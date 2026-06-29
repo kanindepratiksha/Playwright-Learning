@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
-import { testData } from '../utils/testData';
+import { testData } from '../utils/appConstants';
 
 test('Locators Part 2 Demo', async ({ page }) => {
 
     // Navigate to application
-    await page.goto(testData.url);
+    await page.goto(testData.sauceDemoUrl);
 
     // Login
     await page.getByPlaceholder('Username')
