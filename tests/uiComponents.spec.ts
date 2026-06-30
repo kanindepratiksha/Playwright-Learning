@@ -1,13 +1,14 @@
 import { test, expect } from '@playwright/test';
 import { testData } from '../utils/appConstants';
 import user from '../testdata/users.json';
+import { config } from '../config/env';
 
 test('Verify product sorting using dropdown options', async ({ page }) => {
 
     // ==========================================
     // Navigate to SauceDemo application
     // ==========================================
-    await page.goto(testData.sauceDemoUrl);
+    await page.goto(config.sauceDemoUrl);
 
     // ==========================================
     // Login with valid credentials

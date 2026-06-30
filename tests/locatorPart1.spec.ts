@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { testData } from '../utils/appConstants';
 import user from '../testdata/users.json';
+import { config } from '../config/env';
 
 test('Locators Part 1 Demo', async ({ page }) => {
 
     // Navigate to Application
-    await page.goto(testData.sauceDemoUrl);
+    await page.goto(config.sauceDemoUrl);
 
     // getByPlaceholder()
     await page.getByPlaceholder('Username')
@@ -46,7 +47,7 @@ test('Locators Part 1 Demo', async ({ page }) => {
 
     // Validate Logout
     await expect(page)
-        .toHaveURL(testData.sauceDemoUrl);
+        .toHaveURL(config.sauceDemoUrl);
 
     await expect(
         page.getByPlaceholder('Username')

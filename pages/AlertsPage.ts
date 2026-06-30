@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 
 export class AlertsPage {
@@ -37,7 +38,7 @@ export class AlertsPage {
     // ==========================================
     async navigate() {
 
-        await this.page.goto(testData.alertsUrl);
+        await this.page.goto(config.alertsUrl);
 
     }
 
@@ -76,9 +77,8 @@ export class AlertsPage {
     // ==========================================
     async verifyConfirmAlert() {
 
-        await expect(
-            this.confirmResult
-        ).toHaveText(testData.confirmResult);
+        await expect(this.confirmResult)
+            .toHaveText(testData.confirmResult);
 
     }
 
@@ -89,7 +89,7 @@ export class AlertsPage {
 
         this.page.once('dialog', async dialog => {
 
-            await dialog.accept(testData.promptText1);
+            await dialog.accept(testData.promptText);
 
         });
 
@@ -98,13 +98,12 @@ export class AlertsPage {
     }
 
     // ==========================================
-    // Verify Prompt Result
+    // Verify Prompt Alert Result
     // ==========================================
     async verifyPromptAlert() {
 
-        await expect(
-            this.promptResult
-        ).toHaveText(testData.promptResult);
+        await expect(this.promptResult)
+            .toHaveText(testData.promptResult);
 
     }
 

@@ -5,6 +5,7 @@ import {
     expect
 } from '@playwright/test';
 
+import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 
 export class FramesPage {
@@ -29,8 +30,7 @@ export class FramesPage {
 
         this.frame = page.frameLocator('#frame1');
 
-        this.sampleHeading =
-            this.frame.locator('#sampleHeading');
+        this.sampleHeading = this.frame.locator('#sampleHeading');
     }
 
     // ==========================================
@@ -38,7 +38,7 @@ export class FramesPage {
     // ==========================================
     async navigate() {
 
-        await this.page.goto(testData.framesUrl);
+        await this.page.goto(config.framesUrl);
 
     }
 
@@ -47,9 +47,8 @@ export class FramesPage {
     // ==========================================
     async verifyFrameHeadingVisible() {
 
-        await expect(
-            this.sampleHeading
-        ).toBeVisible();
+        await expect(this.sampleHeading)
+            .toBeVisible();
 
     }
 
@@ -58,9 +57,8 @@ export class FramesPage {
     // ==========================================
     async verifyFrameText() {
 
-        await expect(
-            this.sampleHeading
-        ).toHaveText(testData.frameHeading);
+        await expect(this.sampleHeading)
+            .toHaveText(testData.frameHeading);
 
     }
 
