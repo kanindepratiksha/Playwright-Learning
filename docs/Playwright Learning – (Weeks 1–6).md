@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document summarizes my Playwright learning journey during Phase 1. The objective of this phase was to understand Playwright fundamentals, strengthen TypeScript knowledge, and implement automation scripts using Playwright best practices.
+This document summarizes my Playwright learning journey during Phase 1. The primary objective of this phase was to understand Playwright fundamentals, strengthen TypeScript knowledge, and build a scalable automation framework by following Playwright best practices and the Page Object Model (POM).
 
 ---
 
@@ -16,93 +16,142 @@ Set up a Playwright automation framework and understand the basic project archit
 
 ### Playwright Installation
 
-* Installed Playwright using npm.
-* Installed supported browsers.
-* Verified successful installation.
+- Installed Playwright using npm.
+- Installed Playwright supported browsers (Chromium, Firefox, and WebKit).
+- Verified successful installation.
 
 ### Project Setup
 
-Created a Playwright project with the default folder structure.
+Created a Playwright project with a structured folder hierarchy.
 
 ```
+config/
+docs/
 pages/
 tests/
-utils/
 testdata/
+utils/
 playwright.config.ts
 package.json
 tsconfig.json
+README.md
 ```
+
+
 
 ### Playwright Test Runner
 
-Learned:
+Learned and implemented:
 
-* test()
-* expect()
-* describe()
-* beforeEach()
-* afterEach()
+- test()
+- expect()
+- describe()
+- beforeEach()
+- afterEach()
 
 ### Browser Context
 
-Understood:
+Understood the Playwright hierarchy:
 
-* Browser
-* Browser Context
-* Page
+- Browser
+- Browser Context
+- Page
 
-Created multiple browser contexts for isolated test execution.
+Created multiple browser contexts to execute tests in isolated sessions.
 
 ### Page Object Model (POM)
 
-Created page classes to separate:
+Created reusable page classes to separate:
 
-* Locators
-* Actions
-* Business logic
+- Locators
+- Actions
+- Business Logic
 
 Benefits:
 
-* Better maintainability
-* Code reusability
-* Cleaner test scripts
+- Improved code maintainability
+- Better code reusability
+- Cleaner test scripts
 
 ### Playwright Configuration
 
 Configured:
 
-* Browsers
-* Base URL
-* Reporter
-* Headless execution
-* Screenshots
-* Trace
+- Browsers
+- Base URL
+- HTML Reporter
+- Headless Execution
+- Screenshots
+- Trace
 
-### Test Execution
+### Commands Practiced
 
-Executed tests using:
+Install Playwright
 
+```bash
+npm init playwright@latest
 ```
+
+Install browsers
+
+```bash
+npx playwright install
+```
+
+Run all tests
+
+```bash
 npx playwright test
 ```
 
-Executed:
+Run tests in headed mode
 
-* Chromium
-* Firefox
-* WebKit
+```bash
+npx playwright test --headed
+```
 
-Generated HTML reports.
+Run tests on Chromium
+
+```bash
+npx playwright test --project=chromium
+```
+
+Run tests on Firefox
+
+```bash
+npx playwright test --project=firefox
+```
+
+Run tests on WebKit
+
+```bash
+npx playwright test --project=webkit
+```
+
+View HTML Report
+
+```bash
+npx playwright show-report
+```
+
+### Test Execution
+
+Executed tests on:
+
+- Chromium
+- Firefox
+- WebKit
+
+Generated HTML reports after execution.
 
 ## Learning Outcome
 
-* Understood Playwright architecture.
-* Learned project setup.
-* Implemented Page Object Model.
-* Executed tests across multiple browsers.
+- Understood Playwright architecture.
+- Learned Playwright project setup.
+- Implemented the Page Object Model (POM).
+- Executed tests across multiple browsers.
 
-Status: Completed
+**Status:** Completed
 
 ---
 
@@ -118,52 +167,51 @@ Learn TypeScript concepts required for Playwright automation.
 
 Worked with:
 
-* let
-* const
+- let
+- const
 
 ### Data Types
 
 Implemented:
 
-* string
-* number
-* boolean
-* any
-* unknown
-* array
+- string
+- number
+- boolean
+- any
+- unknown
+- array
 
 ### Arrays
 
 Created arrays for:
 
-* Products
-* User names
-* Test data
+- Products
+- Test Data
 
 ### Objects
 
-Created objects containing:
+Created reusable objects containing:
 
-* Username
-* Password
-* Product information
+- Username
+- Password
+- Product Information
 
 ### Functions
 
 Implemented:
 
-* Normal functions
-* Arrow functions
-* Functions with parameters
-* Return values
+- Normal Functions
+- Arrow Functions
+- Functions with Parameters
+- Functions with Return Values
 
 ### Classes
 
 Created reusable classes using:
 
-* constructor
-* methods
-* properties
+- Constructor
+- Methods
+- Properties
 
 ### Interfaces
 
@@ -171,29 +219,39 @@ Used interfaces to define object structures and improve code readability.
 
 ### Async / Await
 
-Learned asynchronous programming.
+Learned asynchronous programming using:
 
-Used:
-
-```
+```typescript
 async
 await
 ```
 
-to handle browser actions.
-
 ### Import / Export
 
-Split reusable code into multiple files using ES Modules.
+Separated reusable code into multiple files using ES Modules.
+
+### Commands Practiced
+
+Compile TypeScript
+
+```bash
+npx tsc
+```
+
+Run TypeScript file
+
+```bash
+npx ts-node filename.ts
+```
 
 ## Learning Outcome
 
-* Improved TypeScript fundamentals.
-* Built reusable classes.
-* Learned modular programming.
-* Understood asynchronous execution.
+- Improved TypeScript fundamentals.
+- Built reusable classes.
+- Learned modular programming.
+- Understood asynchronous execution.
 
-Status: Completed
+**Status:** Completed
 
 ---
 
@@ -207,24 +265,38 @@ Learn Playwright locator strategies.
 
 Implemented:
 
-* getByRole()
-* getByText()
-* getByPlaceholder()
-* CSS Selectors
+- getByRole()
+- getByText()
+- getByPlaceholder()
+- CSS Selectors
 
 Automated:
 
-* Login
-* Logout
-* URL Validation
+- Login
+- Logout
+- URL Validation
+
+### Commands Practiced
+
+Run a specific test file
+
+```bash
+npx playwright test tests/locatorPart1.spec.ts
+```
+
+Run a specific browser
+
+```bash
+npx playwright test tests/locatorPart1.spec.ts --project=chromium
+```
 
 ## Learning Outcome
 
-* Used user-friendly locators.
-* Improved locator reliability.
-* Automated login functionality.
+- Used user-friendly Playwright locators.
+- Improved locator reliability.
+- Automated login and logout functionality.
 
-Status: Completed
+**Status:** Completed
 
 ---
 
@@ -232,32 +304,47 @@ Status: Completed
 
 ## Objective
 
-Learn advanced locator techniques.
+Learn advanced Playwright locator techniques.
 
 ## Topics Covered
 
 Implemented:
 
-* locator()
-* filter()
-* first()
-* last()
-* nth()
-* XPath
-* Chained Locators
+- locator()
+- filter()
+- first()
+- last()
+- nth()
+- XPath
+- Chained Locators
 
 Automated:
 
-* Product Selection
-* Cart Navigation
+- Product Selection
+- Cart Navigation
+- Cart Validation
+
+### Commands Practiced
+
+Run locator test
+
+```bash
+npx playwright test tests/locatorPart2.spec.ts
+```
+
+Run in headed mode
+
+```bash
+npx playwright test tests/locatorPart2.spec.ts --headed
+```
 
 ## Learning Outcome
 
-* Worked with dynamic elements.
-* Used chained locators.
-* Improved locator strategies.
+- Worked with dynamic web elements.
+- Used chained locators.
+- Improved locator strategies.
 
-Status: Completed
+**Status:** Completed
 
 ---
 
@@ -265,30 +352,38 @@ Status: Completed
 
 ## Objective
 
-Automate common user interactions.
+Automate common user interactions using Playwright.
 
 ## Topics Covered
 
 Implemented:
 
-* click()
-* hover()
-* keyboard.press()
+- click()
+- hover()
+- keyboard.press()
 
 Automated:
 
-* Add to Cart
-* Remove Product
-* Navigation
-* Cart Validation
+- Add to Cart
+- Remove Product
+- Navigation
+- Cart Validation
+
+### Commands Practiced
+
+Run User Actions test
+
+```bash
+npx playwright test tests/userActions.spec.ts
+```
 
 ## Learning Outcome
 
-* Automated complete user workflows.
-* Learned keyboard and mouse interactions.
-* Improved UI automation skills.
+- Automated complete user workflows.
+- Learned keyboard and mouse interactions.
+- Improved UI automation skills.
 
-Status: Completed
+**Status:** Completed
 
 ---
 
@@ -296,43 +391,67 @@ Status: Completed
 
 ## Objective
 
-Validate application behavior using Playwright assertions.
+Validate application behavior using Playwright assertions and synchronization techniques.
 
 ## Topics Covered
 
-Assertions:
+### Assertions
 
-* toBeVisible()
-* toHaveText()
-* toHaveURL()
-* toBeEnabled()
+Implemented:
 
-Wait Strategies:
+- toBeVisible()
+- toHaveText()
+- toHaveURL()
+- toBeEnabled()
 
-* waitForSelector()
-* waitForURL()
-* waitForLoadState()
+### Wait Strategies
+
+Implemented:
+
+- waitForSelector()
+- waitForURL()
+- waitForLoadState()
 
 Validated:
 
-* Product added to cart
-* Cart count
-* Page navigation
-* Login success
+- Product addition to cart
+- Cart count
+- Page navigation
+- Successful login
+
+### Commands Practiced
+
+Run Assertions test
+
+```bash
+npx playwright test tests/assertionsAndWaits.spec.ts
+```
+
+Debug test
+
+```bash
+npx playwright test tests/assertionsAndWaits.spec.ts --debug
+```
+
+Generate Trace
+
+```bash
+npx playwright test --trace on
+```
 
 ## Learning Outcome
 
-* Implemented reliable assertions.
-* Reduced flaky tests.
-* Learned synchronization techniques.
+- Implemented reliable assertions.
+- Reduced flaky tests using proper synchronization.
+- Learned effective wait strategies.
 
-Status: Completed
+**Status:** Completed
 
 ---
 
 # Overall Learning Summary
 
-During Phase 1, I successfully built a Playwright automation framework and implemented automation scripts covering setup, TypeScript fundamentals, locator strategies, user interactions, and assertions.
+During Phase 1, I successfully built a Playwright automation framework and implemented automation scripts covering Playwright setup, TypeScript fundamentals, locator strategies, user interactions, assertions, synchronization techniques, and the Page Object Model (POM).
 
 ## Repository Structure
 
@@ -342,6 +461,7 @@ pages/
 tests/
 testdata/
 utils/
+config/
 playwright.config.ts
 package.json
 tsconfig.json
@@ -350,17 +470,18 @@ README.md
 
 ## Skills Gained
 
-* Playwright Framework
-* TypeScript
-* Page Object Model
-* Browser Context
-* Playwright Locators
-* User Actions
-* Assertions
-* Wait Strategies
-* Test Execution
-* Framework Organization
+- Playwright Framework
+- TypeScript
+- Page Object Model (POM)
+- Browser Context
+- Playwright Locators
+- User Actions
+- Assertions
+- Wait Strategies
+- Cross-browser Testing
+- Test Execution
+- Framework Organization
 
 ## Status
 
-✅ Phase 1 Completed Successfully
+✅ **Phase 1 Completed Successfully**

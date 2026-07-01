@@ -1,41 +1,110 @@
-import { test } from '@playwright/test';
-import { AlertsPage } from '../pages/AlertsPage';
+import { Page, Locator, expect } from '@playwright/test';
+import { config } from '../config/env';
+import { testData } from '../utils/appConstants';
 
-test('Verify JavaScript Alerts in Playwright', async ({ page }) => {
+export class AlertsPage {
 
     // ==========================================
-    // Create Alerts Page Object
+    // Page Object
     // ==========================================
-    const alertsPage = new AlertsPage(page);
+    readonly page: Page;
+
+    // ==========================================
+    // Locators
+    // ==========================================
+    readonly alertButton: Locator;
+    readonly confirmButton: Locator;
+    readonly promptButton: Locator;
+    readonly confirmResult: Locator;
+    readonly promptResult: Locator;
+
+    // ==========================================
+    // Constructor
+    // ==========================================
+    constructor(page: Page) {
+
+        this.page = page;
+
+        this.alertButton = page.locator('#alertButton');
+        this.confirmButton = page.locator('#confirmButton');
+        this.promptButton = page.locator('#promtButton');
+
+        this.confirmResult = page.locator('#confirmResult');
+        this.promptResult = page.locator('#promptResult');
+    }
 
     // ==========================================
     // Navigate to Alerts Page
     // ==========================================
-    await alertsPage.navigate();
+    async navigate() {
+
+        await this.page.goto(config.alertsUrl);
+
+    }
 
     // ==========================================
     // Handle JavaScript Alert
     // ==========================================
-    await alertsPage.handleSimpleAlert();
+    async handleSimpleAlert() {
+
+        this.page.once('dialog', async dialog => {
+
+            await dialog.accept();
+
+        });
+
+        await this.alertButton.click();
+
+    }
 
     // ==========================================
     // Handle Confirm Alert
     // ==========================================
-    await alertsPage.handleConfirmAlert();
+    async handleConfirmAlert() {
+
+        this.page.once('dialog', async dialog => {
+
+            await dialog.accept();
+
+        });
+
+        await this.confirmButton.click();
+
+    }
 
     // ==========================================
     // Verify Confirm Alert Result
     // ==========================================
-    await alertsPage.verifyConfirmAlert();
+    async verifyConfirmAlert() {
+
+        await expect(this.confirmResult)
+            .toHaveText(testData.confirmResult);
+
+    }
 
     // ==========================================
     // Handle Prompt Alert
     // ==========================================
-    await alertsPage.handlePromptAlert();
+    async handlePromptAlert() {
+
+        this.page.once('dialog', async dialog => {
+
+            await dialog.accept(testData.promptText);
+
+        });
+
+        await this.promptButton.click();
+
+    }
 
     // ==========================================
     // Verify Prompt Alert Result
     // ==========================================
-    await alertsPage.verifyPromptAlert();
+    async verifyPromptAlert() {
 
-});
+        await expect(this.promptResult)
+            .toHaveText(testData.promptResult);
+
+    }
+
+}
