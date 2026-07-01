@@ -1,46 +1,18 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 
 export class CartPage {
 
-    // ==========================================
-    // Page Object
-    // ==========================================
-    readonly page: Page;
+    constructor(private page: Page) {}
 
-    // ==========================================
-    // Locators
-    // ==========================================
-    readonly cartLink: Locator;
+    cartLink = this.page.locator('.shopping_cart_link');
 
-    // ==========================================
-    // Constructor
-    // ==========================================
-    constructor(page: Page) {
-
-        this.page = page;
-
-        this.cartLink = page.locator('.shopping_cart_link');
-
-    }
-
-    // ==========================================
-    // Open Cart
-    // ==========================================
     async openCart() {
-
         await this.cartLink.click();
-
     }
 
-    // ==========================================
-    // Verify Product in Cart
-    // ==========================================
     async verifyProduct(productName: string) {
-
         await expect(
             this.page.getByText(productName)
         ).toBeVisible();
-
     }
-
 }

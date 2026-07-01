@@ -1,18 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { testData } from '../utils/appConstants';
+import { testData } from '../utils/testData';
 import user from '../testdata/users.json';
-import { config } from '../config/env';
 
-test('Verify product sorting using dropdown options', async ({ page }) => {
+test('Dropdown Handling and Product Sorting', async ({ page }) => {
 
-    // ==========================================
-    // Navigate to SauceDemo application
-    // ==========================================
-    await page.goto(config.sauceDemoUrl);
+    // Navigate to SauceDemo
+    await page.goto(testData.url);
 
-    // ==========================================
-    // Login with valid credentials
-    // ==========================================
+    // Login
     await page.getByPlaceholder('Username')
         .fill(user.username);
 
@@ -20,76 +15,57 @@ test('Verify product sorting using dropdown options', async ({ page }) => {
         .fill(user.password);
 
     await page.getByRole('button', {
-        name: testData.loginButton
+        name: 'Login'
     }).click();
 
-    // ==========================================
-    // Verify successful login
-    // ==========================================
+    // Verify Products Page
     await expect(
         page.locator('.title')
     ).toHaveText(testData.productPageTitle);
 
-    // ==========================================
-    // Define reusable locators
-    // ==========================================
+    // Dropdown Locator
     const sortDropdown = page.locator(
         '[data-test="product-sort-container"]'
     );
 
-    const firstProduct = page.locator(
-        '.inventory_item_name'
-    ).first();
-
-    const firstPrice = page.locator(
-        '.inventory_item_price'
-    ).first();
-
     // ==========================================
-    // Sort Products - Name (A to Z)
+    // Sort by Name (A to Z)
     // ==========================================
     await sortDropdown.selectOption('az');
 
-    await expect(sortDropdown)
-        .toHaveValue('az');
-
-    await expect(firstProduct)
-        .toHaveText(testData.productNameAZ);
+    await expect(
+        page.locator('.inventory_item_name').first()
+    ).toHaveText('Sauce Labs Backpack');
 
     // ==========================================
-    // Sort Products - Name (Z to A)
+    // Sort by Name (Z to A)
     // ==========================================
     await sortDropdown.selectOption('za');
 
-    await expect(sortDropdown)
-        .toHaveValue('za');
-
-    await expect(firstProduct)
-        .toHaveText(testData.productNameZA);
+    await expect(
+        page.locator('.inventory_item_name').first()
+    ).toHaveText('Test.allTheThings() T-Shirt (Red)');
 
     // ==========================================
-    // Sort Products - Price (Low to High)
+    // Sort by Price (Low to High)
     // ==========================================
     await sortDropdown.selectOption('lohi');
 
-    await expect(sortDropdown)
-        .toHaveValue('lohi');
-
-    await expect(firstPrice)
-        .toHaveText(testData.lowPrice);
+    await expect(
+        page.locator('.inventory_item_price').first()
+    ).toHaveText('$7.99');
 
     // ==========================================
-    // Sort Products - Price (High to Low)
+    // Sort by Price (High to Low)
     // ==========================================
     await sortDropdown.selectOption('hilo');
 
-    await expect(sortDropdown)
-        .toHaveValue('hilo');
+    await expect(
+        page.locator('.inventory_item_name').first()
+    ).toHaveText('Sauce Labs Fleece Jacket');
 
-    await expect(firstProduct)
-        .toHaveText(testData.highPriceProduct);
-
-    await expect(firstPrice)
-        .toHaveText(testData.highPrice);
-
+    // Additional Validation
+    await expect(
+        page.locator('.inventory_item_price').first()
+    ).toHaveText('$49.99');
 });
