@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test';
-import { testData } from '../utils/testData';
+import { testData } from '../utils/appConstants';
 import user from '../testdata/users.json';
+import { config } from '../config/env';
 
 test('Locators Part 1 Demo', async ({ page }) => {
 
     // Navigate to Application
-    await page.goto(testData.url);
+    await page.goto(config.sauceDemoUrl);
 
     // getByPlaceholder()
     await page.getByPlaceholder('Username')
@@ -41,12 +42,12 @@ test('Locators Part 1 Demo', async ({ page }) => {
     await page.locator('#react-burger-menu-btn').click();
 
     await page.getByText(
-        testData.logoutOption
+        testData.logoutButton
     ).click();
 
     // Validate Logout
     await expect(page)
-        .toHaveURL(testData.url);
+        .toHaveURL(config.sauceDemoUrl);
 
     await expect(
         page.getByPlaceholder('Username')

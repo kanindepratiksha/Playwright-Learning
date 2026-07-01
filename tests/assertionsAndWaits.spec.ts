@@ -1,81 +1,98 @@
 import { test, expect } from '@playwright/test';
-import { testData } from '../utils/testData';
+import { testData } from '../utils/appConstants';
 import user from '../testdata/users.json';
+import { config } from '../config/env';
 
-test('Assertions and Waits Demo', async ({ page }) => {
+test('Verify Assertions and Waits in SauceDemo', async ({ page }) => {
 
-    // Navigate
-    await page.goto(testData.url);
+    // ==========================================
+    // Navigate to SauceDemo application
+    // ==========================================
+    await page.goto(config.sauceDemoUrl);
 
-    // Wait for page to load completely
+    // Wait until all network requests are completed
     await page.waitForLoadState('networkidle');
 
-    // Login
+    // ==========================================
+    // Login with valid credentials
+    // ==========================================
     await page.getByPlaceholder('Username')
         .fill(user.username);
 
     await page.getByPlaceholder('Password')
         .fill(user.password);
 
-    // toBeEnabled()
+    // Verify Login button is enabled
     await expect(
-        page.getByRole('button', { name: 'Login' })
+        page.getByRole('button', {
+            name: testData.loginButton
+        })
     ).toBeEnabled();
 
+    // Click Login button
     await page.getByRole('button', {
-        name: 'Login'
+        name: testData.loginButton
     }).click();
 
-    // waitForURL()
+    // ==========================================
+    // Verify successful login
+    // ==========================================
     await page.waitForURL('**/inventory.html');
 
-    // toHaveURL()
     await expect(page)
         .toHaveURL(/inventory/);
 
-    // waitForSelector()
     await page.waitForSelector('.title');
 
-    // toHaveText()
     await expect(
         page.locator('.title')
     ).toHaveText(testData.productPageTitle);
 
-    // toBeVisible()
+    // ==========================================
+    // Verify product is visible
+    // ==========================================
     await expect(
         page.getByText(testData.product1)
     ).toBeVisible();
 
-    // Add Product 1
+    // ==========================================
+    // Add Product 1 to cart
+    // ==========================================
     await page
         .locator('.inventory_item')
         .filter({ hasText: testData.product1 })
         .getByRole('button')
         .click();
 
-    // Add Product 2
+    // ==========================================
+    // Add Product 2 to cart
+    // ==========================================
     await page
         .locator('.inventory_item')
         .filter({ hasText: testData.product2 })
         .getByRole('button')
         .click();
 
-    // Cart Assertions
+    // ==========================================
+    // Verify cart badge count
+    // ==========================================
     await expect(
         page.locator('.shopping_cart_badge')
     ).toHaveText('2');
 
-    // Open Cart
+    // ==========================================
+    // Navigate to Cart page
+    // ==========================================
     await page.locator('.shopping_cart_link').click();
 
-    // waitForURL()
     await page.waitForURL('**/cart.html');
 
-    // toHaveURL()
     await expect(page)
         .toHaveURL(/cart/);
 
-    // Cart Assertions
+    // ==========================================
+    // Verify added products are displayed
+    // ==========================================
     await expect(
         page.getByText(testData.product1)
     ).toBeVisible();
@@ -84,13 +101,18 @@ test('Assertions and Waits Demo', async ({ page }) => {
         page.getByText(testData.product2)
     ).toBeVisible();
 
-    // Remove Product
+    // ==========================================
+    // Remove Product 1 from cart
+    // ==========================================
     await page.locator(
         '[data-test="remove-sauce-labs-backpack"]'
     ).click();
 
-    // Cart Count Assertion
+    // ==========================================
+    // Verify cart badge count after removal
+    // ==========================================
     await expect(
         page.locator('.shopping_cart_badge')
     ).toHaveText('1');
+
 });
