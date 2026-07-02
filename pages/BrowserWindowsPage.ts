@@ -25,9 +25,9 @@ export class BrowserWindowsPage {
     this.newWindowButton = page.locator("#windowButton");
   }
 
-  // ==========================================
+  // =========================================
   // Navigate
-  // ==========================================
+  // =========================================
   async navigate() {
     await this.page.goto(config.browserWindowsUrl);
   }
