@@ -1,86 +1,72 @@
-import { Page, Locator, expect } from '@playwright/test';
-import { config } from '../config/env';
-import { testData } from '../utils/appConstants';
+import { Page, Locator, expect } from "@playwright/test";
+import { config } from "../config/env";
+import { testData } from "../utils/appConstants";
 
 export class BrowserWindowsPage {
+  // ==========================================
+  // Page Object
+  // ==========================================
+  readonly page: Page;
 
-    // ==========================================
-    // Page Object
-    // ==========================================
-    readonly page: Page;
+  // ==========================================
+  // Locators
+  // ==========================================
+  readonly newTabButton: Locator;
+  readonly newWindowButton: Locator;
 
-    // ==========================================
-    // Locators
-    // ==========================================
-    readonly newTabButton: Locator;
-    readonly newWindowButton: Locator;
+  // ==========================================
+  // Constructor
+  // ==========================================
+  constructor(page: Page) {
+    this.page = page;
 
-    // ==========================================
-    // Constructor
-    // ==========================================
-    constructor(page: Page) {
+    this.newTabButton = page.locator("#tabButton");
 
-        this.page = page;
+    this.newWindowButton = page.locator("#windowButton");
+  }
 
-        this.newTabButton = page.locator('#tabButton');
+  // ==========================================
+  // Navigate
+  // ==========================================
+  async navigate() {
+    await this.page.goto(config.browserWindowsUrl);
+  }
 
-        this.newWindowButton = page.locator('#windowButton');
+  // ==========================================
+  // Handle Multiple Tab
+  // ==========================================
+  async verifyNewTab() {
+    const [newPage] = await Promise.all([
+      this.page.context().waitForEvent("page"),
 
-    }
+      this.newTabButton.click(),
+    ]);
 
-    // ==========================================
-    // Navigate
-    // ==========================================
-    async navigate() {
+    await newPage.waitForLoadState();
 
-        await this.page.goto(config.browserWindowsUrl);
+    await expect(newPage.locator("#sampleHeading")).toHaveText(
+      testData.newTabHeading,
+    );
 
-    }
+    await newPage.close();
+  }
 
-    // ==========================================
-    // Handle Multiple Tab
-    // ==========================================
-    async verifyNewTab() {
+  // ==========================================
+  // Handle Popup Window
+  // ==========================================
+  async verifyNewWindow() {
+    const [popup] = await Promise.all([
+      this.page.context().waitForEvent("page"),
 
-        const [newPage] = await Promise.all([
+      this.newWindowButton.click(),
+    ]);
 
-            this.page.context().waitForEvent('page'),
+    await popup.waitForLoadState();
 
-            this.newTabButton.click()
+    await expect(popup.locator("#sampleHeading")).toHaveText(
+      testData.newTabHeading,
+    );
 
-        ]);
-
-        await newPage.waitForLoadState();
-
-        await expect(
-            newPage.locator('#sampleHeading')
-        ).toHaveText(testData.newTabHeading);
-
-        await newPage.close();
-
-    }
-
-    // ==========================================
-    // Handle Popup Window
-    // ==========================================
-    async verifyNewWindow() {
-
-        const [popup] = await Promise.all([
-
-            this.page.context().waitForEvent('page'),
-
-            this.newWindowButton.click()
-
-        ]);
-
-        await popup.waitForLoadState();
-
-        await expect(
-            popup.locator('#sampleHeading')
-        ).toHaveText(testData.newTabHeading);
-
-        await popup.close();
-
-    }
-
+    await popup.close();
+  }
 }
