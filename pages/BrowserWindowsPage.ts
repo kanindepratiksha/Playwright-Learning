@@ -21,9 +21,7 @@ export class BrowserWindowsPage {
     constructor(page: Page) {
 
         this.page = page;
-
         this.newTabButton = page.locator('#tabButton');
-
         this.newWindowButton = page.locator('#windowButton');
 
     }
@@ -32,9 +30,7 @@ export class BrowserWindowsPage {
     // Navigate
     // ==========================================
     async navigate() {
-
         await this.page.goto(config.browserWindowsUrl);
-
     }
 
     // ==========================================
@@ -43,11 +39,8 @@ export class BrowserWindowsPage {
     async verifyNewTab() {
 
         const [newPage] = await Promise.all([
-
             this.page.context().waitForEvent('page'),
-
             this.newTabButton.click()
-
         ]);
 
         await newPage.waitForLoadState();
@@ -55,30 +48,21 @@ export class BrowserWindowsPage {
         await expect(
             newPage.locator('#sampleHeading')
         ).toHaveText(testData.newTabHeading);
-
         await newPage.close();
-
-    }
+     }
 
     // ==========================================
     // Handle Popup Window
     // ==========================================
     async verifyNewWindow() {
-
         const [popup] = await Promise.all([
-
             this.page.context().waitForEvent('page'),
-
             this.newWindowButton.click()
-
         ]);
-
         await popup.waitForLoadState();
-
         await expect(
             popup.locator('#sampleHeading')
         ).toHaveText(testData.newTabHeading);
-
         await popup.close();
 
     }
