@@ -1,20 +1,20 @@
 import { test } from '@playwright/test';
-import { FramesPage } from '../pages/FramesPage';
-test('Verify iframe handling using frameLocator()', async ({ page }) => {
+import { BrowserWindowsPage } from '../pages/BrowserWindowsPage';
+test('Verify Multiple Tabs and Popup Handling', async ({ page }) => {
     // ==========================================
-    // Create Frames Page Object
+    // Create Page Object
     // ==========================================
-    const framesPage = new FramesPage(page);
+    const browserWindow = new BrowserWindowsPage(page);
     // ==========================================
-    // Navigate to Frames Page
+    // Navigate
     // ==========================================
-    await framesPage.navigate();
+    await browserWindow.navigate();
     // ==========================================
-    // Verify Frame Heading Visibility
+    // Multiple Tabs
     // ==========================================
-    await framesPage.verifyFrameHeadingVisible();
+    await browserWindow.verifyNewTab();
     // ==========================================
-    // Verify Frame Heading Text
+    // Popup Window
     // ==========================================
-    await framesPage.verifyFrameText();
+    await browserWindow.verifyNewWindow();
 });
