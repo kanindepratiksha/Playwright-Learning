@@ -6,8 +6,4 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
-# Ignore screenshot images only
-/screenshots/*.png
-
-# Keep the folder
-!/screenshots/.gitkeep
+/screenshots/

@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { Hooks2Page } from '../pages/Hooks2Page';
+import { Hooks2Page } from '../pages/hooks-advanced';
 // ==========================================
 // Page Object
 // ==========================================
