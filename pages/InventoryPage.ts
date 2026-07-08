@@ -1,32 +1,22 @@
-import { Page, Locator, expect } from '@playwright/test';
-export class InventoryPage {
-    // ==========================================
-    // Page Object
-    // ==========================================
-    readonly page: Page;
-    // ==========================================
-    // Constructor
-    // ==========================================
+import { Page, Locator } from '@playwright/test';
+import { BasePage } from './BasePage';
+export class InventoryPage extends BasePage {
     constructor(page: Page) {
-        this.page = page;
+        super(page);
     }
-    // ==========================================
-    // Add Product to Cart
-    // ==========================================
-    async addProduct(productName: string) {
-        const product: Locator = this.page
+    private getProduct(productName: string): Locator {
+        return this.page
             .locator('.inventory_item')
             .filter({ hasText: productName });
-        await product
+    }
+    async addProduct(productName: string) {
+        await this.getProduct(productName)
             .getByRole('button')
             .click();
     }
-    // ==========================================
-    // Verify Product is Visible
-    // ==========================================
     async verifyProductVisible(productName: string) {
-        await expect(
+        await this.verifyVisible(
             this.page.getByText(productName)
-        ).toBeVisible();
+        );
     }
 }

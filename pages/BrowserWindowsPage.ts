@@ -1,70 +1,38 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
-
-export class BrowserWindowsPage {
-
-    // ==========================================
-    // Page Object
-    // ==========================================
-    readonly page: Page;
-
-    // ==========================================
-    // Locators
-    // ==========================================
-    readonly newTabButton: Locator;
-    readonly newWindowButton: Locator;
-
-    // ==========================================
-    // Constructor
-    // ==========================================
+import { BasePage } from './BasePage';
+export class BrowserWindowsPage extends BasePage {
+    private readonly newTabButton: Locator;
+    private readonly newWindowButton: Locator;
     constructor(page: Page) {
-
-        this.page = page;
+        super(page);
         this.newTabButton = page.locator('#tabButton');
         this.newWindowButton = page.locator('#windowButton');
-
     }
-
-    // ==========================================
-    // Navigate
-    // ==========================================
     async navigate() {
-        await this.page.goto(config.browserWindowsUrl);
+        await super.navigate(config.browserWindowsUrl);
     }
-
-    // ==========================================
-    // Handle Multiple Tab
-    // ==========================================
-    async verifyNewTab() {
-
+    private async openNewPage(button: Locator) {
         const [newPage] = await Promise.all([
             this.page.context().waitForEvent('page'),
-            this.newTabButton.click()
+            button.click()
         ]);
-
         await newPage.waitForLoadState();
-
-        await expect(
-            newPage.locator('#sampleHeading')
-        ).toHaveText(testData.newTabHeading);
-        await newPage.close();
-     }
-
-    // ==========================================
-    // Handle Popup Window
-    // ==========================================
-    async verifyNewWindow() {
-        const [popup] = await Promise.all([
-            this.page.context().waitForEvent('page'),
-            this.newWindowButton.click()
-        ]);
-        await popup.waitForLoadState();
-        await expect(
-            popup.locator('#sampleHeading')
-        ).toHaveText(testData.newTabHeading);
-        await popup.close();
-
+        return newPage;
     }
-
+    async verifyNewTab() {
+        const page = await this.openNewPage(this.newTabButton);
+        await expect(
+            page.locator('#sampleHeading')
+        ).toHaveText(testData.newTabHeading);
+        await page.close();
+    }
+    async verifyNewWindow() {
+        const page = await this.openNewPage(this.newWindowButton);
+        await expect(
+            page.locator('#sampleHeading')
+        ).toHaveText(testData.newTabHeading);
+        await page.close();
+    }
 }

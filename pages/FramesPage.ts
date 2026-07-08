@@ -1,26 +1,22 @@
 import {
     Page,
     FrameLocator,
-    Locator,
-    expect
+    Locator
 } from '@playwright/test';
 import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
-export class FramesPage {
-    // ==========================================
-    // Page Object
-    // ==========================================
-    readonly page: Page;
+import { BasePage } from './BasePage';
+export class FramesPage extends BasePage {
     // ==========================================
     // Locators
     // ==========================================
-    readonly frame: FrameLocator;
-    readonly sampleHeading: Locator;
+    private readonly frame: FrameLocator;
+    private readonly sampleHeading: Locator;
     // ==========================================
     // Constructor
     // ==========================================
     constructor(page: Page) {
-        this.page = page;
+        super(page);
         this.frame = page.frameLocator('#frame1');
         this.sampleHeading = this.frame.locator('#sampleHeading');
     }
@@ -28,20 +24,21 @@ export class FramesPage {
     // Navigate to Frames Page
     // ==========================================
     async navigate() {
-        await this.page.goto(config.framesUrl);
+        await super.navigate(config.framesUrl);
     }
     // ==========================================
     // Verify Heading Visibility
     // ==========================================
     async verifyFrameHeadingVisible() {
-        await expect(this.sampleHeading)
-            .toBeVisible();
+        await this.verifyVisible(this.sampleHeading);
     }
     // ==========================================
     // Verify Heading Text
     // ==========================================
     async verifyFrameText() {
-        await expect(this.sampleHeading)
-            .toHaveText(testData.frameHeading);
+        await this.verifyText(
+            this.sampleHeading,
+            testData.frameHeading
+        );
     }
 }
