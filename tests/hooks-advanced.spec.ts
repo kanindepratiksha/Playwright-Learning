@@ -19,7 +19,6 @@ test.use({
 // ==========================================
 test.describe('Hooks 2 - Advanced Playwright Features', () => {
     // ==========================================
-    // test.describe.configure()
     // Execute tests sequentially
     // ==========================================
     test.describe.configure({
@@ -29,39 +28,40 @@ test.describe('Hooks 2 - Advanced Playwright Features', () => {
     // Before Each
     // ==========================================
     test.beforeEach(async ({ page }) => {
-       hooksAdvancedPage = new HooksAdvancedPage(page);
-        await hooksAdvancedPage .navigate();
-        await hooksAdvancedPage .login();
+        hooksAdvancedPage = new HooksAdvancedPage(page);
+        await hooksAdvancedPage.navigate();
+        await hooksAdvancedPage.login();
     });
     // ==========================================
-    // test.step()
+    // Verify Login
     // ==========================================
     test('@smoke Verify Login', async () => {
         await test.step('Verify User is Logged In', async () => {
-            await hooksAdvancedPage .verifyLogin();
+            await hooksAdvancedPage.verifyLogin();
         });
     });
     // ==========================================
-    // test.slow()
+    // Verify Logout
     // ==========================================
     test('@regression Verify Logout', async () => {
-        // Increase timeout for this test
         test.slow();
         await test.step('Logout From Application', async () => {
-            await hooksAdvancedPage .logout();
+            await hooksAdvancedPage.logout();
         });
         await test.step('Verify Logout Successful', async () => {
-            await hooksAdvancedPage .verifyLogout();
+            await hooksAdvancedPage.verifyLogout();
         });
     });
     // ==========================================
-    // test.fail()
+    // Known Bug Example (Pass)
     // ==========================================
-    test.fail('Known Bug Example', async () => {
-        throw new Error('Known Bug');
+    test('Known Bug Example', async () => {
+        await test.step('Demonstrate Known Bug Placeholder', async () => {
+            console.log('Known bug placeholder test');
+        });
     });
     // ==========================================
-    // test.fixme()
+    // Future Feature
     // ==========================================
     test.fixme('Wishlist Feature', async () => {
         // Future implementation

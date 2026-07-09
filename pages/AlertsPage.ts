@@ -3,11 +3,17 @@ import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 import { BasePage } from './BasePage';
 export class AlertsPage extends BasePage {
+    // ==========================================
+    // Locators
+    // ==========================================
     private readonly alertButton: Locator;
     private readonly confirmButton: Locator;
     private readonly promptButton: Locator;
     private readonly confirmResult: Locator;
     private readonly promptResult: Locator;
+    // ==========================================
+    // Constructor
+    // ==========================================
     constructor(page: Page) {
         super(page);
         this.alertButton = page.locator('#alertButton');
@@ -16,32 +22,54 @@ export class AlertsPage extends BasePage {
         this.confirmResult = page.locator('#confirmResult');
         this.promptResult = page.locator('#promptResult');
     }
+    // ==========================================
+    // Navigate
+    // ==========================================
     async navigate() {
         await super.navigate(config.alertsUrl);
-    }
-    private async acceptDialog(text?: string) {
-        this.page.once('dialog', async dialog => {
-            await dialog.accept(text);
+        await this.alertButton.waitFor({
+            state: 'visible'
         });
     }
+    // ==========================================
+    // Handle Simple Alert
+    // ==========================================
     async handleSimpleAlert() {
-        await this.acceptDialog();
-        await this.click(this.alertButton);
+        this.page.once('dialog', async dialog => {
+            await dialog.accept();
+        });
+        await this.alertButton.click();
     }
+    // ==========================================
+    // Handle Confirm Alert
+    // ==========================================
     async handleConfirmAlert() {
-        await this.acceptDialog();
-        await this.click(this.confirmButton);
+        this.page.once('dialog', async dialog => {
+            await dialog.accept();
+        });
+        await this.confirmButton.click();
     }
+    // ==========================================
+    // Verify Confirm Result
+    // ==========================================
     async verifyConfirmAlert() {
         await this.verifyText(
             this.confirmResult,
             testData.confirmResult
         );
     }
+    // ==========================================
+    // Handle Prompt Alert
+    // ==========================================
     async handlePromptAlert() {
-        await this.acceptDialog(testData.promptText);
-        await this.click(this.promptButton);
+        this.page.once('dialog', async dialog => {
+            await dialog.accept(testData.promptText);
+        });
+        await this.promptButton.click();
     }
+    // ==========================================
+    // Verify Prompt Result
+    // ==========================================
     async verifyPromptAlert() {
         await this.verifyText(
             this.promptResult,

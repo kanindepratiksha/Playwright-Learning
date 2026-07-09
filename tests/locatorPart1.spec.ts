@@ -3,37 +3,44 @@ import { testData } from '../utils/appConstants';
 import user from '../testdata/users.json';
 import { config } from '../config/env';
 test('Locators Part 1 Demo', async ({ page }) => {
+    // ==========================================
     // Navigate to Application
+    // ==========================================
     await page.goto(config.sauceDemoUrl);
-    // getByPlaceholder()
+    // ==========================================
+    // Login
+    // ==========================================
     await page.getByPlaceholder('Username')
         .fill(user.username);
     await page.getByPlaceholder('Password')
         .fill(user.password);
-    // getByRole()
     await page.getByRole('button', {
         name: testData.loginButton
     }).click();
-    // URL Validation
+    // ==========================================
+    // Validate Login
+    // ==========================================
     await expect(page).toHaveURL(/inventory/);
-    // getByText()
     await expect(
         page.getByText(testData.productPageTitle)
     ).toBeVisible();
-    // Basic CSS Selector
     await expect(
         page.locator('.inventory_list')
     ).toBeVisible();
-    // Product Validation
     await expect(
         page.getByText(testData.product1)
     ).toBeVisible();
+    // ==========================================
     // Logout Flow
-    await page.locator('#react-burger-menu-btn').click();
-    await page.getByText(
-        testData.logoutButton
-    ).click();
+    // ==========================================
+    const menuButton = page.locator('#react-burger-menu-btn');
+    const logoutButton = page.locator('#logout_sidebar_link');
+    await menuButton.click();
+    await expect(logoutButton).toBeVisible();
+    await logoutButton.click();
+    // ==========================================
     // Validate Logout
+    // ==========================================
     await expect(page)
         .toHaveURL(config.sauceDemoUrl);
     await expect(
