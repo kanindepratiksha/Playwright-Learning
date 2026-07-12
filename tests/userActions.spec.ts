@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test';
 import { testData } from '../utils/appConstants';
-import user from '../testdata/users.json';
+import users from '../testdata/users.json';
 import { config } from '../config/env';
 test('UI Actions Demo', async ({ page }) => {
     await page.goto(config.sauceDemoUrl);
+    const user = users[0];
     // Login
     await page.getByPlaceholder('Username')
         .fill(user.username);

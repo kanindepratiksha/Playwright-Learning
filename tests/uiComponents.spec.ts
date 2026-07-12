@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { testData } from '../utils/appConstants';
-import user from '../testdata/users.json';
+import users from '../testdata/users.json';
 import { config } from '../config/env';
 test('Verify product sorting using dropdown options', async ({ page }) => {
     // ==========================================
@@ -10,6 +10,7 @@ test('Verify product sorting using dropdown options', async ({ page }) => {
     // ==========================================
     // Login with valid credentials
     // ==========================================
+    const user = users[0];
     await page.getByPlaceholder('Username')
         .fill(user.username);
     await page.getByPlaceholder('Password')

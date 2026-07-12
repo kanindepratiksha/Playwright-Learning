@@ -1,8 +1,8 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { config } from '../config/env';
 import users from '../testdata/users.json';
-export class HooksAdvancedPage  {
-
+const user = users[0];
+export class HooksAdvancedPage {
     readonly page: Page;
     readonly username: Locator;
     readonly password: Locator;
@@ -14,7 +14,9 @@ export class HooksAdvancedPage  {
         this.page = page;
         this.username = page.getByPlaceholder('Username');
         this.password = page.getByPlaceholder('Password');
-        this.loginButton = page.getByRole('button', { name: 'Login' });
+        this.loginButton = page.getByRole('button', {
+            name: 'Login'
+        });
         this.menuButton = page.locator('#react-burger-menu-btn');
         this.logoutButton = page.getByText('Logout');
         this.productTitle = page.locator('.title');
@@ -29,7 +31,6 @@ export class HooksAdvancedPage  {
     // Login
     // ==========================================
     async login() {
-
         await this.username.fill(user.username);
         await this.password.fill(user.password);
         await this.loginButton.click();

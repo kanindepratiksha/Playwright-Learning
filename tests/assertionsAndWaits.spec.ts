@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { testData } from '../utils/appConstants';
-import user from '../testdata/users.json';
+import users from '../testdata/users.json';
 import { config } from '../config/env';
 test('Verify Assertions and Waits in SauceDemo', async ({ page }) => {
     // ==========================================
@@ -9,6 +9,7 @@ test('Verify Assertions and Waits in SauceDemo', async ({ page }) => {
     await page.goto(config.sauceDemoUrl);
     // Wait until all network requests are completed
     await page.waitForLoadState('networkidle');
+    const user = users[0];
     // ==========================================
     // Login with valid credentials
     // ==========================================
