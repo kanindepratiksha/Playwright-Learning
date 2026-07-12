@@ -1,6 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { config } from '../config/env';
-import user from '../testdata/users.json';
+import users from '../testdata/users.json';
 
 export class HooksPage {
 
@@ -29,6 +29,7 @@ export class HooksPage {
     }
 
     async login() {
+        const user = users[0];
 
         await this.username.fill(user.username);
         await this.password.fill(user.password);

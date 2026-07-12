@@ -1,5 +1,20 @@
-{
-  "username": "standard_user",
-  "password": "secret_sauce",
-  "dropdownValue": "1"
-}
+[
+    {
+        "username": "standard_user",
+        "password": "secret_sauce",
+        "dropdownValue": "1",
+        "expected": "success"
+    },
+    {
+        "username": "problem_user",
+        "password": "secret_sauce",
+        "dropdownValue": "2",
+        "expected": "success"
+    },
+    {
+        "username": "locked_out_user",
+        "password": "secret_sauce",
+        "dropdownValue": "3",
+        "expected": "locked"
+    }
+]
