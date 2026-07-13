@@ -1,9 +1,9 @@
 import { test } from '@playwright/test';
-import { Hooks2Page } from '../pages/hooks-advancedPage';
+import { HooksAdvancedPage } from '../pages/hooks-advancedPage';
 // ==========================================
 // Page Object
 // ==========================================
-let hooks2Page: Hooks2Page;
+let hooksAdvancedPage: HooksAdvancedPage;
 // ==========================================
 // test.use()
 // Apply configuration for all tests in this file
@@ -17,7 +17,7 @@ test.use({
 // ==========================================
 // Test Suite
 // ==========================================
-test.describe('Hooks 2 - Advanced Playwright Features', () => {
+test.describe('Hooks Advanced - Playwright Features', () => {
     // ==========================================
     // test.describe.configure()
     // Execute tests sequentially
@@ -29,29 +29,28 @@ test.describe('Hooks 2 - Advanced Playwright Features', () => {
     // Before Each
     // ==========================================
     test.beforeEach(async ({ page }) => {
-        hooks2Page = new Hooks2Page(page);
-        await hooks2Page.navigate();
-        await hooks2Page.login();
+        hooksAdvancedPage = new HooksAdvancedPage(page);
+        await hooksAdvancedPage.navigate();
+        await hooksAdvancedPage.login();
     });
     // ==========================================
     // test.step()
     // ==========================================
     test('@smoke Verify Login', async () => {
         await test.step('Verify User is Logged In', async () => {
-            await hooks2Page.verifyLogin();
+            await hooksAdvancedPage.verifyLogin();
         });
     });
     // ==========================================
     // test.slow()
     // ==========================================
     test('@regression Verify Logout', async () => {
-        // Increase timeout for this test
         test.slow();
         await test.step('Logout From Application', async () => {
-            await hooks2Page.logout();
+            await hooksAdvancedPage.logout();
         });
         await test.step('Verify Logout Successful', async () => {
-            await hooks2Page.verifyLogout();
+            await hooksAdvancedPage.verifyLogout();
         });
     });
     // ==========================================

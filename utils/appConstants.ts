@@ -40,6 +40,11 @@ export const testData = {
     // ==========================================
     // Browser Windows
     // ==========================================
-    newTabHeading: 'This is a sample page'
+    newTabHeading: 'This is a sample page',
+    // ==========================================
+    // API
+    // ==========================================
+
+    usersEndpoint: 'users?page=2'
 
 };
