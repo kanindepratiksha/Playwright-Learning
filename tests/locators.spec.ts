@@ -1,22 +1,26 @@
 import { test, expect } from '@playwright/test';
+import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 import user from '../testdata/users.json';
-import { config } from '../config/env';
-test('Locators Part 1 Demo', async ({ page }) => {
+import { LoginPage } from '../pages/LoginPage';
+import { HooksAdvancedPage } from '../pages/hooks-advancedPage';
+test('Locators Demo', async ({ page }) => {
     // ==========================================
-    // Navigate to Application
+    // Page Objects
+    // ==========================================
+    const loginPage = new LoginPage(page);
+    const hooksAdvancedPage = new HooksAdvancedPage(page);
+    // ==========================================
+    // Navigate
     // ==========================================
     await page.goto(config.sauceDemoUrl);
     // ==========================================
     // Login
     // ==========================================
-    await page.getByPlaceholder('Username')
-        .fill(user.username);
-    await page.getByPlaceholder('Password')
-        .fill(user.password);
-    await page.getByRole('button', {
-        name: testData.loginButton
-    }).click();
+    await loginPage.login(
+        user.username,
+        user.password
+    );
     // ==========================================
     // Validate Login
     // ==========================================
@@ -31,18 +35,13 @@ test('Locators Part 1 Demo', async ({ page }) => {
         page.getByText(testData.product1)
     ).toBeVisible();
     // ==========================================
-    // Logout Flow
+    // Logout
     // ==========================================
-    const menuButton = page.locator('#react-burger-menu-btn');
-    const logoutButton = page.locator('#logout_sidebar_link');
-    await menuButton.click();
-    await expect(logoutButton).toBeVisible();
-    await logoutButton.click();
+    await hooksAdvancedPage.logout();
     // ==========================================
     // Validate Logout
     // ==========================================
-    await expect(page)
-        .toHaveURL(config.sauceDemoUrl);
+    await hooksAdvancedPage.verifyLogout();
     await expect(
         page.getByPlaceholder('Username')
     ).toBeVisible();
