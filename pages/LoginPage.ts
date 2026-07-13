@@ -25,9 +25,9 @@ export class LoginPage {
     // ==========================================
     // Login to Application
     // ==========================================
-    async login(user: string, pass: string) {
-        await this.username.fill(user);
-        await this.password.fill(pass);
-        await this.loginButton.click();
-    }
+    async login(user: any) {
+    await this.username.fill(user.username);
+    await this.password.fill(user.password);
+    await this.loginButton.click();
+}
 }

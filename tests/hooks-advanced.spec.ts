@@ -1,5 +1,6 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { HooksAdvancedPage } from '../pages/hooks-advancedPage';
+import users from '../testdata/users.json';
 // ==========================================
 // Page Object
 // ==========================================
@@ -30,7 +31,8 @@ test.describe('Hooks Advanced - Playwright Features', () => {
     test.beforeEach(async ({ page }) => {
         hooksAdvancedPage = new HooksAdvancedPage(page);
         await hooksAdvancedPage.navigate();
-        await hooksAdvancedPage.login();
+        // Login using first user from users.json
+        await hooksAdvancedPage.login(users[0]);
     });
     // ==========================================
     // Verify Login

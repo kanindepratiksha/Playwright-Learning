@@ -9,10 +9,7 @@ export const test = base.extend<AuthFixture>({
     authenticatedPage: async ({ page }, use) => {
         await page.goto(config.sauceDemoUrl);
         const loginPage = new LoginPage(page);
-        await loginPage.login(
-            users.username,
-            users.password
-        );
+        await loginPage.login(users[0]);
         await use(page);
     }
 });

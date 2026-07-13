@@ -1,6 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { config } from '../config/env';
-import user from '../testdata/users.json';
 export class HooksAdvancedPage  {
     readonly page: Page;
     readonly username: Locator;
@@ -29,11 +28,11 @@ export class HooksAdvancedPage  {
     // ==========================================
     // Login
     // ==========================================
-    async login() {
-        await this.username.fill(user.username);
-        await this.password.fill(user.password);
-        await this.loginButton.click();
-    }
+    async login(user: any) {
+    await this.username.fill(user.username);
+    await this.password.fill(user.password);
+    await this.loginButton.click();
+}
     // ==========================================
     // Verify Login
     // ==========================================
