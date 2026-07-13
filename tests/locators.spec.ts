@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
-import user from '../testdata/users.json';
+import users from '../testdata/users.json';
 import { LoginPage } from '../pages/LoginPage';
 import { HooksAdvancedPage } from '../pages/hooks-advancedPage';
 test('Locators Demo', async ({ page }) => {
@@ -18,8 +18,8 @@ test('Locators Demo', async ({ page }) => {
     // Login
     // ==========================================
     await loginPage.login(
-        user.username,
-        user.password
+        users.username,
+        users.password
     );
     // ==========================================
     // Validate Login

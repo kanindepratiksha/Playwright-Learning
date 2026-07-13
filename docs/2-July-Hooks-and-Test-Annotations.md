@@ -145,49 +145,49 @@ npx playwright test
 Run Hooks 2 test
 
 ```bash
-npx playwright test tests/hooks2.spec.ts
+npx playwright test tests/hooks-Advanced.spec.ts
 ```
 
 Run in headed mode
 
 ```bash
-npx playwright test tests/hooks2.spec.ts --headed
+npx playwright test tests/hooks-Advanced.spec.ts --headed
 ```
 
 Run in Chromium
 
 ```bash
-npx playwright test tests/hooks2.spec.ts --project=chromium
+npx playwright test tests/hooks-Advanced.spec.ts --project=chromium
 ```
 
 Run in Firefox
 
 ```bash
-npx playwright test tests/hooks2.spec.ts --project=firefox
+npx playwright test tests/hooks-Advanced.spec.ts --project=firefox
 ```
 
 Run in WebKit
 
 ```bash
-npx playwright test tests/hooks2.spec.ts --project=webkit
+npx playwright test tests/hooks-Advanced.spec.ts --project=webkit
 ```
 
 Run Smoke tests
 
 ```bash
-npx playwright test tests/hooks2.spec.ts --grep @smoke
+npx playwright test tests/hooks-Advanced.spec.ts --grep @smoke
 ```
 
 Run Regression tests
 
 ```bash
-npx playwright test tests/hooks2.spec.ts --grep @regression
+npx playwright test tests/hooks-Advanced.spec.ts --grep @regression
 ```
 
 Debug Hooks 2 test
 
 ```bash
-npx playwright test tests/hooks2.spec.ts --debug
+npx playwright test tests/hooks-Advanced.spec.ts --debug
 ```
 
 View HTML Report
@@ -202,10 +202,10 @@ npx playwright show-report
 
 ```
 pages/
-└── Hooks2Page.ts
+└── hooks-AdvancedPage.ts
 
 tests/
-└── hooks2.spec.ts
+└── hooks-Advanced.spec.ts
 
 docs/
 └── Week-10-Advanced-Playwright-Test-Features.md
