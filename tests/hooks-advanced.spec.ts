@@ -17,7 +17,7 @@ test.use({
 // ==========================================
 // Test Suite
 // ==========================================
-test.describe('Hooks 2 - Advanced Playwright Features', () => {
+test.describe('Hooks Advanced - Playwright Features', () => {
     // ==========================================
     // Execute tests sequentially
     // ==========================================

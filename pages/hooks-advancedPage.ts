@@ -1,8 +1,7 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { config } from '../config/env';
-import users from '../testdata/users.json';
-const user = users[0];
-export class HooksAdvancedPage {
+import user from '../testdata/users.json';
+export class HooksAdvancedPage  {
     readonly page: Page;
     readonly username: Locator;
     readonly password: Locator;
