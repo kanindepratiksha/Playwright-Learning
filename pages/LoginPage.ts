@@ -1,21 +1,18 @@
 import { Page, Locator } from '@playwright/test';
 import { testData } from '../utils/appConstants';
-export class LoginPage {
-    // ==========================================
-    // Page Object
-    // ==========================================
-    readonly page: Page;
+import { BasePage } from './BasePage';
+export class LoginPage extends BasePage {
     // ==========================================
     // Locators
     // ==========================================
-    readonly username: Locator;
-    readonly password: Locator;
-    readonly loginButton: Locator;
+    private readonly username: Locator;
+    private readonly password: Locator;
+    private readonly loginButton: Locator;
     // ==========================================
     // Constructor
     // ==========================================
     constructor(page: Page) {
-        this.page = page;
+        super(page);
         this.username = page.getByPlaceholder('Username');
         this.password = page.getByPlaceholder('Password');
         this.loginButton = page.getByRole('button', {
@@ -25,9 +22,12 @@ export class LoginPage {
     // ==========================================
     // Login to Application
     // ==========================================
-    async login(user: any) {
-    await this.username.fill(user.username);
-    await this.password.fill(user.password);
-    await this.loginButton.click();
+    async login(user: string, pass: string) {
+    console.log('Username:', user);
+    console.log('Password:', pass);
+
+    await this.fill(this.username, user);
+    await this.fill(this.password, pass);
+    await this.click(this.loginButton);
 }
 }

@@ -1,25 +1,22 @@
 import { Page, Locator, expect } from '@playwright/test';
-export class CartPage {
-    // ==========================================
-    // Page Object
-    // ==========================================
-    readonly page: Page;
+import { BasePage } from './BasePage';
+export class CartPage extends BasePage {
     // ==========================================
     // Locators
     // ==========================================
-    readonly cartLink: Locator;
-    readonly checkoutButton: Locator;
-    readonly firstName: Locator;
-    readonly lastName: Locator;
-    readonly postalCode: Locator;
-    readonly continueButton: Locator;
-    readonly finishButton: Locator;
-    readonly completeHeader: Locator;
+    private readonly cartLink: Locator;
+    private readonly checkoutButton: Locator;
+    private readonly firstName: Locator;
+    private readonly lastName: Locator;
+    private readonly postalCode: Locator;
+    private readonly continueButton: Locator;
+    private readonly finishButton: Locator;
+    private readonly completeHeader: Locator;
     // ==========================================
     // Constructor
     // ==========================================
     constructor(page: Page) {
-        this.page = page;
+        super(page);
         this.cartLink = page.locator('.shopping_cart_link');
         this.checkoutButton = page.locator('#checkout');
         this.firstName = page.locator('#first-name');
@@ -33,21 +30,21 @@ export class CartPage {
     // Open Cart
     // ==========================================
     async openCart() {
-        await this.cartLink.click();
+        await this.click(this.cartLink);
     }
     // ==========================================
     // Verify Product in Cart
     // ==========================================
     async verifyProduct(productName: string) {
-        await expect(
+        await this.verifyVisible(
             this.page.getByText(productName)
-        ).toBeVisible();
+        );
     }
     // ==========================================
     // Click Checkout
     // ==========================================
     async clickCheckout() {
-        await this.checkoutButton.click();
+        await this.click(this.checkoutButton);
     }
     // ==========================================
     // Fill Checkout Details
@@ -57,21 +54,21 @@ export class CartPage {
         lastName: string,
         postalCode: string
     ) {
-        await this.firstName.fill(firstName);
-        await this.lastName.fill(lastName);
-        await this.postalCode.fill(postalCode);
+        await this.fill(this.firstName, firstName);
+        await this.fill(this.lastName, lastName);
+        await this.fill(this.postalCode, postalCode);
     }
     // ==========================================
     // Continue Checkout
     // ==========================================
     async continueCheckout() {
-        await this.continueButton.click();
+        await this.click(this.continueButton);
     }
     // ==========================================
     // Finish Checkout
     // ==========================================
     async finishCheckout() {
-        await this.finishButton.click();
+        await this.click(this.finishButton);
     }
     // ==========================================
     // Verify Order Success

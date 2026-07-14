@@ -13,19 +13,28 @@ test.describe('Playwright Fixture Demo', () => {
     // Feature 2 - Custom Fixture
     // ==========================================
     test('Custom Fixture', async ({ loginPage }) => {
-        await loginPage.login(users[0]);
+        await loginPage.login(
+    users[0].username,
+    users[0].password
+);
     });
     // ==========================================
     // Feature 3 - test.extend()
     // ==========================================
     test('test.extend Demo', async ({ loginPage }) => {
-        await loginPage.login(users[0]);
+        await loginPage.login(
+    users[0].username,
+    users[0].password
+);
     });
     // ==========================================
     // Feature 4 - use()
     // ==========================================
     test('use() Demo', async ({ loginPage }) => {
-        await loginPage.login(users[0]);
+        await loginPage.login(
+    users[0].username,
+    users[0].password
+);
     });
     // ==========================================
     // Feature 5 - Fixture Dependency

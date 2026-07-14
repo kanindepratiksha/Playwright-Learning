@@ -17,7 +17,10 @@ export const test = base.extend<MyFixtures>({
     },
     inventoryPage: async ({ page, loginPage }, use) => {
         console.log('Inventory Fixture Setup');
-        await loginPage.login(users[0]);
+        await loginPage.login(
+    users[0].username,
+    users[0].password
+);
         const inventoryPage = new InventoryPage(page);
         await use(inventoryPage);
         console.log('Inventory Fixture Cleanup');

@@ -11,7 +11,10 @@ test('Checkout using Dynamic Test Data', async ({ page }) => {
     const cartPage = new CartPage(page);
     const user = FakerUtils.getUser();
     await page.goto(config.sauceDemoUrl);
-    await loginPage.login(users[0]);
+    await loginPage.login(
+    users[0].username,
+    users[0].password
+);
     await inventoryPage.addProduct('Sauce Labs Backpack');
     await cartPage.openCart();
     await cartPage.verifyProduct('Sauce Labs Backpack');

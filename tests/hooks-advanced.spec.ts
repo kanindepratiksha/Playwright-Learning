@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { HooksAdvancedPage } from '../pages/hooks-advancedPage';
 import users from '../testdata/users.json';
 // ==========================================
@@ -7,7 +7,6 @@ import users from '../testdata/users.json';
 let hooksAdvancedPage: HooksAdvancedPage;
 // ==========================================
 // test.use()
-// Apply configuration for all tests in this file
 // ==========================================
 test.use({
     viewport: {
@@ -31,8 +30,10 @@ test.describe('Hooks Advanced - Playwright Features', () => {
     test.beforeEach(async ({ page }) => {
         hooksAdvancedPage = new HooksAdvancedPage(page);
         await hooksAdvancedPage.navigate();
-        // Login using first user from users.json
-        await hooksAdvancedPage.login(users[0]);
+        await hooksAdvancedPage.login(
+            users[0].username,
+            users[0].password
+        );
     });
     // ==========================================
     // Verify Login
@@ -55,10 +56,12 @@ test.describe('Hooks Advanced - Playwright Features', () => {
         });
     });
     // ==========================================
-    // Known Bug
+    // Known Bug Example
     // ==========================================
-    test.fail('Known Bug Example', async () => {
-        throw new Error('Known Bug');
+    test('Known Bug Example', async () => {
+        await test.step('Demonstrate Known Bug Placeholder', async () => {
+            console.log('Known bug placeholder test');
+        });
     });
     // ==========================================
     // Future Feature
