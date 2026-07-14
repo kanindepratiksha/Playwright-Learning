@@ -1,7 +1,8 @@
 import { Page, Locator } from '@playwright/test';
 import { config } from '../config/env';
-import user from '../testdata/users.json';
+import users from '../testdata/users.json';
 import { BasePage } from './BasePage';
+const user = users[0];
 export class HooksPage extends BasePage {
     // ==========================================
     // Locators

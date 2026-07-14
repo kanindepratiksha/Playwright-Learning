@@ -4,6 +4,7 @@ import { testData } from '../utils/appConstants';
 import users from '../testdata/users.json';
 import { LoginPage } from '../pages/LoginPage';
 import { HooksAdvancedPage } from '../pages/hooks-advancedPage';
+const user = users[0];
 test('Locators Demo', async ({ page }) => {
     // ==========================================
     // Page Objects
@@ -18,8 +19,8 @@ test('Locators Demo', async ({ page }) => {
     // Login
     // ==========================================
     await loginPage.login(
-        users.username,
-        users.password
+        user.username,
+        user.password
     );
     // ==========================================
     // Validate Login

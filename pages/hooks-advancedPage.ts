@@ -2,6 +2,7 @@ import { Page, Locator, expect } from '@playwright/test';
 import { config } from '../config/env';
 import users from '../testdata/users.json';
 import { BasePage } from './BasePage';
+const user = users[0];
 export class HooksAdvancedPage extends BasePage {
     // ==========================================
     // Locators
@@ -38,8 +39,8 @@ export class HooksAdvancedPage extends BasePage {
     // Login
     // ==========================================
     async login() {
-        await this.fill(this.username, users.username);
-        await this.fill(this.password, users.password);
+        await this.fill(this.username, user.username);
+        await this.fill(this.password, user.password);
         await this.click(this.loginButton);
     }
     // ==========================================

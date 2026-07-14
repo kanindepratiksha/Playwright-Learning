@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { testData } from '../utils/appConstants';
-import user from '../testdata/users.json';
+import users from '../testdata/users.json';
 import { config } from '../config/env';
+// Select the first user
+const user = users[0];
 test('Verify product sorting using dropdown options', async ({ page }) => {
     // ==========================================
     // Navigate to SauceDemo application
