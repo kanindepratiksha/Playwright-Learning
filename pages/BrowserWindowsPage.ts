@@ -21,22 +21,20 @@ export class BrowserWindowsPage extends BasePage {
     // ==========================================
     async navigate() {
         await super.navigate(config.browserWindowsUrl);
-        // Wait until page is ready
-        await this.newTabButton.waitFor({
-            state: 'visible'
-        });
+        await expect(this.newTabButton).toBeVisible();
     }
     // ==========================================
     // Open New Page
     // ==========================================
-    private async openNewPage(button: Locator) {
-        await button.waitFor({
-            state: 'visible'
-        });
-        const [newPage] = await Promise.all([
-            this.page.context().waitForEvent('page'),
-            button.click()
-        ]);
+    private async openNewPage(button: Locator): Promise<Page> {
+        await expect(button).toBeVisible();
+        const popupPromise = this.page.waitForEvent('popup').catch(() => null);
+        const pagePromise = this.page.context().waitForEvent('page').catch(() => null);
+        await button.click();
+        const newPage = (await popupPromise) || (await pagePromise);
+        if (!newPage) {
+            throw new Error('No new page or popup was opened.');
+        }
         await newPage.waitForLoadState('domcontentloaded');
         return newPage;
     }
@@ -52,7 +50,9 @@ export class BrowserWindowsPage extends BasePage {
     // Verify New Tab
     // ==========================================
     async verifyNewTab() {
-        const newPage = await this.openNewPage(this.newTabButton);
+        const newPage = await this.openNewPage(
+            this.newTabButton
+        );
         await this.verifyHeading(newPage);
         await newPage.close();
     }
@@ -60,7 +60,9 @@ export class BrowserWindowsPage extends BasePage {
     // Verify New Window
     // ==========================================
     async verifyNewWindow() {
-        const newPage = await this.openNewPage(this.newWindowButton);
+        const newPage = await this.openNewPage(
+            this.newWindowButton
+        );
         await this.verifyHeading(newPage);
         await newPage.close();
     }
