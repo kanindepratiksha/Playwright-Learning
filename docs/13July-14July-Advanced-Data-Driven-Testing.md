@@ -156,7 +156,7 @@ npx playwright show-report
 
 ```
 testdata/
-├── Users.xlsx
+├── users.xlsx
 ├── users.csv
 ├── qaUsers.json
 ├── uatUsers.json

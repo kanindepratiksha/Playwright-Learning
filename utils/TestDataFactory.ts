@@ -14,7 +14,7 @@ export class TestDataFactory {
 }
     static getExcelUsers() {
         return ExcelReader.readExcel(
-            path.join(process.cwd(), 'testdata', 'Users.xlsx'),
+            path.join(process.cwd(), 'testdata', 'users.xlsx'),
             'users'
         );
     }
