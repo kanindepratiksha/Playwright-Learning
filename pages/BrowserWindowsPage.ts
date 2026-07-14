@@ -2,6 +2,7 @@ import { Page, Locator, expect } from '@playwright/test';
 import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 import { BasePage } from './BasePage';
+import { BrowserContentPage } from './BrowserContentPage';
 export class BrowserWindowsPage extends BasePage {
     // ==========================================
     // Locators
@@ -41,27 +42,21 @@ export class BrowserWindowsPage extends BasePage {
         return newPage;
     }
     // ==========================================
-    // Verify Heading
-    // ==========================================
-    private async verifyHeading(newPage: Page) {
-        await expect(
-            newPage.locator('#sampleHeading')
-        ).toHaveText(testData.newTabHeading);
-    }
-    // ==========================================
     // Verify New Tab
     // ==========================================
     async verifyNewTab() {
-        const newPage = await this.openNewPage(this.newTabButton);
-        await this.verifyHeading(newPage);
-        await newPage.close();
-    }
+    const newPage = await this.openNewPage(this.newTabButton);
+    const browserContentPage = new BrowserContentPage(newPage);
+    await browserContentPage.verifyHeading();
+    await newPage.close();
+}
     // ==========================================
     // Verify New Window
     // ==========================================
     async verifyNewWindow() {
-        const newPage = await this.openNewPage(this.newWindowButton);
-        await this.verifyHeading(newPage);
-        await newPage.close();
-    }
+    const newPage = await this.openNewPage(this.newWindowButton);
+    const browserContentPage = new BrowserContentPage(newPage);
+    await browserContentPage.verifyHeading();
+    await newPage.close();
+}
 }
