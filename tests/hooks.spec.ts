@@ -1,17 +1,19 @@
 import { test } from '@playwright/test';
 import { HooksPage } from '../pages/HooksPage';
+import { Logger } from '../utils/Logger';
+import { ScreenshotManager } from '../utils/ScreenshotManager';
 let hooksPage: HooksPage;
 // ==========================================
 // Before All
 // ==========================================
 test.beforeAll(async () => {
-    console.log('BEFORE ALL');
+    Logger.info('========== Test Execution Started ==========');
 });
 // ==========================================
 // Before Each
 // ==========================================
-test.beforeEach(async ({ page }) => {
-    console.log('BEFORE EACH');
+test.beforeEach(async ({ page }, testInfo) => {
+    Logger.info(`Starting Test : ${testInfo.title}`);
     hooksPage = new HooksPage(page);
     await hooksPage.navigate();
     await hooksPage.login();
@@ -19,14 +21,22 @@ test.beforeEach(async ({ page }) => {
 // ==========================================
 // After Each
 // ==========================================
-test.afterEach(async () => {
-    console.log('AFTER EACH');
+test.afterEach(async ({ page }, testInfo) => {
+    if (testInfo.status !== testInfo.expectedStatus) {
+        Logger.error(`Test Failed : ${testInfo.title}`);
+        await ScreenshotManager.captureFailure(
+            page,
+            testInfo.title.replace(/\s+/g, '_')
+        );
+    } else {
+        Logger.info(`Test Passed : ${testInfo.title}`);
+    }
 });
 // ==========================================
 // After All
 // ==========================================
 test.afterAll(async () => {
-    console.log('AFTER ALL');
+    Logger.info('========== Test Execution Completed ==========');
 });
 // ==========================================
 // Test Suite
@@ -45,13 +55,16 @@ test.describe('Hooks Demo', () => {
         await hooksPage.logout();
         await hooksPage.verifyLogout();
     });
+    // ==========================================
+    // Only Example
+    // ==========================================
     test('Only Example', async () => {
-        console.log('This is test.only example');
+        Logger.info('Executing Only Example Test');
     });
     // ==========================================
     // Skip Example
     // ==========================================
     test.skip('Checkout Test', async () => {
-        console.log('Checkout test skipped');
+        Logger.info('Checkout Test Skipped');
     });
 });

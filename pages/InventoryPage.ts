@@ -1,5 +1,10 @@
 import { Page, Locator } from '@playwright/test';
 import { BasePage } from './BasePage';
+import { Logger } from '../utils/Logger';
+import { WaitUtil } from '../utils/WaitUtil';
+import { RetryUtil } from '../utils/RetryUtil';
+import { ScreenshotManager } from '../utils/ScreenshotManager';
+import { AssertUtil } from '../utils/AssertUtil';
 export class InventoryPage extends BasePage {
     // ==========================================
     // Constructor
@@ -22,17 +27,29 @@ export class InventoryPage extends BasePage {
     // Add Product to Cart
     // ==========================================
     async addProduct(productName: string) {
-        await this.click(
-            this.getProduct(productName)
-                .getByRole('button')
-        );
-    }
+    Logger.info(`Adding ${productName}`);
+    const button = this.getProduct(productName)
+        .getByRole('button');
+    await WaitUtil.waitForVisible(button);
+    await RetryUtil.execute(async () => {
+        await this.click(button);
+    });
+    await ScreenshotManager.capture(
+        this.page,
+        `${productName}-Added`
+    );
+    Logger.info(`${productName} Added Successfully`);
+}
     // ==========================================
     // Verify Product is Visible
     // ==========================================
     async verifyProductVisible(productName: string) {
-        await this.verifyVisible(
-            this.getProductText(productName)
-        );
+        Logger.info(`Verifying product: ${productName}`);
+        const product = this.getProductText(productName);
+        // Wait until product is visible
+        await WaitUtil.waitForVisible(product);
+        // Verify product
+        await AssertUtil.visible(product);
+        Logger.info(`${productName} is visible`);
     }
 }
