@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 import users from '../testdata/users.json';
@@ -20,33 +20,25 @@ test('Locators Advanced Demo', async ({ page }) => {
     // Login
     // ==========================================
     await loginPage.login(
-    users[0].username,
-    users[0].password
-);
+        users[0].username,
+        users[0].password
+    );
     // ==========================================
     // Verify Products Page
     // ==========================================
-    await expect(
-        page.locator("//span[text()='Products']")
-    ).toBeVisible();
+    await inventoryPage.verifyProductsPage();
     // ==========================================
-    // locator() + first()
+    // Verify First Product
     // ==========================================
-    await expect(
-        page.locator('.inventory_item').first()
-    ).toBeVisible();
+    await inventoryPage.verifyFirstProductVisible();
     // ==========================================
-    // locator() + last()
+    // Verify Last Product
     // ==========================================
-    await expect(
-        page.locator('.inventory_item').last()
-    ).toBeVisible();
+    await inventoryPage.verifyLastProductVisible();
     // ==========================================
-    // locator() + nth()
+    // Verify Second Product
     // ==========================================
-    await expect(
-        page.locator('.inventory_item').nth(1)
-    ).toBeVisible();
+    await inventoryPage.verifyNthProductVisible(1);
     // ==========================================
     // Add Product
     // ==========================================
@@ -56,13 +48,14 @@ test('Locators Advanced Demo', async ({ page }) => {
     // ==========================================
     // Open Cart
     // ==========================================
-    await cartPage.openCart();
+    await inventoryPage.openCart();
     // ==========================================
-    // Verify Cart
+    // Verify Cart Page
     // ==========================================
-    await expect(
-        page.getByText(testData.cartPageTitle)
-    ).toBeVisible();
+    await cartPage.verifyCartPage();
+    // ==========================================
+    // Verify Product in Cart
+    // ==========================================
     await cartPage.verifyProduct(
         testData.product1
     );

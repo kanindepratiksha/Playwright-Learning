@@ -1,5 +1,6 @@
 import { Page, Locator } from '@playwright/test';
 import { config } from '../config/env';
+import { testData } from '../utils/appConstants';
 import { BasePage } from './BasePage';
 export class HooksAdvancedPage extends BasePage {
     // ==========================================
@@ -18,7 +19,9 @@ export class HooksAdvancedPage extends BasePage {
         super(page);
         this.username = page.getByPlaceholder('Username');
         this.password = page.getByPlaceholder('Password');
-        this.loginButton = page.getByRole('button', { name: 'Login' });
+        this.loginButton = page.getByRole('button', {
+            name: testData.loginButton
+        });
         this.menuButton = page.locator('#react-burger-menu-btn');
         this.logoutButton = page.locator('#logout_sidebar_link');
         this.productTitle = page.locator('.title');
@@ -43,7 +46,7 @@ export class HooksAdvancedPage extends BasePage {
     async verifyLogin() {
         await this.verifyText(
             this.productTitle,
-            'Products'
+            testData.productPageTitle
         );
     }
     // ==========================================
@@ -51,7 +54,10 @@ export class HooksAdvancedPage extends BasePage {
     // ==========================================
     async logout() {
         await this.click(this.menuButton);
-        await this.verifyVisible(this.logoutButton);
+        await this.logoutButton.waitFor({
+            state: 'visible',
+            timeout: 10000
+        });
         await this.click(this.logoutButton);
     }
     // ==========================================
@@ -59,5 +65,6 @@ export class HooksAdvancedPage extends BasePage {
     // ==========================================
     async verifyLogout() {
         await this.verifyUrl(config.sauceDemoUrl);
+        await this.verifyVisible(this.username);
     }
 }

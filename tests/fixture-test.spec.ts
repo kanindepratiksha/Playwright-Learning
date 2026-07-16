@@ -1,5 +1,6 @@
 import { test, expect } from '../fixtures/fixture';
 import { config } from '../config/env';
+import { testData } from '../utils/appConstants';
 import users from '../testdata/users.json';
 test.describe('Playwright Fixture Demo', () => {
     // ==========================================
@@ -7,6 +8,7 @@ test.describe('Playwright Fixture Demo', () => {
     // ==========================================
     test('Built-in Page Fixture', async ({ page }) => {
         await page.goto(config.sauceDemoUrl);
+        // Page title assertion is acceptable since it is not a locator.
         await expect(page).toHaveTitle(/Swag Labs/);
     });
     // ==========================================
@@ -14,34 +16,34 @@ test.describe('Playwright Fixture Demo', () => {
     // ==========================================
     test('Custom Fixture', async ({ loginPage }) => {
         await loginPage.login(
-    users[0].username,
-    users[0].password
-);
+            users[0].username,
+            users[0].password
+        );
     });
     // ==========================================
     // Feature 3 - test.extend()
     // ==========================================
     test('test.extend Demo', async ({ loginPage }) => {
         await loginPage.login(
-    users[0].username,
-    users[0].password
-);
+            users[0].username,
+            users[0].password
+        );
     });
     // ==========================================
     // Feature 4 - use()
     // ==========================================
     test('use() Demo', async ({ loginPage }) => {
         await loginPage.login(
-    users[0].username,
-    users[0].password
-);
+            users[0].username,
+            users[0].password
+        );
     });
     // ==========================================
     // Feature 5 - Fixture Dependency
     // ==========================================
     test('Fixture Dependency', async ({ inventoryPage }) => {
         await inventoryPage.verifyProductVisible(
-            'Sauce Labs Backpack'
+            testData.product1
         );
     });
 });

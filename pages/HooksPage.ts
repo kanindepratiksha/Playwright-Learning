@@ -1,6 +1,7 @@
 import { Page, Locator } from '@playwright/test';
 import { config } from '../config/env';
 import users from '../testdata/users.json';
+import { testData } from '../utils/appConstants';
 import { BasePage } from './BasePage';
 export class HooksPage extends BasePage {
     // ==========================================
@@ -19,7 +20,9 @@ export class HooksPage extends BasePage {
         super(page);
         this.username = page.getByPlaceholder('Username');
         this.password = page.getByPlaceholder('Password');
-        this.loginButton = page.getByRole('button', { name: 'Login' });
+        this.loginButton = page.getByRole('button', {
+            name: testData.loginButton
+        });
         this.menuButton = page.locator('#react-burger-menu-btn');
         this.logoutButton = page.locator('#logout_sidebar_link');
         this.productTitle = page.locator('.title');
@@ -44,7 +47,7 @@ export class HooksPage extends BasePage {
     async verifyLogin() {
         await this.verifyText(
             this.productTitle,
-            'Products'
+            testData.productPageTitle
         );
     }
     // ==========================================
@@ -60,5 +63,6 @@ export class HooksPage extends BasePage {
     // ==========================================
     async verifyLogout() {
         await this.verifyUrl(config.sauceDemoUrl);
+        await this.verifyVisible(this.username);
     }
 }

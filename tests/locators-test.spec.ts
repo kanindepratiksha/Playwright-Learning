@@ -1,14 +1,16 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 import users from '../testdata/users.json';
 import { LoginPage } from '../pages/LoginPage';
+import { InventoryPage } from '../pages/InventoryPage';
 import { HooksAdvancedPage } from '../pages/hooks-advancedPage';
 test('Locators Demo', async ({ page }) => {
     // ==========================================
     // Page Objects
     // ==========================================
     const loginPage = new LoginPage(page);
+    const inventoryPage = new InventoryPage(page);
     const hooksAdvancedPage = new HooksAdvancedPage(page);
     // ==========================================
     // Navigate
@@ -17,23 +19,19 @@ test('Locators Demo', async ({ page }) => {
     // ==========================================
     // Login
     // ==========================================
-  await loginPage.login(
-    users[0].username,
-    users[0].password
-);
+    await loginPage.login(
+        users[0].username,
+        users[0].password
+    );
     // ==========================================
     // Validate Login
     // ==========================================
-    await expect(page).toHaveURL(/inventory/);
-    await expect(
-        page.getByText(testData.productPageTitle)
-    ).toBeVisible();
-    await expect(
-        page.locator('.inventory_list')
-    ).toBeVisible();
-    await expect(
-        page.getByText(testData.product1)
-    ).toBeVisible();
+    await loginPage.verifyLoginSuccess();
+    await inventoryPage.verifyProductsPage();
+    await inventoryPage.verifyInventoryList();
+    await inventoryPage.verifyProductVisible(
+        testData.product1
+    );
     // ==========================================
     // Logout
     // ==========================================
@@ -42,7 +40,5 @@ test('Locators Demo', async ({ page }) => {
     // Validate Logout
     // ==========================================
     await hooksAdvancedPage.verifyLogout();
-    await expect(
-        page.getByPlaceholder('Username')
-    ).toBeVisible();
+    await loginPage.verifyLoginPage();
 });

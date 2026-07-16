@@ -59,8 +59,8 @@ test.describe('Hooks Advanced - Playwright Features', () => {
     // Known Bug Example
     // ==========================================
     test('Known Bug Example', async () => {
-        await test.step('Demonstrate Known Bug Placeholder', async () => {
-            console.log('Known bug placeholder test');
+        await test.step('Known Bug Placeholder', async () => {
+            // Placeholder for future known bug validation.
         });
     });
     // ==========================================
@@ -78,7 +78,7 @@ test.describe('Hooks Advanced - Playwright Features', () => {
         console.log(`Status : ${testInfo.status}`);
         console.log(`Duration : ${testInfo.duration} ms`);
         await page.screenshot({
-            path: `screenshots/${testInfo.title}.png`,
+            path: testInfo.outputPath('screenshot.png'),
             fullPage: true
         });
     });

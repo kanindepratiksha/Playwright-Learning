@@ -1,6 +1,5 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 import { config } from '../config/env';
-import { testData } from '../utils/appConstants';
 import { BasePage } from './BasePage';
 import { BrowserContentPage } from './BrowserContentPage';
 export class BrowserWindowsPage extends BasePage {
@@ -22,7 +21,6 @@ export class BrowserWindowsPage extends BasePage {
     // ==========================================
     async navigate() {
         await super.navigate(config.browserWindowsUrl);
-        // Wait until page is ready
         await this.newTabButton.waitFor({
             state: 'visible'
         });
@@ -30,7 +28,7 @@ export class BrowserWindowsPage extends BasePage {
     // ==========================================
     // Open New Page
     // ==========================================
-    private async openNewPage(button: Locator) {
+    private async openNewPage(button: Locator): Promise<Page> {
         await button.waitFor({
             state: 'visible'
         });
@@ -45,18 +43,24 @@ export class BrowserWindowsPage extends BasePage {
     // Verify New Tab
     // ==========================================
     async verifyNewTab() {
-    const newPage = await this.openNewPage(this.newTabButton);
-    const browserContentPage = new BrowserContentPage(newPage);
-    await browserContentPage.verifyHeading();
-    await newPage.close();
-}
+        const newPage = await this.openNewPage(
+            this.newTabButton
+        );
+        const browserContentPage =
+            new BrowserContentPage(newPage);
+        await browserContentPage.verifyHeading();
+        await newPage.close();
+    }
     // ==========================================
     // Verify New Window
     // ==========================================
     async verifyNewWindow() {
-    const newPage = await this.openNewPage(this.newWindowButton);
-    const browserContentPage = new BrowserContentPage(newPage);
-    await browserContentPage.verifyHeading();
-    await newPage.close();
-}
+        const newPage = await this.openNewPage(
+            this.newWindowButton
+        );
+        const browserContentPage =
+            new BrowserContentPage(newPage);
+        await browserContentPage.verifyHeading();
+        await newPage.close();
+    }
 }
