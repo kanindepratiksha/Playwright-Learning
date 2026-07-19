@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect  } from '@playwright/test';
 import { testData } from '../utils/appConstants';
 import { BasePage } from './BasePage';
 export class LoginPage extends BasePage {
@@ -8,6 +8,7 @@ export class LoginPage extends BasePage {
     private readonly username: Locator;
     private readonly password: Locator;
     private readonly loginButton: Locator;
+    private readonly errorMessage: Locator;
     // ==========================================
     // Constructor
     // ==========================================
@@ -18,6 +19,7 @@ export class LoginPage extends BasePage {
         this.loginButton = page.getByRole('button', {
             name: testData.loginButton
         });
+        this.errorMessage = page.locator('[data-test="error"]');
     }
     // ==========================================
     // Login to Application
@@ -27,4 +29,11 @@ export class LoginPage extends BasePage {
         await this.fill(this.password, pass);
         await this.click(this.loginButton);
     }
+    // ==========================================
+// Verify Error Message
+// ==========================================
+async verifyErrorMessage(message: string) {
+    await expect(this.errorMessage)
+        .toContainText(message);
+}
 }

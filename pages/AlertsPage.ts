@@ -27,6 +27,17 @@ export class AlertsPage extends BasePage {
     // ==========================================
     async navigate() {
         await super.navigate(config.alertsUrl);
+        // Hide DemoQA advertisement and footer
+        await this.page.evaluate(() => {
+            const fixedBan = document.getElementById('fixedban');
+            if (fixedBan) {
+                (fixedBan as HTMLElement).style.display = 'none';
+            }
+            const footer = document.querySelector('footer');
+            if (footer) {
+                (footer as HTMLElement).style.display = 'none';
+            }
+        });
         await this.alertButton.waitFor({
             state: 'visible'
         });

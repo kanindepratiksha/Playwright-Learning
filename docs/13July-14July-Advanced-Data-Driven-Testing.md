@@ -167,7 +167,9 @@ utils/
 ├── CsvReader.ts
 ├── EnvironmentReader.ts
 ├── TestDataFactory.ts
-└── DataValidator.ts
+├── DataValidator.ts
+├── FakerUtils.ts
+└── types.ts
 
 tests/
 ├── excelDataDriven.spec.ts

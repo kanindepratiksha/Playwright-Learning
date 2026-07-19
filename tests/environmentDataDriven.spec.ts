@@ -1,13 +1,20 @@
 import { test, expect } from '@playwright/test';
-import { EnvironmentReader } from '../utils/EnvironmentReader';
-import { DataValidator } from '../utils/DataValidator';
 import { LoginPage } from '../pages/LoginPage';
 import { config } from '../config/env';
-const users = EnvironmentReader.getUsers();
-// Validate environment data
-DataValidator.validateUsers(users);
-users.forEach((user: any) => {
-    test(`Login using ${process.env.TEST_ENV || 'qa'} - ${user.username}`, async ({ page }) => {
+import { TestDataFactory } from '../utils/TestDataFactory';
+import { DataValidator } from '../utils/DataValidator';
+import { ExcelUser, LoginUser } from '../utils/types';
+const users = TestDataFactory.getExcelUsers();
+const normalizedUsers: LoginUser[] = users.map(
+    (user: ExcelUser) => ({
+        username: user.Username,
+        password: user.Password,
+        expected: user.Expected
+    })
+);
+DataValidator.validateUsers(normalizedUsers);
+normalizedUsers.forEach((user: LoginUser) => {
+    test(`Login with ${user.username}`, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await page.goto(config.sauceDemoUrl);
         await loginPage.login(
@@ -17,11 +24,9 @@ users.forEach((user: any) => {
         if (user.expected === 'success') {
             await expect(page).toHaveURL(/inventory/);
         } else {
-            await expect(
-                page.locator('[data-test="error"]')
-            ).toContainText(
-                'Sorry, this user has been locked out.'
-            );
-        }
+    await loginPage.verifyErrorMessage(
+        'Sorry, this user has been locked out.'
+    );
+}
     });
 });
