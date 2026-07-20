@@ -26,9 +26,8 @@ test('Locators Advanced Demo', async ({ page }) => {
     // ==========================================
     // Verify Products Page
     // ==========================================
-    await expect(
-        page.locator("//span[text()='Products']")
-    ).toBeVisible();
+    await inventoryPage.verifyPageTitle();
+    await inventoryPage.verifyInventoryList();
     // ==========================================
     // locator() + first()
     // ==========================================
@@ -60,9 +59,7 @@ test('Locators Advanced Demo', async ({ page }) => {
     // ==========================================
     // Verify Cart
     // ==========================================
-    await expect(
-        page.getByText(testData.cartPageTitle)
-    ).toBeVisible();
+    await cartPage.verifyCartTitle();
     await cartPage.verifyProduct(
         testData.product1
     );

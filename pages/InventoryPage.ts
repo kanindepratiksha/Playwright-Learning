@@ -2,10 +2,17 @@ import { Page, Locator } from '@playwright/test';
 import { BasePage } from './BasePage';
 export class InventoryPage extends BasePage {
     // ==========================================
+    // Locators
+    // ==========================================
+    private readonly pageTitle: Locator;
+    private readonly inventoryList: Locator;
+    // ==========================================
     // Constructor
     // ==========================================
     constructor(page: Page) {
         super(page);
+        this.pageTitle = page.locator('.title');
+        this.inventoryList = page.locator('.inventory_list');
     }
     // ==========================================
     // Dynamic Locators
@@ -28,8 +35,14 @@ export class InventoryPage extends BasePage {
         );
     }
     // ==========================================
-    // Verify Product is Visible
+    // Verify Page Elements
     // ==========================================
+    async verifyPageTitle() {
+        await this.verifyVisible(this.pageTitle);
+    }
+    async verifyInventoryList() {
+        await this.verifyVisible(this.inventoryList);
+    }
     async verifyProductVisible(productName: string) {
         await this.verifyVisible(
             this.getProductText(productName)
