@@ -10,6 +10,7 @@ export class HooksAdvancedPage extends BasePage {
     private readonly password: Locator;
     private readonly loginButton: Locator;
     private readonly menuButton: Locator;
+    private readonly sideMenu: Locator;
     private readonly logoutButton: Locator;
     // ==========================================
     // Constructor
@@ -20,6 +21,7 @@ export class HooksAdvancedPage extends BasePage {
         this.password = page.getByPlaceholder('Password');
         this.loginButton = page.getByRole('button', { name: 'Login' });
         this.menuButton = page.locator('#react-burger-menu-btn');
+        this.sideMenu = page.locator('.bm-menu-wrap');
         this.logoutButton = page.locator('#logout_sidebar_link');
     }
     // ==========================================
@@ -55,9 +57,18 @@ export class HooksAdvancedPage extends BasePage {
     // Logout
     // ==========================================
     async logout() {
-        await this.click(this.menuButton);
-        await expect(this.logoutButton).toBeVisible();
-        await this.click(this.logoutButton);
+        // Open the menu
+        await this.menuButton.click();
+        // Wait for the side menu to appear
+        await expect(this.sideMenu).toBeVisible({
+            timeout: 10000
+        });
+        // Wait for Logout button to become visible
+        await expect(this.logoutButton).toBeVisible({
+            timeout: 10000
+        });
+        // Click Logout
+        await this.logoutButton.click();
     }
     // ==========================================
     // Verify Logout

@@ -1,6 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { config } from '../config/env';
-import { testData } from '../utils/appConstants';
 import { BasePage } from './BasePage';
 import { BrowserContentPage } from './BrowserContentPage';
 export class BrowserWindowsPage extends BasePage {
@@ -22,41 +21,45 @@ export class BrowserWindowsPage extends BasePage {
     // ==========================================
     async navigate() {
         await super.navigate(config.browserWindowsUrl);
-        // Wait until page is ready
-        await this.newTabButton.waitFor({
-            state: 'visible'
-        });
+        await expect(this.newTabButton).toBeVisible();
+        timeout: 15000
     }
     // ==========================================
     // Open New Page
     // ==========================================
-    private async openNewPage(button: Locator) {
-        await button.waitFor({
-            state: 'visible'
-        });
+    private async openNewPage(button: Locator): Promise<Page> {
         const [newPage] = await Promise.all([
             this.page.context().waitForEvent('page'),
             button.click()
         ]);
-        await newPage.waitForLoadState('domcontentloaded');
+        await newPage.waitForLoadState('load');
+        await expect(
+            newPage.locator('#sampleHeading')
+        ).toBeVisible();
         return newPage;
     }
     // ==========================================
     // Verify New Tab
     // ==========================================
     async verifyNewTab() {
-    const newPage = await this.openNewPage(this.newTabButton);
-    const browserContentPage = new BrowserContentPage(newPage);
-    await browserContentPage.verifyHeading();
-    await newPage.close();
-}
+        const newPage = await this.openNewPage(
+            this.newTabButton
+        );
+        const browserContentPage =
+            new BrowserContentPage(newPage);
+        await browserContentPage.verifyHeading();
+        await newPage.close();
+    }
     // ==========================================
     // Verify New Window
     // ==========================================
     async verifyNewWindow() {
-    const newPage = await this.openNewPage(this.newWindowButton);
-    const browserContentPage = new BrowserContentPage(newPage);
-    await browserContentPage.verifyHeading();
-    await newPage.close();
-}
+        const newPage = await this.openNewPage(
+            this.newWindowButton
+        );
+        const browserContentPage =
+            new BrowserContentPage(newPage);
+        await browserContentPage.verifyHeading();
+        await newPage.close();
+    }
 }

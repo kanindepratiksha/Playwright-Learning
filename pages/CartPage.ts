@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './BasePage';
 export class CartPage extends BasePage {
     // ==========================================
@@ -6,6 +6,8 @@ export class CartPage extends BasePage {
     // ==========================================
     private readonly cartLink: Locator;
     private readonly cartTitle: Locator;
+    private readonly cartBadge: Locator;
+    private readonly cartItems: Locator;
     // ==========================================
     // Constructor
     // ==========================================
@@ -13,31 +15,50 @@ export class CartPage extends BasePage {
         super(page);
         this.cartLink = page.locator('.shopping_cart_link');
         this.cartTitle = page.locator('.title');
+        this.cartBadge = page.locator('.shopping_cart_badge');
+        this.cartItems = page.locator('.cart_item');
     }
     // ==========================================
-    // Open Cart
+    // Dynamic Locators
+    // ==========================================
+    private getCartProduct(productName: string): Locator {
+        return this.page
+            .locator('.cart_item')
+            .filter({ hasText: productName });
+    }
+    private getRemoveButton(productName: string): Locator {
+        return this.getCartProduct(productName)
+            .getByRole('button');
+    }
+    // ==========================================
+    // Actions
     // ==========================================
     async openCart() {
         await this.click(this.cartLink);
     }
+    async removeProduct(productName: string) {
+        await this.click(
+            this.getRemoveButton(productName)
+        );
+    }
     // ==========================================
-    // Verify Cart Page
+    // Verifications
     // ==========================================
     async verifyCartTitle() {
         await this.verifyVisible(this.cartTitle);
     }
-    // ==========================================
-    // Cart Product Locators
-    // ==========================================
-    private getCartProduct(productName: string): Locator {
-        return this.page.getByText(productName);
-    }
-    // ==========================================
-    // Verify Product in Cart
-    // ==========================================
     async verifyProduct(productName: string) {
         await this.verifyVisible(
             this.getCartProduct(productName)
         );
+    }
+    async verifyCartBadgeCount(count: string) {
+        await this.verifyText(
+            this.cartBadge,
+            count
+        );
+    }
+    async verifyCartIsEmpty() {
+        await expect(this.cartItems).toHaveCount(0);
     }
 }
