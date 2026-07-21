@@ -27,17 +27,20 @@ export class BrowserWindowsPage extends BasePage {
     // Open New Page
     // ==========================================
     private async openNewPage(button: Locator): Promise<Page> {
-        await expect(button).toBeVisible();
-        const popupPromise = this.page.waitForEvent('popup').catch(() => null);
-        const pagePromise = this.page.context().waitForEvent('page').catch(() => null);
-        await button.click();
-        const newPage = (await popupPromise) || (await pagePromise);
-        if (!newPage) {
-            throw new Error('No new page or popup was opened.');
-        }
-        await newPage.waitForLoadState('domcontentloaded');
-        return newPage;
+    await button.waitFor({ state: 'visible' });
+    const pagePromise = this.page.context().waitForEvent('page').catch(() => null);
+    const popupPromise = this.page.waitForEvent('popup').catch(() => null);
+    await button.click();
+    const newPage = await Promise.race([
+        pagePromise,
+        popupPromise
+    ]);
+    if (!newPage) {
+        throw new Error('No new page or popup was opened.');
     }
+    await newPage.waitForLoadState('domcontentloaded');
+    return newPage;
+}
     // ==========================================
     // Verify Heading
     // ==========================================
