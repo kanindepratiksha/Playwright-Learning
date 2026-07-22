@@ -19,17 +19,20 @@ test.describe('CSV Data Driven Testing', () => {
             await test.step(`Login with ${user.username}`, async () => {
                 const loginPage = new LoginPage(page);
                 await page.goto(config.sauceDemoUrl);
-                await loginPage.login(
-                    user.username,
-                    user.password
-                );
-                if (user.expected === 'success') {
+                if (user.expected.toLowerCase() === 'success') {
+                    await loginPage.login(
+                        user.username,
+                        user.password
+                    );
                     await expect(page).toHaveURL(/inventory/);
                 } else {
-                    await expect(
-                        page.locator('[data-test="error"]')
-                    ).toContainText(
-                        'Sorry, this user has been locked out.'
+                    await loginPage.login(
+                        user.username,
+                        user.password,
+                        false
+                    );
+                    await loginPage.verifyErrorMessage(
+                        'Epic sadface: Sorry, this user has been locked out.'
                     );
                 }
             });

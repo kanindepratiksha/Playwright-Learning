@@ -1,13 +1,13 @@
 import { test as base } from '@playwright/test';
 type TestFixture = {
-    sample: void;
+    sample: string;
 };
 export const test = base.extend<TestFixture>({
     sample: [
         async ({}, use) => {
-            console.log('Test Fixture Setup');
-            await use();
-            console.log('Test Fixture Cleanup');
+            console.log('========== TEST FIXTURE SETUP ==========');
+            await use('Sample Fixture');
+            console.log('========== TEST FIXTURE CLEANUP ==========');
         },
         {
             scope: 'test'

@@ -8,6 +8,6 @@ export class EnvironmentReader {
             'testdata',
             `${environment}-users.json`
         );
-        return DataReader.readJson(filePath);
+        return DataReader.readJson('users.json');
     }
 }

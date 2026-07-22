@@ -1,21 +1,19 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 import users from '../testdata/users.json';
 import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
-import { CartPage } from '../pages/CartPage';
-// ==========================================
-// Default User
-// ==========================================
-const user = users[0];
-test('Locators Advanced Demo', async ({ page }) => {
+test('Verify Product Sorting Using Dropdown Options', async ({ page }) => {
     // ==========================================
     // Page Objects
     // ==========================================
     const loginPage = new LoginPage(page);
     const inventoryPage = new InventoryPage(page);
-    const cartPage = new CartPage(page);
+    // ==========================================
+    // Select the first user
+    // ==========================================
+    const user = users[0];
     // ==========================================
     // Navigate
     // ==========================================
@@ -28,46 +26,33 @@ test('Locators Advanced Demo', async ({ page }) => {
         user.password
     );
     // ==========================================
-    // Verify Products Page
+    // Verify Login
     // ==========================================
-    await expect(
-        page.locator("//span[text()='Products']")
-    ).toBeVisible();
+    await loginPage.verifyLoginSuccess();
+    await inventoryPage.verifyProductsPage();
     // ==========================================
-    // locator() + first()
+    // Sort A-Z
     // ==========================================
-    await expect(
-        page.locator('.inventory_item').first()
-    ).toBeVisible();
+    await inventoryPage.sortProducts('az');
+    await inventoryPage.verifySortOption('az');
+    await inventoryPage.verifyFirstProduct(testData.productNameAZ);
     // ==========================================
-    // locator() + last()
+    // Sort Z-A
     // ==========================================
-    await expect(
-        page.locator('.inventory_item').last()
-    ).toBeVisible();
+    await inventoryPage.sortProducts('za');
+    await inventoryPage.verifySortOption('za');
+    await inventoryPage.verifyFirstProduct(testData.productNameZA);
     // ==========================================
-    // locator() + nth()
+    // Sort Low to High
     // ==========================================
-    await expect(
-        page.locator('.inventory_item').nth(1)
-    ).toBeVisible();
+    await inventoryPage.sortProducts('lohi');
+    await inventoryPage.verifySortOption('lohi');
+    await inventoryPage.verifyFirstPrice(testData.lowPrice);
     // ==========================================
-    // Add Product
+    // Sort High to Low
     // ==========================================
-    await inventoryPage.addProduct(
-        testData.product1
-    );
-    // ==========================================
-    // Open Cart
-    // ==========================================
-    await cartPage.openCart();
-    // ==========================================
-    // Verify Cart
-    // ==========================================
-    await expect(
-        page.getByText(testData.cartPageTitle)
-    ).toBeVisible();
-    await cartPage.verifyProduct(
-        testData.product1
-    );
+    await inventoryPage.sortProducts('hilo');
+    await inventoryPage.verifySortOption('hilo');
+    await inventoryPage.verifyFirstProduct(testData.highPriceProduct);
+    await inventoryPage.verifyFirstPrice(testData.highPrice);
 });

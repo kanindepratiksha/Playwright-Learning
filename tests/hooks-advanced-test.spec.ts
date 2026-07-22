@@ -1,12 +1,12 @@
 import { test } from '@playwright/test';
 import { HooksAdvancedPage } from '../pages/hooks-advancedPage';
+import users from '../testdata/users.json';
 // ==========================================
 // Page Object
 // ==========================================
 let hooksAdvancedPage: HooksAdvancedPage;
 // ==========================================
 // test.use()
-// Apply configuration for all tests in this file
 // ==========================================
 test.use({
     viewport: {
@@ -30,7 +30,10 @@ test.describe('Hooks Advanced - Playwright Features', () => {
     test.beforeEach(async ({ page }) => {
         hooksAdvancedPage = new HooksAdvancedPage(page);
         await hooksAdvancedPage.navigate();
-        await hooksAdvancedPage.login();
+        await hooksAdvancedPage.login(
+            users[0].username,
+            users[0].password
+        );
     });
     // ==========================================
     // Verify Login
@@ -53,11 +56,11 @@ test.describe('Hooks Advanced - Playwright Features', () => {
         });
     });
     // ==========================================
-    // Known Bug Example (Pass)
+    // Known Bug Example
     // ==========================================
     test('Known Bug Example', async () => {
-        await test.step('Demonstrate Known Bug Placeholder', async () => {
-            console.log('Known bug placeholder test');
+        await test.step('Known Bug Placeholder', async () => {
+            // Placeholder for future known bug validation.
         });
     });
     // ==========================================
@@ -75,7 +78,7 @@ test.describe('Hooks Advanced - Playwright Features', () => {
         console.log(`Status : ${testInfo.status}`);
         console.log(`Duration : ${testInfo.duration} ms`);
         await page.screenshot({
-            path: `screenshots/${testInfo.title}.png`,
+            path: testInfo.outputPath('screenshot.png'),
             fullPage: true
         });
     });

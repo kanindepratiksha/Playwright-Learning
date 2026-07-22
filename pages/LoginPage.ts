@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { testData } from '../utils/appConstants';
 import { BasePage } from './BasePage';
 import { Logger } from '../utils/Logger';
@@ -13,9 +13,7 @@ export class LoginPage extends BasePage {
     private readonly usernameInput: Locator;
     private readonly passwordInput: Locator;
     private readonly loginButton: Locator;
-    // ==========================================
-    // Constructor
-    // ==========================================
+    private readonly errorMessage: Locator;
     constructor(page: Page) {
         super(page);
         this.usernameInput = page.getByPlaceholder('Username');
@@ -23,41 +21,42 @@ export class LoginPage extends BasePage {
         this.loginButton = page.getByRole('button', {
             name: testData.loginButton
         });
+        this.errorMessage = page.locator('[data-test="error"]');
     }
     // ==========================================
-    // Actions
+    // Login
     // ==========================================
-    async enterUsername(username: string) {
-        await this.fill(this.usernameInput, username);
-    }
-    async enterPassword(password: string) {
-        await this.fill(this.passwordInput, password);
-    }
-    async clickLogin() {
-    await RetryUtil.execute(async () => {
+    async login(
+        user: string,
+        pass: string,
+        shouldLogin: boolean = true
+    ) {
+        await this.fill(this.usernameInput, user);
+        await this.fill(this.passwordInput, pass);
         await this.click(this.loginButton);
-    });
-}
-    async login(username: string, password: string) {
-    Logger.info('Entering Username');
-    await this.enterUsername(username);
-    Logger.info('Entering Password');
-    await this.enterPassword(password);
-    Logger.info('Clicking Login');
-    await RetryUtil.execute(async () => {
-        await this.clickLogin();
-    });
-    await WaitUtil.waitForPageLoad(this.page);
-    await ScreenshotManager.capture(
-        this.page,
-        'LoginSuccess'
-    );
-    Logger.info('Login Successful');
-}
+        if (shouldLogin) {
+            await expect(this.page).toHaveURL(/inventory/);
+        }
+    }
+    
     // ==========================================
-    // Validations
+    // Verify Login Page
     // ==========================================
-    async verifyLoginPageDisplayed() {
-        await AssertUtil.visible(this.loginButton);
+    async verifyLoginPage() {
+        await this.verifyVisible(this.usernameInput);
+        await this.verifyVisible(this.passwordInput);
+        await this.verifyVisible(this.loginButton);
+    }
+    // ==========================================
+    // Verify Login Successful
+    // ==========================================
+    async verifyLoginSuccess() {
+        await this.verifyUrl(/inventory/);
+    }
+    // ==========================================
+    // Verify Error Message
+    // ==========================================
+    async verifyErrorMessage(message: string) {
+        await expect(this.errorMessage).toContainText(message);
     }
 }

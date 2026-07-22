@@ -1,10 +1,14 @@
 import { test, expect } from '../fixtures/fixture';
+import { config } from '../config/env';
+import { testData } from '../utils/appConstants';
+import users from '../testdata/users.json';
 test.describe('Playwright Fixture Demo', () => {
     // ==========================================
     // Feature 1 - Built-in Fixture
     // ==========================================
     test('Built-in Page Fixture', async ({ page }) => {
-        await page.goto('https://www.saucedemo.com/');
+        await page.goto(config.sauceDemoUrl);
+        // Page title assertion is acceptable since it is not a locator.
         await expect(page).toHaveTitle(/Swag Labs/);
     });
     // ==========================================
@@ -12,8 +16,8 @@ test.describe('Playwright Fixture Demo', () => {
     // ==========================================
     test('Custom Fixture', async ({ loginPage }) => {
         await loginPage.login(
-            'standard_user',
-            'secret_sauce'
+            users[0].username,
+            users[0].password
         );
     });
     // ==========================================
@@ -21,8 +25,8 @@ test.describe('Playwright Fixture Demo', () => {
     // ==========================================
     test('test.extend Demo', async ({ loginPage }) => {
         await loginPage.login(
-            'standard_user',
-            'secret_sauce'
+            users[0].username,
+            users[0].password
         );
     });
     // ==========================================
@@ -30,8 +34,8 @@ test.describe('Playwright Fixture Demo', () => {
     // ==========================================
     test('use() Demo', async ({ loginPage }) => {
         await loginPage.login(
-            'standard_user',
-            'secret_sauce'
+            users[0].username,
+            users[0].password
         );
     });
     // ==========================================
@@ -39,7 +43,7 @@ test.describe('Playwright Fixture Demo', () => {
     // ==========================================
     test('Fixture Dependency', async ({ inventoryPage }) => {
         await inventoryPage.verifyProductVisible(
-            'Sauce Labs Backpack'
+            testData.product1
         );
     });
 });
