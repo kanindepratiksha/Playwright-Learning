@@ -3,7 +3,7 @@ export class BasePage {
     constructor(protected page: Page) {}
     protected async navigate(url: string) {
         await this.page.goto(url, {
-            waitUntil: 'load',
+            waitUntil: 'domcontentloaded',
             timeout: 60000
         });
     }
