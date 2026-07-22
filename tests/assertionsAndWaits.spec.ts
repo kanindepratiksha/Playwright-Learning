@@ -2,98 +2,63 @@ import { test, expect } from '@playwright/test';
 import { testData } from '../utils/appConstants';
 import users from '../testdata/users.json';
 import { config } from '../config/env';
-// ==========================================
-// Default User
-// ==========================================
-const user = users[0];
+import { LoginPage } from '../pages/LoginPage';
+import { InventoryPage } from '../pages/InventoryPage';
+import { CartPage } from '../pages/CartPage';
 test('Verify Assertions and Waits in SauceDemo', async ({ page }) => {
     // ==========================================
-    // Navigate to SauceDemo application
+    // Page Objects
+    // ==========================================
+    const loginPage = new LoginPage(page);
+    const inventoryPage = new InventoryPage(page);
+    const cartPage = new CartPage(page);
+    const user = users[0];
+    // ==========================================
+    // Navigate
     // ==========================================
     await page.goto(config.sauceDemoUrl);
-    // Wait until all network requests are completed
     await page.waitForLoadState('networkidle');
     // ==========================================
-    // Login with valid credentials
+    // Login
     // ==========================================
-    await page.getByPlaceholder('Username')
-        .fill(user.username);
-    await page.getByPlaceholder('Password')
-        .fill(user.password);
-    // Verify Login button is enabled
-    await expect(
-        page.getByRole('button', {
-            name: testData.loginButton
-        })
-    ).toBeEnabled();
-    // Click Login button
-    await page.getByRole('button', {
-        name: testData.loginButton
-    }).click();
+    await loginPage.login(
+        user.username,
+        user.password
+    );
     // ==========================================
-    // Verify successful login
+    // Verify Inventory Page
     // ==========================================
     await page.waitForURL('**/inventory.html');
-    await expect(page)
-        .toHaveURL(/inventory/);
-    await page.waitForSelector('.title');
-    await expect(
-        page.locator('.title')
-    ).toHaveText(testData.productPageTitle);
+    await expect(page).toHaveURL(/inventory/);
+    await inventoryPage.verifyPageTitle();
+    await inventoryPage.verifyInventoryList();
+    await inventoryPage.verifyProductVisible(testData.product1);
     // ==========================================
-    // Verify product is visible
+    // Add Products
     // ==========================================
-    await expect(
-        page.getByText(testData.product1)
-    ).toBeVisible();
+    await inventoryPage.addProduct(testData.product1);
+    await inventoryPage.addProduct(testData.product2);
     // ==========================================
-    // Add Product 1 to cart
+    // Verify Cart Badge
     // ==========================================
-    await page
-        .locator('.inventory_item')
-        .filter({ hasText: testData.product1 })
-        .getByRole('button')
-        .click();
+    await inventoryPage.verifyCartBadgeCount('2');
     // ==========================================
-    // Add Product 2 to cart
+    // Open Cart
     // ==========================================
-    await page
-        .locator('.inventory_item')
-        .filter({ hasText: testData.product2 })
-        .getByRole('button')
-        .click();
-    // ==========================================
-    // Verify cart badge count
-    // ==========================================
-    await expect(
-        page.locator('.shopping_cart_badge')
-    ).toHaveText('2');
-    // ==========================================
-    // Navigate to Cart page
-    // ==========================================
-    await page.locator('.shopping_cart_link').click();
+    await cartPage.openCart();
     await page.waitForURL('**/cart.html');
-    await expect(page)
-        .toHaveURL(/cart/);
+    await expect(page).toHaveURL(/cart/);
     // ==========================================
-    // Verify added products are displayed
+    // Verify Cart Products
     // ==========================================
-    await expect(
-        page.getByText(testData.product1)
-    ).toBeVisible();
-    await expect(
-        page.getByText(testData.product2)
-    ).toBeVisible();
+    await cartPage.verifyProduct(testData.product1);
+    await cartPage.verifyProduct(testData.product2);
     // ==========================================
-    // Remove Product 1 from cart
+    // Remove Product
     // ==========================================
-    await page.locator(
-        '[data-test="remove-sauce-labs-backpack"]'
-    ).click();
+    await cartPage.removeProduct(testData.product1);
     // ==========================================
-    // Verify cart badge count after removal
+    // Verify Cart Badge
     // ==========================================
-    await expect(
-        page.locator('.shopping_cart_badge')
-    ).toHaveText('1');
+    await cartPage.verifyCartBadgeCount('1');
 });

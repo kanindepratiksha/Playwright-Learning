@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 import users from '../testdata/users.json';
@@ -30,27 +30,20 @@ test('Locators Advanced Demo', async ({ page }) => {
     // ==========================================
     // Verify Products Page
     // ==========================================
-    await expect(
-        page.locator("//span[text()='Products']")
-    ).toBeVisible();
+    await inventoryPage.verifyPageTitle();
+    await inventoryPage.verifyInventoryList();
     // ==========================================
     // locator() + first()
     // ==========================================
-    await expect(
-        page.locator('.inventory_item').first()
-    ).toBeVisible();
+    await inventoryPage.verifyFirstInventoryItemVisible();
     // ==========================================
     // locator() + last()
     // ==========================================
-    await expect(
-        page.locator('.inventory_item').last()
-    ).toBeVisible();
+    await inventoryPage.verifyLastInventoryItemVisible();
     // ==========================================
     // locator() + nth()
     // ==========================================
-    await expect(
-        page.locator('.inventory_item').nth(1)
-    ).toBeVisible();
+    await inventoryPage.verifyInventoryItemVisible(1);
     // ==========================================
     // Add Product
     // ==========================================
@@ -64,9 +57,7 @@ test('Locators Advanced Demo', async ({ page }) => {
     // ==========================================
     // Verify Cart
     // ==========================================
-    await expect(
-        page.getByText(testData.cartPageTitle)
-    ).toBeVisible();
+    await cartPage.verifyCartTitle();
     await cartPage.verifyProduct(
         testData.product1
     );

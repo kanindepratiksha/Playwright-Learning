@@ -1,7 +1,7 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { config } from '../config/env';
-import { testData } from '../utils/appConstants';
 import { BasePage } from './BasePage';
+import { BrowserContentPage } from './BrowserContentPage';
 export class BrowserWindowsPage extends BasePage {
     // ==========================================
     // Locators
@@ -27,27 +27,15 @@ export class BrowserWindowsPage extends BasePage {
     // Open New Page
     // ==========================================
     private async openNewPage(button: Locator): Promise<Page> {
-    await button.waitFor({ state: 'visible' });
-    const pagePromise = this.page.context().waitForEvent('page').catch(() => null);
-    const popupPromise = this.page.waitForEvent('popup').catch(() => null);
-    await button.click();
-    const newPage = await Promise.race([
-        pagePromise,
-        popupPromise
-    ]);
-    if (!newPage) {
-        throw new Error('No new page or popup was opened.');
-    }
-    await newPage.waitForLoadState('domcontentloaded');
-    return newPage;
-}
-    // ==========================================
-    // Verify Heading
-    // ==========================================
-    private async verifyHeading(newPage: Page) {
+        const [newPage] = await Promise.all([
+            this.page.context().waitForEvent('page'),
+            button.click()
+        ]);
+        await newPage.waitForLoadState('load');
         await expect(
             newPage.locator('#sampleHeading')
-        ).toHaveText(testData.newTabHeading);
+        ).toBeVisible();
+        return newPage;
     }
     // ==========================================
     // Verify New Tab
@@ -56,7 +44,13 @@ export class BrowserWindowsPage extends BasePage {
         const newPage = await this.openNewPage(
             this.newTabButton
         );
+<<<<<<< HEAD
         await this.verifyHeading(newPage);
+=======
+        const browserContentPage =
+            new BrowserContentPage(newPage);
+        await browserContentPage.verifyHeading();
+>>>>>>> main
         await newPage.close();
     }
     // ==========================================
@@ -66,7 +60,23 @@ export class BrowserWindowsPage extends BasePage {
         const newPage = await this.openNewPage(
             this.newWindowButton
         );
+<<<<<<< HEAD
         await this.verifyHeading(newPage);
+=======
+        const browserContentPage =
+            new BrowserContentPage(newPage);
+        const browserContentPage =
+            new BrowserContentPage(newPage);
+        await browserContentPage.verifyHeading();
         await newPage.close();
     }
-}
+    // ==========================================
+    // Verify New Window
+    // ==========================================
+    async verifyNewWindow() {
+        const newPage = await this.openNewPage(
+            this.newWindowButton
+        );
+        const browserContentPage =
+            new BrowserContentPage(newPage);
+        await browserContentPage.verifyHeading();

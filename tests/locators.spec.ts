@@ -3,6 +3,7 @@ import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 import users from '../testdata/users.json';
 import { LoginPage } from '../pages/LoginPage';
+import { InventoryPage } from '../pages/InventoryPage';
 import { HooksAdvancedPage } from '../pages/hooks-advancedPage';
 const user = users[0];
 test('Locators Demo', async ({ page }) => {
@@ -10,6 +11,7 @@ test('Locators Demo', async ({ page }) => {
     // Page Objects
     // ==========================================
     const loginPage = new LoginPage(page);
+    const inventoryPage = new InventoryPage(page);
     const hooksAdvancedPage = new HooksAdvancedPage(page);
     // ==========================================
     // Navigate
@@ -26,15 +28,9 @@ test('Locators Demo', async ({ page }) => {
     // Validate Login
     // ==========================================
     await expect(page).toHaveURL(/inventory/);
-    await expect(
-        page.getByText(testData.productPageTitle)
-    ).toBeVisible();
-    await expect(
-        page.locator('.inventory_list')
-    ).toBeVisible();
-    await expect(
-        page.getByText(testData.product1)
-    ).toBeVisible();
+    await inventoryPage.verifyPageTitle();
+    await inventoryPage.verifyInventoryList();
+    await inventoryPage.verifyProductVisible(testData.product1);
     // ==========================================
     // Logout
     // ==========================================
