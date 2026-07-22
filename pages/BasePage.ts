@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 export class BasePage {
     constructor(protected page: Page) {}
     // ==========================================
