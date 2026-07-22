@@ -1,20 +1,20 @@
 import { test } from '@playwright/test';
-import { BrowserWindowsPage } from '../pages/BrowserWindowsPage';
-test('Verify Multiple Tabs and Popup Handling', async ({ page }) => {
+import { FramesPage } from '../pages/FramesPage';
+test('Verify Frames', async ({ page }) => {
     // ==========================================
-    // Create Page Object
+    // Page Object
     // ==========================================
-    const browserWindow = new BrowserWindowsPage(page);
+    const framesPage = new FramesPage(page);
     // ==========================================
     // Navigate
     // ==========================================
-    await browserWindow.navigate();
+    await framesPage.navigate();
     // ==========================================
-    // Multiple Tabs
+    // Verify Frame Visibility
     // ==========================================
-    await browserWindow.verifyNewTab();
+    await framesPage.verifyFrameHeadingVisible();
     // ==========================================
-    // Popup Window
+    // Verify Frame Text
     // ==========================================
-    await browserWindow.verifyNewWindow();
+    await framesPage.verifyFrameText();
 });

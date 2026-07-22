@@ -1,6 +1,6 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { config } from '../config/env';
-import users from '../testdata/users.json';
+import { testData } from '../utils/appConstants';
 import { BasePage } from './BasePage';
 export class HooksAdvancedPage extends BasePage {
     // ==========================================
@@ -12,6 +12,7 @@ export class HooksAdvancedPage extends BasePage {
     private readonly menuButton: Locator;
     private readonly sideMenu: Locator;
     private readonly logoutButton: Locator;
+    private readonly productTitle: Locator;
     // ==========================================
     // Constructor
     // ==========================================
@@ -19,16 +20,13 @@ export class HooksAdvancedPage extends BasePage {
         super(page);
         this.username = page.getByPlaceholder('Username');
         this.password = page.getByPlaceholder('Password');
-        this.loginButton = page.getByRole('button', { name: 'Login' });
+        this.loginButton = page.getByRole('button', {
+            name: testData.loginButton
+        });
         this.menuButton = page.locator('#react-burger-menu-btn');
         this.sideMenu = page.locator('.bm-menu-wrap');
         this.logoutButton = page.locator('#logout_sidebar_link');
-    }
-    // ==========================================
-    // Dynamic Locator
-    // ==========================================
-    private getProductTitle(): Locator {
-        return this.page.locator('.title');
+        this.productTitle = page.locator('.title');
     }
     // ==========================================
     // Navigate
@@ -39,9 +37,9 @@ export class HooksAdvancedPage extends BasePage {
     // ==========================================
     // Login
     // ==========================================
-    async login() {
-        await this.fill(this.username, users.username);
-        await this.fill(this.password, users.password);
+    async login(username: string, password: string) {
+        await this.fill(this.username, username);
+        await this.fill(this.password, password);
         await this.click(this.loginButton);
     }
     // ==========================================
@@ -49,8 +47,8 @@ export class HooksAdvancedPage extends BasePage {
     // ==========================================
     async verifyLogin() {
         await this.verifyText(
-            this.getProductTitle(),
-            'Products'
+            this.productTitle,
+            testData.productPageTitle
         );
     }
     // ==========================================
@@ -75,5 +73,6 @@ export class HooksAdvancedPage extends BasePage {
     // ==========================================
     async verifyLogout() {
         await this.verifyUrl(config.sauceDemoUrl);
+        await this.verifyVisible(this.username);
     }
 }

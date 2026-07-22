@@ -5,6 +5,7 @@ export class LoginPage extends BasePage {
     private readonly username: Locator;
     private readonly password: Locator;
     private readonly loginButton: Locator;
+    private readonly errorMessage: Locator;
     constructor(page: Page) {
         super(page);
         this.username = page.getByPlaceholder('Username');
@@ -12,6 +13,7 @@ export class LoginPage extends BasePage {
         this.loginButton = page.getByRole('button', {
             name: testData.loginButton
         });
+        this.errorMessage = page.locator('[data-test="error"]');
     }
     async login(user: string, pass: string) {
         await this.fill(this.username, user);
@@ -19,5 +21,28 @@ export class LoginPage extends BasePage {
         await this.click(this.loginButton);
         // Wait until login succeeds
         await expect(this.page).toHaveURL(/inventory/);
+    }
+    // ==========================================
+    // Verify Login Page
+    // ==========================================
+    async verifyLoginPage() {
+        await this.verifyVisible(this.username);
+        await this.verifyVisible(this.password);
+        await this.verifyVisible(this.loginButton);
+    }
+    // ==========================================
+    // Verify Login Successful
+    // ==========================================
+    async verifyLoginSuccess() {
+        await this.verifyUrl(/inventory/);
+    }
+    // ==========================================
+    // Verify Error Message
+    // ==========================================
+    async verifyErrorMessage(message: string) {
+        await this.verifyText(
+            this.errorMessage,
+            message
+        );
     }
 }

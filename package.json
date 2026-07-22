@@ -2,17 +2,18 @@
   "name": "playwrightframework",
   "version": "1.0.0",
   "main": "index.js",
- "scripts": {
-  "test": "playwright test",
-  "headed": "playwright test --headed",
-  "chrome": "playwright test --project=chromium",
-  "report": "playwright show-report"
-},
+  "scripts": {
+    "test": "playwright test",
+    "headed": "playwright test --headed",
+    "chrome": "playwright test --project=chromium",
+    "report": "playwright show-report"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@faker-js/faker": "^10.5.0",
     "@playwright/test": "^1.61.1",
     "@types/node": "^26.0.0"
   }

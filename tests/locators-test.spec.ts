@@ -20,8 +20,8 @@ test('Locators Demo', async ({ page }) => {
     // Login
     // ==========================================
     await loginPage.login(
-        users.username,
-        users.password
+        users[0].username,
+        users[0].password
     );
     // ==========================================
     // Validate Login
@@ -38,7 +38,5 @@ test('Locators Demo', async ({ page }) => {
     // Validate Logout
     // ==========================================
     await hooksAdvancedPage.verifyLogout();
-    await expect(
-        page.getByPlaceholder('Username')
-    ).toBeVisible();
+    await loginPage.verifyLoginPage();
 });

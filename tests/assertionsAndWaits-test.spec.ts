@@ -1,17 +1,18 @@
-import { test, expect } from '@playwright/test';
-import { testData } from '../utils/appConstants';
-import user from '../testdata/users.json';
+import { test } from '@playwright/test';
 import { config } from '../config/env';
+import users from '../testdata/users.json';
+import { testData } from '../utils/appConstants';
 import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
 import { CartPage } from '../pages/CartPage';
-test('Verify Assertions and Waits in SauceDemo', async ({ page }) => {
+test('Verify Assertions and Waits', async ({ page }) => {
     // ==========================================
     // Page Objects
     // ==========================================
     const loginPage = new LoginPage(page);
     const inventoryPage = new InventoryPage(page);
     const cartPage = new CartPage(page);
+    const user = users[0];
     // ==========================================
     // Navigate
     // ==========================================
@@ -25,31 +26,32 @@ test('Verify Assertions and Waits in SauceDemo', async ({ page }) => {
         user.password
     );
     // ==========================================
-    // Verify Inventory Page
+    // Verify Login
     // ==========================================
-    await page.waitForURL('**/inventory.html');
-    await expect(page).toHaveURL(/inventory/);
-    await inventoryPage.verifyPageTitle();
-    await inventoryPage.verifyInventoryList();
-    await inventoryPage.verifyProductVisible(testData.product1);
+    await inventoryPage.verifyProductsPage();
+    // ==========================================
+    // Verify Products
+    // ==========================================
+    await inventoryPage.verifyProductVisible(
+        testData.product1
+    );
     // ==========================================
     // Add Products
     // ==========================================
     await inventoryPage.addProduct(testData.product1);
     await inventoryPage.addProduct(testData.product2);
     // ==========================================
-    // Verify Cart Badge
+    // Verify Cart Count
     // ==========================================
-    await inventoryPage.verifyCartBadgeCount('2');
+    await inventoryPage.verifyCartCount('2');
     // ==========================================
     // Open Cart
     // ==========================================
-    await cartPage.openCart();
-    await page.waitForURL('**/cart.html');
-    await expect(page).toHaveURL(/cart/);
+    await inventoryPage.openCart();
     // ==========================================
-    // Verify Cart Products
+    // Verify Cart
     // ==========================================
+    await cartPage.verifyCartPage();
     await cartPage.verifyProduct(testData.product1);
     await cartPage.verifyProduct(testData.product2);
     // ==========================================
@@ -57,7 +59,7 @@ test('Verify Assertions and Waits in SauceDemo', async ({ page }) => {
     // ==========================================
     await cartPage.removeProduct(testData.product1);
     // ==========================================
-    // Verify Cart Badge
+    // Verify Cart Count
     // ==========================================
     await cartPage.verifyCartBadgeCount('1');
 });

@@ -1,17 +1,22 @@
 import { test } from '@playwright/test';
-import { config } from '../config/env';
-import { testData } from '../utils/appConstants';
-import user from '../testdata/users.json';
 import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
 import { CartPage } from '../pages/CartPage';
-test('Locators Advanced Demo', async ({ page }) => {
+import { FakerUtils } from '../utils/FakerUtils';
+import { config } from '../config/env';
+import { testData } from '../utils/appConstants';
+import users from '../testdata/users.json';
+test('Checkout using Dynamic Test Data', async ({ page }) => {
     // ==========================================
     // Page Objects
     // ==========================================
     const loginPage = new LoginPage(page);
     const inventoryPage = new InventoryPage(page);
     const cartPage = new CartPage(page);
+    // ==========================================
+    // Test Data
+    // ==========================================
+    const user = FakerUtils.getUser();
     // ==========================================
     // Navigate
     // ==========================================
@@ -20,26 +25,9 @@ test('Locators Advanced Demo', async ({ page }) => {
     // Login
     // ==========================================
     await loginPage.login(
-        user.username,
-        user.password
+        users[0].username,
+        users[0].password
     );
-    // ==========================================
-    // Verify Products Page
-    // ==========================================
-    await inventoryPage.verifyPageTitle();
-    await inventoryPage.verifyInventoryList();
-    // ==========================================
-    // locator() + first()
-    // ==========================================
-    await inventoryPage.verifyFirstInventoryItemVisible();
-    // ==========================================
-    // locator() + last()
-    // ==========================================
-    await inventoryPage.verifyLastInventoryItemVisible();
-    // ==========================================
-    // locator() + nth()
-    // ==========================================
-    await inventoryPage.verifyInventoryItemVisible(1);
     // ==========================================
     // Add Product
     // ==========================================
@@ -49,12 +37,26 @@ test('Locators Advanced Demo', async ({ page }) => {
     // ==========================================
     // Open Cart
     // ==========================================
-    await cartPage.openCart();
+    await inventoryPage.openCart();
     // ==========================================
-    // Verify Cart
+    // Verify Product
     // ==========================================
-    await cartPage.verifyCartTitle();
     await cartPage.verifyProduct(
         testData.product1
     );
+    // ==========================================
+    // Checkout
+    // ==========================================
+    await cartPage.clickCheckout();
+    await cartPage.fillCheckoutDetails(
+        user.firstName,
+        user.lastName,
+        user.postalCode
+    );
+    await cartPage.continueCheckout();
+    await cartPage.finishCheckout();
+    // ==========================================
+    // Verify Order
+    // ==========================================
+    await cartPage.verifyOrderSuccess();
 });
