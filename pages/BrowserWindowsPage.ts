@@ -1,70 +1,65 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { config } from '../config/env';
-import { testData } from '../utils/appConstants';
-
-export class BrowserWindowsPage {
-
-    // ==========================================
-    // Page Object
-    // ==========================================
-    readonly page: Page;
-
+import { BasePage } from './BasePage';
+import { BrowserContentPage } from './BrowserContentPage';
+export class BrowserWindowsPage extends BasePage {
     // ==========================================
     // Locators
     // ==========================================
-    readonly newTabButton: Locator;
-    readonly newWindowButton: Locator;
-
+    private readonly newTabButton: Locator;
+    private readonly newWindowButton: Locator;
     // ==========================================
     // Constructor
     // ==========================================
     constructor(page: Page) {
-
-        this.page = page;
+        super(page);
         this.newTabButton = page.locator('#tabButton');
         this.newWindowButton = page.locator('#windowButton');
-
     }
-
     // ==========================================
     // Navigate
     // ==========================================
     async navigate() {
-        await this.page.goto(config.browserWindowsUrl);
+        await super.navigate(config.browserWindowsUrl);
+        await expect(this.newTabButton).toBeVisible();
+        timeout: 15000
     }
-
     // ==========================================
-    // Handle Multiple Tab
+    // Open New Page
     // ==========================================
-    async verifyNewTab() {
-
+    private async openNewPage(button: Locator): Promise<Page> {
         const [newPage] = await Promise.all([
             this.page.context().waitForEvent('page'),
-            this.newTabButton.click()
+            button.click()
         ]);
-
-        await newPage.waitForLoadState();
-
+        await newPage.waitForLoadState('load');
         await expect(
             newPage.locator('#sampleHeading')
-        ).toHaveText(testData.newTabHeading);
-        await newPage.close();
-     }
-
+        ).toBeVisible();
+        return newPage;
+    }
     // ==========================================
-    // Handle Popup Window
+    // Verify New Tab
+    // ==========================================
+    async verifyNewTab() {
+        const newPage = await this.openNewPage(
+            this.newTabButton
+        );
+        const browserContentPage =
+            new BrowserContentPage(newPage);
+        await browserContentPage.verifyHeading();
+        await newPage.close();
+    }
+    // ==========================================
+    // Verify New Window
     // ==========================================
     async verifyNewWindow() {
-        const [popup] = await Promise.all([
-            this.page.context().waitForEvent('page'),
-            this.newWindowButton.click()
-        ]);
-        await popup.waitForLoadState();
-        await expect(
-            popup.locator('#sampleHeading')
-        ).toHaveText(testData.newTabHeading);
-        await popup.close();
-
+        const newPage = await this.openNewPage(
+            this.newWindowButton
+        );
+        const browserContentPage =
+            new BrowserContentPage(newPage);
+        await browserContentPage.verifyHeading();
+        await newPage.close();
     }
-
 }

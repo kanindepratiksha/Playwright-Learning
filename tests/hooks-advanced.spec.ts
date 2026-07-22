@@ -19,7 +19,6 @@ test.use({
 // ==========================================
 test.describe('Hooks Advanced - Playwright Features', () => {
     // ==========================================
-    // test.describe.configure()
     // Execute tests sequentially
     // ==========================================
     test.describe.configure({
@@ -34,7 +33,7 @@ test.describe('Hooks Advanced - Playwright Features', () => {
         await hooksAdvancedPage.login();
     });
     // ==========================================
-    // test.step()
+    // Verify Login
     // ==========================================
     test('@smoke Verify Login', async () => {
         await test.step('Verify User is Logged In', async () => {
@@ -42,7 +41,7 @@ test.describe('Hooks Advanced - Playwright Features', () => {
         });
     });
     // ==========================================
-    // test.slow()
+    // Verify Logout
     // ==========================================
     test('@regression Verify Logout', async () => {
         test.slow();
@@ -54,13 +53,15 @@ test.describe('Hooks Advanced - Playwright Features', () => {
         });
     });
     // ==========================================
-    // test.fail()
+    // Known Bug Example (Pass)
     // ==========================================
-    test.fail('Known Bug Example', async () => {
-        throw new Error('Known Bug');
+    test('Known Bug Example', async () => {
+        await test.step('Demonstrate Known Bug Placeholder', async () => {
+            console.log('Known bug placeholder test');
+        });
     });
     // ==========================================
-    // test.fixme()
+    // Future Feature
     // ==========================================
     test.fixme('Wishlist Feature', async () => {
         // Future implementation

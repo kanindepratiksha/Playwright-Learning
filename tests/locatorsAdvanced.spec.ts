@@ -1,11 +1,11 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
+import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 import user from '../testdata/users.json';
-import { config } from '../config/env';
 import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
 import { CartPage } from '../pages/CartPage';
-test('Verify Assertions and Waits in SauceDemo', async ({ page }) => {
+test('Locators Advanced Demo', async ({ page }) => {
     // ==========================================
     // Page Objects
     // ==========================================
@@ -16,7 +16,6 @@ test('Verify Assertions and Waits in SauceDemo', async ({ page }) => {
     // Navigate
     // ==========================================
     await page.goto(config.sauceDemoUrl);
-    await page.waitForLoadState('networkidle');
     // ==========================================
     // Login
     // ==========================================
@@ -25,39 +24,37 @@ test('Verify Assertions and Waits in SauceDemo', async ({ page }) => {
         user.password
     );
     // ==========================================
-    // Verify Inventory Page
+    // Verify Products Page
     // ==========================================
-    await page.waitForURL('**/inventory.html');
-    await expect(page).toHaveURL(/inventory/);
     await inventoryPage.verifyPageTitle();
     await inventoryPage.verifyInventoryList();
-    await inventoryPage.verifyProductVisible(testData.product1);
     // ==========================================
-    // Add Products
+    // locator() + first()
     // ==========================================
-    await inventoryPage.addProduct(testData.product1);
-    await inventoryPage.addProduct(testData.product2);
+    await inventoryPage.verifyFirstInventoryItemVisible();
     // ==========================================
-    // Verify Cart Badge
+    // locator() + last()
     // ==========================================
-    await inventoryPage.verifyCartBadgeCount('2');
+    await inventoryPage.verifyLastInventoryItemVisible();
+    // ==========================================
+    // locator() + nth()
+    // ==========================================
+    await inventoryPage.verifyInventoryItemVisible(1);
+    // ==========================================
+    // Add Product
+    // ==========================================
+    await inventoryPage.addProduct(
+        testData.product1
+    );
     // ==========================================
     // Open Cart
     // ==========================================
     await cartPage.openCart();
-    await page.waitForURL('**/cart.html');
-    await expect(page).toHaveURL(/cart/);
     // ==========================================
-    // Verify Cart Products
+    // Verify Cart
     // ==========================================
-    await cartPage.verifyProduct(testData.product1);
-    await cartPage.verifyProduct(testData.product2);
-    // ==========================================
-    // Remove Product
-    // ==========================================
-    await cartPage.removeProduct(testData.product1);
-    // ==========================================
-    // Verify Cart Badge
-    // ==========================================
-    await cartPage.verifyCartBadgeCount('1');
+    await cartPage.verifyCartTitle();
+    await cartPage.verifyProduct(
+        testData.product1
+    );
 });

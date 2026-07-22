@@ -1,24 +1,21 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
-export class AlertsPage {
-    // ==========================================
-    // Page Object
-    // ==========================================
-    readonly page: Page;
+import { BasePage } from './BasePage';
+export class AlertsPage extends BasePage {
     // ==========================================
     // Locators
     // ==========================================
-    readonly alertButton: Locator;
-    readonly confirmButton: Locator;
-    readonly promptButton: Locator;
-    readonly confirmResult: Locator;
-    readonly promptResult: Locator;
+    private readonly alertButton: Locator;
+    private readonly confirmButton: Locator;
+    private readonly promptButton: Locator;
+    private readonly confirmResult: Locator;
+    private readonly promptResult: Locator;
     // ==========================================
     // Constructor
     // ==========================================
     constructor(page: Page) {
-        this.page = page;
+        super(page);
         this.alertButton = page.locator('#alertButton');
         this.confirmButton = page.locator('#confirmButton');
         this.promptButton = page.locator('#promtButton');
@@ -26,13 +23,16 @@ export class AlertsPage {
         this.promptResult = page.locator('#promptResult');
     }
     // ==========================================
-    // Navigate to Alerts Page
+    // Navigate
     // ==========================================
     async navigate() {
-        await this.page.goto(config.alertsUrl);
+        await super.navigate(config.alertsUrl);
+        await this.alertButton.waitFor({
+            state: 'visible'
+        });
     }
     // ==========================================
-    // Handle JavaScript Alert
+    // Handle Simple Alert
     // ==========================================
     async handleSimpleAlert() {
         this.page.once('dialog', async dialog => {
@@ -50,11 +50,13 @@ export class AlertsPage {
         await this.confirmButton.click();
     }
     // ==========================================
-    // Verify Confirm Alert Result
+    // Verify Confirm Result
     // ==========================================
     async verifyConfirmAlert() {
-        await expect(this.confirmResult)
-            .toHaveText(testData.confirmResult);
+        await this.verifyText(
+            this.confirmResult,
+            testData.confirmResult
+        );
     }
     // ==========================================
     // Handle Prompt Alert
@@ -66,10 +68,12 @@ export class AlertsPage {
         await this.promptButton.click();
     }
     // ==========================================
-    // Verify Prompt Alert Result
+    // Verify Prompt Result
     // ==========================================
     async verifyPromptAlert() {
-        await expect(this.promptResult)
-            .toHaveText(testData.promptResult);
+        await this.verifyText(
+            this.promptResult,
+            testData.promptResult
+        );
     }
 }

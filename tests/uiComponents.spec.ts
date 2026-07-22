@@ -1,72 +1,63 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { testData } from '../utils/appConstants';
 import user from '../testdata/users.json';
 import { config } from '../config/env';
+import { LoginPage } from '../pages/LoginPage';
+import { InventoryPage } from '../pages/InventoryPage';
 test('Verify product sorting using dropdown options', async ({ page }) => {
     // ==========================================
-    // Navigate to SauceDemo application
+    // Page Objects
+    // ==========================================
+    const loginPage = new LoginPage(page);
+    const inventoryPage = new InventoryPage(page);
+    // ==========================================
+    // Navigate
     // ==========================================
     await page.goto(config.sauceDemoUrl);
     // ==========================================
-    // Login with valid credentials
+    // Login
     // ==========================================
-    await page.getByPlaceholder('Username')
-        .fill(user.username);
-    await page.getByPlaceholder('Password')
-        .fill(user.password);
-    await page.getByRole('button', {
-        name: testData.loginButton
-    }).click();
-    // ==========================================
-    // Verify successful login
-    // ==========================================
-    await expect(
-        page.locator('.title')
-    ).toHaveText(testData.productPageTitle);
-    // ==========================================
-    // Define reusable locators
-    // ==========================================
-    const sortDropdown = page.locator(
-        '[data-test="product-sort-container"]'
+    await loginPage.login(
+        user.username,
+        user.password
     );
-    const firstProduct = page.locator(
-        '.inventory_item_name'
-    ).first();
-    const firstPrice = page.locator(
-        '.inventory_item_price'
-    ).first();
+    // ==========================================
+    // Verify Inventory Page
+    // ==========================================
+    await inventoryPage.verifyPageTitle();
     // ==========================================
     // Sort Products - Name (A to Z)
     // ==========================================
-    await sortDropdown.selectOption('az');
-    await expect(sortDropdown)
-        .toHaveValue('az');
-    await expect(firstProduct)
-        .toHaveText(testData.productNameAZ);
+    await inventoryPage.sortProducts('az');
+    await inventoryPage.verifySelectedSortOption('az');
+    await inventoryPage.verifyFirstProduct(
+        testData.productNameAZ
+    );
     // ==========================================
     // Sort Products - Name (Z to A)
     // ==========================================
-    await sortDropdown.selectOption('za');
-    await expect(sortDropdown)
-        .toHaveValue('za');
-    await expect(firstProduct)
-        .toHaveText(testData.productNameZA);
+    await inventoryPage.sortProducts('za');
+    await inventoryPage.verifySelectedSortOption('za');
+    await inventoryPage.verifyFirstProduct(
+        testData.productNameZA
+    );
     // ==========================================
     // Sort Products - Price (Low to High)
     // ==========================================
-    await sortDropdown.selectOption('lohi');
-    await expect(sortDropdown)
-        .toHaveValue('lohi');
-    await expect(firstPrice)
-        .toHaveText(testData.lowPrice);
+    await inventoryPage.sortProducts('lohi');
+    await inventoryPage.verifySelectedSortOption('lohi');
+    await inventoryPage.verifyFirstPrice(
+        testData.lowPrice
+    );
     // ==========================================
     // Sort Products - Price (High to Low)
     // ==========================================
-    await sortDropdown.selectOption('hilo');
-    await expect(sortDropdown)
-        .toHaveValue('hilo');
-    await expect(firstProduct)
-        .toHaveText(testData.highPriceProduct);
-    await expect(firstPrice)
-        .toHaveText(testData.highPrice);
+    await inventoryPage.sortProducts('hilo');
+    await inventoryPage.verifySelectedSortOption('hilo');
+    await inventoryPage.verifyFirstProduct(
+        testData.highPriceProduct
+    );
+    await inventoryPage.verifyFirstPrice(
+        testData.highPrice
+    );
 });

@@ -1,59 +1,67 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 import { config } from '../config/env';
 import user from '../testdata/users.json';
-
-export class HooksPage {
-
-    readonly page: Page;
-    readonly username: Locator;
-    readonly password: Locator;
-    readonly loginButton: Locator;
-    readonly menuButton: Locator;
-    readonly logoutButton: Locator;
-
+import { BasePage } from './BasePage';
+export class HooksPage extends BasePage {
+    // ==========================================
+    // Locators
+    // ==========================================
+    private readonly username: Locator;
+    private readonly password: Locator;
+    private readonly loginButton: Locator;
+    private readonly menuButton: Locator;
+    private readonly logoutButton: Locator;
+    // ==========================================
+    // Constructor
+    // ==========================================
     constructor(page: Page) {
-
-        this.page = page;
-
+        super(page);
         this.username = page.getByPlaceholder('Username');
         this.password = page.getByPlaceholder('Password');
         this.loginButton = page.getByRole('button', { name: 'Login' });
         this.menuButton = page.locator('#react-burger-menu-btn');
         this.logoutButton = page.getByText('Logout');
     }
-
+    // ==========================================
+    // Dynamic Locator
+    // ==========================================
+    private getProductTitle(): Locator {
+        return this.page.locator('.title');
+    }
+    // ==========================================
+    // Navigate
+    // ==========================================
     async navigate() {
-
-        await this.page.goto(config.sauceDemoUrl);
-
+        await super.navigate(config.sauceDemoUrl);
     }
-
+    // ==========================================
+    // Login
+    // ==========================================
     async login() {
-
-        await this.username.fill(user.username);
-        await this.password.fill(user.password);
-        await this.loginButton.click();
-
+        await this.fill(this.username, user.username);
+        await this.fill(this.password, user.password);
+        await this.click(this.loginButton);
     }
-
+    // ==========================================
+    // Verify Login
+    // ==========================================
     async verifyLogin() {
-
-        await expect(this.page.locator('.title'))
-            .toHaveText('Products');
-
+        await this.verifyText(
+            this.getProductTitle(),
+            'Products'
+        );
     }
-
+    // ==========================================
+    // Logout
+    // ==========================================
     async logout() {
-
-        await this.menuButton.click();
-        await this.logoutButton.click();
-
+        await this.click(this.menuButton);
+        await this.click(this.logoutButton);
     }
-
+    // ==========================================
+    // Verify Logout
+    // ==========================================
     async verifyLogout() {
-
-        await expect(this.page)
-            .toHaveURL(config.sauceDemoUrl);
-
+        await this.verifyUrl(config.sauceDemoUrl);
     }
 }
