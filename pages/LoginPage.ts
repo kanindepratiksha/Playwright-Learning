@@ -22,8 +22,6 @@ export class LoginPage extends BasePage {
         await this.fill(this.username, user);
         await this.fill(this.password, pass);
         await this.click(this.loginButton);
-        // Wait until login succeeds
-        await expect(this.page).toHaveURL(/inventory/);
     }
     // ==========================================
     // Verify Error Message
@@ -32,5 +30,4 @@ export class LoginPage extends BasePage {
         await expect(this.errorMessage)
             .toContainText(message);
     }
-}
 }

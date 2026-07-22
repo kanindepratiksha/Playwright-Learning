@@ -44,27 +44,6 @@ export class BrowserWindowsPage extends BasePage {
         const newPage = await this.openNewPage(
             this.newTabButton
         );
-<<<<<<< HEAD
-        await this.verifyHeading(newPage);
-=======
-        const browserContentPage =
-            new BrowserContentPage(newPage);
-        await browserContentPage.verifyHeading();
->>>>>>> main
-        await newPage.close();
-    }
-    // ==========================================
-    // Verify New Window
-    // ==========================================
-    async verifyNewWindow() {
-        const newPage = await this.openNewPage(
-            this.newWindowButton
-        );
-<<<<<<< HEAD
-        await this.verifyHeading(newPage);
-=======
-        const browserContentPage =
-            new BrowserContentPage(newPage);
         const browserContentPage =
             new BrowserContentPage(newPage);
         await browserContentPage.verifyHeading();
@@ -80,3 +59,6 @@ export class BrowserWindowsPage extends BasePage {
         const browserContentPage =
             new BrowserContentPage(newPage);
         await browserContentPage.verifyHeading();
+        await newPage.close();
+    }
+}

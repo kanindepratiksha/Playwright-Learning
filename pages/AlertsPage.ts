@@ -46,8 +46,8 @@ export class AlertsPage extends BasePage {
     // Handle Simple Alert
     // ==========================================
     async handleSimpleAlert() {
-        this.page.once('dialog', async dialog => {
-            await dialog.accept();
+        this.page.once('dialog', dialog => {
+            dialog.accept();
         });
         await this.alertButton.click();
     }
@@ -55,8 +55,8 @@ export class AlertsPage extends BasePage {
     // Handle Confirm Alert
     // ==========================================
     async handleConfirmAlert() {
-        this.page.once('dialog', async dialog => {
-            await dialog.accept();
+        this.page.once('dialog', dialog => {
+            dialog.accept();
         });
         await this.confirmButton.click();
     }
@@ -73,8 +73,8 @@ export class AlertsPage extends BasePage {
     // Handle Prompt Alert
     // ==========================================
     async handlePromptAlert() {
-        this.page.once('dialog', async dialog => {
-            await dialog.accept(testData.promptText);
+        this.page.once('dialog', dialog => {
+            dialog.accept(testData.promptText);
         });
         await this.promptButton.click();
     }
