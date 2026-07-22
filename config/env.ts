@@ -7,6 +7,7 @@ export const config = {
     framesUrl: 'https://demoqa.com/frames',
     alertsUrl: 'https://demoqa.com/alerts',
     browserWindowsUrl: 'https://demoqa.com/browser-windows',
-    jsonPlaceholderBaseUrl: 'https://jsonplaceholder.typicode.com/'
+    jsonPlaceholderBaseUrl: 'https://jsonplaceholder.typicode.com/',
+    restfulBookerBaseUrl: 'https://restful-booker.herokuapp.com'
 
 };
