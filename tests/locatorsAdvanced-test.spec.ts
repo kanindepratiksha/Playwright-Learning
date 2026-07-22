@@ -5,6 +5,10 @@ import users from '../testdata/users.json';
 import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
 import { CartPage } from '../pages/CartPage';
+// ==========================================
+// Default User
+// ==========================================
+const user = users[0];
 test('Locators Advanced Demo', async ({ page }) => {
     // ==========================================
     // Page Objects

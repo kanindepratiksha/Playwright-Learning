@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { config } from '../config/env';
 import users from '../testdata/users.json';
 import { testData } from '../utils/appConstants';
@@ -11,6 +11,7 @@ export class HooksPage extends BasePage {
     private readonly password: Locator;
     private readonly loginButton: Locator;
     private readonly menuButton: Locator;
+    private readonly sideMenu: Locator;
     private readonly logoutButton: Locator;
     private readonly productTitle: Locator;
     // ==========================================
@@ -24,6 +25,7 @@ export class HooksPage extends BasePage {
             name: testData.loginButton
         });
         this.menuButton = page.locator('#react-burger-menu-btn');
+        this.sideMenu = page.locator('.bm-menu-wrap');
         this.logoutButton = page.locator('#logout_sidebar_link');
         this.productTitle = page.locator('.title');
     }
@@ -54,8 +56,19 @@ export class HooksPage extends BasePage {
     // Logout
     // ==========================================
     async logout() {
+        // Open menu
         await this.click(this.menuButton);
-        await this.verifyVisible(this.logoutButton);
+        // Wait for side menu
+        await expect(this.sideMenu).toBeVisible({
+            timeout: 10000
+        });
+        // Wait for logout button
+        await expect(this.logoutButton).toBeVisible({
+            timeout: 10000
+        });
+        // Scroll into view (helps WebKit)
+        await this.logoutButton.scrollIntoViewIfNeeded();
+        // Click logout
         await this.click(this.logoutButton);
     }
     // ==========================================

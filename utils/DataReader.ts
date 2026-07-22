@@ -2,8 +2,9 @@ import fs from 'fs';
 import path from 'path';
 export class DataReader {
     static readJson(fileName: string) {
-        const filePath = path.join(
-            process.cwd(),
+        const filePath = path.resolve(
+            __dirname,
+            '..',
             'testdata',
             fileName
         );

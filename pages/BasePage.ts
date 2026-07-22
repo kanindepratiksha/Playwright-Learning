@@ -6,7 +6,7 @@ export class BasePage {
     // ==========================================
     protected async navigate(url: string) {
         await this.page.goto(url, {
-            waitUntil: 'load',
+            waitUntil: 'domcontentloaded',
             timeout: 60000
         });
     }

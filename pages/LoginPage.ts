@@ -2,6 +2,9 @@ import { Page, Locator, expect } from '@playwright/test';
 import { testData } from '../utils/appConstants';
 import { BasePage } from './BasePage';
 export class LoginPage extends BasePage {
+    // ==========================================
+    // Locators
+    // ==========================================
     private readonly username: Locator;
     private readonly password: Locator;
     private readonly loginButton: Locator;
@@ -15,13 +18,22 @@ export class LoginPage extends BasePage {
         });
         this.errorMessage = page.locator('[data-test="error"]');
     }
-    async login(user: string, pass: string) {
+    // ==========================================
+    // Login
+    // ==========================================
+    async login(
+        user: string,
+        pass: string,
+        shouldLogin: boolean = true
+    ) {
         await this.fill(this.username, user);
         await this.fill(this.password, pass);
         await this.click(this.loginButton);
-        // Wait until login succeeds
-        await expect(this.page).toHaveURL(/inventory/);
+        if (shouldLogin) {
+            await expect(this.page).toHaveURL(/inventory/);
+        }
     }
+    
     // ==========================================
     // Verify Login Page
     // ==========================================
@@ -40,9 +52,6 @@ export class LoginPage extends BasePage {
     // Verify Error Message
     // ==========================================
     async verifyErrorMessage(message: string) {
-        await this.verifyText(
-            this.errorMessage,
-            message
-        );
+        await expect(this.errorMessage).toContainText(message);
     }
 }

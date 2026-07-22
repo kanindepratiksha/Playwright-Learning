@@ -22,20 +22,19 @@ export class BrowserWindowsPage extends BasePage {
     async navigate() {
         await super.navigate(config.browserWindowsUrl);
         await expect(this.newTabButton).toBeVisible();
-        timeout: 15000
     }
     // ==========================================
     // Open New Page
     // ==========================================
     private async openNewPage(button: Locator): Promise<Page> {
-        const [newPage] = await Promise.all([
-            this.page.context().waitForEvent('page'),
-            button.click()
-        ]);
-        await newPage.waitForLoadState('load');
-        await expect(
-            newPage.locator('#sampleHeading')
-        ).toBeVisible();
+        await expect(button).toBeVisible();
+        await expect(button).toBeEnabled();
+        const popupPromise = this.page.waitForEvent('popup');
+        await button.click();
+        const newPage = await popupPromise;
+        await newPage.waitForLoadState('domcontentloaded');
+        await expect(newPage.locator('#sampleHeading'))
+            .toBeVisible();
         return newPage;
     }
     // ==========================================

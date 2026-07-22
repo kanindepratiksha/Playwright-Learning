@@ -10,6 +10,9 @@ test('Verify Product Sorting Using Dropdown Options', async ({ page }) => {
     // ==========================================
     const loginPage = new LoginPage(page);
     const inventoryPage = new InventoryPage(page);
+    // ==========================================
+    // Select the first user
+    // ==========================================
     const user = users[0];
     // ==========================================
     // Navigate
@@ -32,34 +35,24 @@ test('Verify Product Sorting Using Dropdown Options', async ({ page }) => {
     // ==========================================
     await inventoryPage.sortProducts('az');
     await inventoryPage.verifySortOption('az');
-    await inventoryPage.verifyFirstProduct(
-        testData.productNameAZ
-    );
+    await inventoryPage.verifyFirstProduct(testData.productNameAZ);
     // ==========================================
     // Sort Z-A
     // ==========================================
     await inventoryPage.sortProducts('za');
     await inventoryPage.verifySortOption('za');
-    await inventoryPage.verifyFirstProduct(
-        testData.productNameZA
-    );
+    await inventoryPage.verifyFirstProduct(testData.productNameZA);
     // ==========================================
     // Sort Low to High
     // ==========================================
     await inventoryPage.sortProducts('lohi');
     await inventoryPage.verifySortOption('lohi');
-    await inventoryPage.verifyFirstPrice(
-        testData.lowPrice
-    );
+    await inventoryPage.verifyFirstPrice(testData.lowPrice);
     // ==========================================
     // Sort High to Low
     // ==========================================
     await inventoryPage.sortProducts('hilo');
     await inventoryPage.verifySortOption('hilo');
-    await inventoryPage.verifyFirstProduct(
-        testData.highPriceProduct
-    );
-    await inventoryPage.verifyFirstPrice(
-        testData.highPrice
-    );
+    await inventoryPage.verifyFirstProduct(testData.highPriceProduct);
+    await inventoryPage.verifyFirstPrice(testData.highPrice);
 });
