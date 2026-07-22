@@ -26,26 +26,29 @@ export class BrowserWindowsPage extends BasePage {
     // ==========================================
     // Open New Page
     // ==========================================
-    private async openNewPage(button: Locator): Promise<Page> {
-        await expect(button).toBeVisible();
-        await expect(button).toBeEnabled();
-        const popupPromise = this.page.waitForEvent('popup');
-        await button.click();
-        const newPage = await popupPromise;
-        await newPage.waitForLoadState('domcontentloaded');
-        await expect(newPage.locator('#sampleHeading'))
-            .toBeVisible();
-        return newPage;
-    }
+    // ==========================================
+// Open New Page
+// ==========================================
+private async openNewPage(button: Locator): Promise<Page> {
+    await expect(button).toBeVisible();
+    await expect(button).toBeEnabled();
+    const context = this.page.context();
+    const [newPage] = await Promise.all([
+        context.waitForEvent('page'),
+        button.click()
+    ]);
+    await newPage.waitForLoadState('domcontentloaded');
+    await expect(
+        newPage.locator('#sampleHeading')
+    ).toBeVisible();
+    return newPage;
+}
     // ==========================================
     // Verify New Tab
     // ==========================================
     async verifyNewTab() {
-        const newPage = await this.openNewPage(
-            this.newTabButton
-        );
-        const browserContentPage =
-            new BrowserContentPage(newPage);
+        const newPage = await this.openNewPage(this.newTabButton);
+        const browserContentPage = new BrowserContentPage(newPage);
         await browserContentPage.verifyHeading();
         await newPage.close();
     }
@@ -53,11 +56,8 @@ export class BrowserWindowsPage extends BasePage {
     // Verify New Window
     // ==========================================
     async verifyNewWindow() {
-        const newPage = await this.openNewPage(
-            this.newWindowButton
-        );
-        const browserContentPage =
-            new BrowserContentPage(newPage);
+        const newPage = await this.openNewPage(this.newWindowButton);
+        const browserContentPage = new BrowserContentPage(newPage);
         await browserContentPage.verifyHeading();
         await newPage.close();
     }

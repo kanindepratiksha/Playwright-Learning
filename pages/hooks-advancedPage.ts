@@ -55,15 +55,14 @@ export class HooksAdvancedPage extends BasePage {
     // Logout
     // ==========================================
     async logout() {
-        await this.menuButton.click();
-        await expect(this.sideMenu).toBeVisible({
-            timeout: 10000
-        });
-        await expect(this.logoutButton).toBeVisible({
-            timeout: 10000
-        });
-        await this.logoutButton.click();
-    }
+    await this.menuButton.click();
+    // Wait for Logout link instead of menu container
+    await expect(this.logoutButton).toBeVisible({
+        timeout: 10000
+    });
+    await this.logoutButton.scrollIntoViewIfNeeded();
+    await this.logoutButton.click();
+}
     // ==========================================
     // Verify Logout
     // ==========================================

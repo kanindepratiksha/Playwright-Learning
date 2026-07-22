@@ -1,5 +1,10 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './BasePage';
+import { Logger } from '../utils/Logger';
+import { WaitUtil } from '../utils/WaitUtil';
+import { RetryUtil } from '../utils/RetryUtil';
+import { ScreenshotManager } from '../utils/ScreenshotManager';
+import { AssertUtil } from '../utils/AssertUtil';
 export class InventoryPage extends BasePage {
     // ==========================================
     // Locators
@@ -94,9 +99,13 @@ export class InventoryPage extends BasePage {
         await this.verifyVisible(this.inventoryList);
     }
     async verifyProductVisible(productName: string) {
-        await this.verifyVisible(
-            this.getProductText(productName)
-        );
+        Logger.info(`Verifying product: ${productName}`);
+        const product = this.getProductText(productName);
+        // Wait until product is visible
+        await WaitUtil.waitForVisible(product);
+        // Verify product
+        await AssertUtil.visible(product);
+        Logger.info(`${productName} is visible`);
     }
     async verifyFirstInventoryItemVisible() {
         await this.verifyVisible(this.firstInventoryItem);

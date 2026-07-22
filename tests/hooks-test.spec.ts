@@ -1,5 +1,7 @@
 import { test } from '@playwright/test';
 import { HooksPage } from '../pages/HooksPage';
+import { Logger } from '../utils/Logger';
+import { ScreenshotManager } from '../utils/ScreenshotManager';
 let hooksPage: HooksPage;
 // ==========================================
 // Before All
