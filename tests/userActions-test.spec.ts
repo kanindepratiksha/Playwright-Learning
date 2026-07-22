@@ -64,7 +64,7 @@ test('UI Actions Demo', async ({ page }) => {
     // ==========================================
     // Verify Cart Empty
     // ==========================================
-    await cartPage.verifyCartEmpty();
+    await cartPage.verifyCartIsEmpty();
     // ==========================================
     // Go Back
     // ==========================================

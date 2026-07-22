@@ -61,5 +61,5 @@ test('Verify Assertions and Waits', async ({ page }) => {
     // ==========================================
     // Verify Cart Count
     // ==========================================
-    await cartPage.verifyCartCount('1');
+    await cartPage.verifyCartBadgeCount('1');
 });

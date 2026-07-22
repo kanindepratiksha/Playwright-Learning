@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './BasePage';
 import { testData } from '../utils/appConstants';
 export class BrowserContentPage extends BasePage {
@@ -17,9 +17,10 @@ export class BrowserContentPage extends BasePage {
     // Verify Heading
     // ==========================================
     async verifyHeading() {
-        await this.verifyText(
-            this.sampleHeading,
-            testData.newTabHeading
-        );
+        await this.sampleHeading.waitFor({
+            state: 'visible'
+        });
+        await expect(this.sampleHeading)
+            .toHaveText(testData.newTabHeading);
     }
 }

@@ -26,19 +26,20 @@ test('Locators Advanced Demo', async ({ page }) => {
     // ==========================================
     // Verify Products Page
     // ==========================================
-    await inventoryPage.verifyProductsPage();
+    await inventoryPage.verifyPageTitle();
+    await inventoryPage.verifyInventoryList();
     // ==========================================
     // Verify First Product
     // ==========================================
-    await inventoryPage.verifyFirstProductVisible();
+    await inventoryPage.verifyFirstInventoryItemVisible();
     // ==========================================
     // Verify Last Product
     // ==========================================
-    await inventoryPage.verifyLastProductVisible();
+    await inventoryPage.verifyLastInventoryItemVisible();
     // ==========================================
     // Verify Second Product
     // ==========================================
-    await inventoryPage.verifyNthProductVisible(1);
+    await inventoryPage.verifyInventoryItemVisible(1);
     // ==========================================
     // Add Product
     // ==========================================
@@ -56,6 +57,7 @@ test('Locators Advanced Demo', async ({ page }) => {
     // ==========================================
     // Verify Product in Cart
     // ==========================================
+    await cartPage.verifyCartTitle();
     await cartPage.verifyProduct(
         testData.product1
     );

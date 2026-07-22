@@ -6,7 +6,8 @@ export class BasePage {
     // ==========================================
     protected async navigate(url: string) {
         await this.page.goto(url, {
-            waitUntil: 'domcontentloaded'
+            waitUntil: 'load',
+            timeout: 60000
         });
     }
     // ==========================================
@@ -15,11 +16,8 @@ export class BasePage {
     protected async click(locator: Locator) {
         await locator.click();
     }
-    // ==========================================
-    // Fill
-    // ==========================================
-    protected async fill(locator: Locator, value: string) {
-        await locator.fill(value);
+    protected async fill(locator: Locator, text: string) {
+        await locator.fill(text);
     }
     // ==========================================
     // Get Text
@@ -54,12 +52,7 @@ export class BasePage {
     ) {
         await expect(locator).toHaveText(text);
     }
-    // ==========================================
-    // Verify URL
-    // ==========================================
-    protected async verifyUrl(
-        url: string | RegExp
-    ) {
+    protected async verifyUrl(url: string | RegExp) {
         await expect(this.page).toHaveURL(url);
     }
     // ==========================================

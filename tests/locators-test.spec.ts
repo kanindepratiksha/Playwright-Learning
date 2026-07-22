@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 import users from '../testdata/users.json';
@@ -26,12 +26,10 @@ test('Locators Demo', async ({ page }) => {
     // ==========================================
     // Validate Login
     // ==========================================
-    await loginPage.verifyLoginSuccess();
-    await inventoryPage.verifyProductsPage();
+    await expect(page).toHaveURL(/inventory/);
+    await inventoryPage.verifyPageTitle();
     await inventoryPage.verifyInventoryList();
-    await inventoryPage.verifyProductVisible(
-        testData.product1
-    );
+    await inventoryPage.verifyProductVisible(testData.product1);
     // ==========================================
     // Logout
     // ==========================================

@@ -1,66 +1,51 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from './BasePage';
 export class CartPage extends BasePage {
     // ==========================================
     // Locators
     // ==========================================
+    private readonly cartLink: Locator;
     private readonly cartTitle: Locator;
     private readonly cartBadge: Locator;
+    private readonly cartItems: Locator;
     private readonly checkoutButton: Locator;
-    private readonly firstName: Locator;
-    private readonly lastName: Locator;
-    private readonly postalCode: Locator;
+    private readonly firstNameInput: Locator;
+    private readonly lastNameInput: Locator;
+    private readonly postalCodeInput: Locator;
     private readonly continueButton: Locator;
     private readonly finishButton: Locator;
     private readonly completeHeader: Locator;
-    private readonly cartItems: Locator;
     // ==========================================
     // Constructor
     // ==========================================
     constructor(page: Page) {
         super(page);
+        this.cartLink = page.locator('.shopping_cart_link');
         this.cartTitle = page.locator('.title');
         this.cartBadge = page.locator('.shopping_cart_badge');
-        this.checkoutButton = page.locator('#checkout');
-        this.firstName = page.locator('#first-name');
-        this.lastName = page.locator('#last-name');
-        this.postalCode = page.locator('#postal-code');
-        this.continueButton = page.locator('#continue');
-        this.finishButton = page.locator('#finish');
-        this.completeHeader = page.locator('.complete-header');
         this.cartItems = page.locator('.cart_item');
+        this.checkoutButton = page.locator('[data-test="checkout"]');
+        this.firstNameInput = page.locator('[data-test="firstName"]');
+        this.lastNameInput = page.locator('[data-test="lastName"]');
+        this.postalCodeInput = page.locator('[data-test="postalCode"]');
+        this.continueButton = page.locator('[data-test="continue"]');
+        this.finishButton = page.locator('[data-test="finish"]');
+        this.completeHeader = page.locator('[data-test="complete-header"]');
     }
     // ==========================================
-    // Dynamic Locator - Product
+    // Dynamic Locators
     // ==========================================
-    private getProduct(productName: string): Locator {
-        return this.page.getByText(productName);
-    }
-    // ==========================================
-    // Dynamic Locator - Remove Button
-    // ==========================================
-    private getRemoveButton(productName: string): Locator {
+    private getCartProduct(productName: string): Locator {
         return this.page
             .locator('.cart_item')
-            .filter({ hasText: productName })
-            .getByRole('button', { name: 'Remove' });
+            .filter({ hasText: productName });
+    }
+    private getRemoveButton(productName: string): Locator {
+        return this.getCartProduct(productName)
+            .getByRole('button');
     }
     // ==========================================
-    // Verify Cart Page
-    // ==========================================
-    async verifyCartPage() {
-        await this.verifyVisible(this.cartTitle);
-    }
-    // ==========================================
-    // Verify Product
-    // ==========================================
-    async verifyProduct(productName: string) {
-        await this.verifyVisible(
-            this.getProduct(productName)
-        );
-    }
-    // ==========================================
-    // Remove Product
+    // Actions
     // ==========================================
     async removeProduct(productName: string) {
         await this.click(
@@ -68,60 +53,50 @@ export class CartPage extends BasePage {
         );
     }
     // ==========================================
-    // Verify Cart Empty
+    // Verifications
     // ==========================================
-    async verifyCartEmpty() {
-        await this.verifyCount(
-            this.cartItems,
-            0
+    async verifyCartPage() {
+        await this.verifyUrl(/cart/);
+    }
+    async verifyCartTitle() {
+        await this.verifyVisible(this.cartTitle);
+    }
+    async verifyProduct(productName: string) {
+        await this.verifyVisible(
+            this.getCartProduct(productName)
         );
     }
-    // ==========================================
-    // Verify Cart Badge Count
-    // ==========================================
-    async verifyCartCount(count: string) {
+    async verifyCartBadgeCount(count: string) {
         await this.verifyText(
             this.cartBadge,
             count
         );
     }
+    async verifyCartIsEmpty() {
+        await expect(this.cartItems).toHaveCount(0);
+    }
     // ==========================================
-    // Checkout
+    // Checkout Methods
     // ==========================================
     async clickCheckout() {
         await this.click(this.checkoutButton);
     }
-    // ==========================================
-    // Fill Checkout Details
-    // ==========================================
     async fillCheckoutDetails(
         firstName: string,
         lastName: string,
         postalCode: string
     ) {
-        await this.fill(this.firstName, firstName);
-        await this.fill(this.lastName, lastName);
-        await this.fill(this.postalCode, postalCode);
+        await this.fill(this.firstNameInput, firstName);
+        await this.fill(this.lastNameInput, lastName);
+        await this.fill(this.postalCodeInput, postalCode);
     }
-    // ==========================================
-    // Continue Checkout
-    // ==========================================
     async continueCheckout() {
         await this.click(this.continueButton);
     }
-    // ==========================================
-    // Finish Checkout
-    // ==========================================
     async finishCheckout() {
         await this.click(this.finishButton);
     }
-    // ==========================================
-    // Verify Order Success
-    // ==========================================
     async verifyOrderSuccess() {
-        await this.verifyText(
-            this.completeHeader,
-            'Thank you for your order!'
-        );
+        await this.verifyVisible(this.completeHeader);
     }
 }

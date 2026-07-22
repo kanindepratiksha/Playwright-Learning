@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 import { config } from '../config/env';
 import { BasePage } from './BasePage';
 import { BrowserContentPage } from './BrowserContentPage';
@@ -21,22 +21,21 @@ export class BrowserWindowsPage extends BasePage {
     // ==========================================
     async navigate() {
         await super.navigate(config.browserWindowsUrl);
-        await this.newTabButton.waitFor({
-            state: 'visible'
-        });
+        await expect(this.newTabButton).toBeVisible();
+        timeout: 15000
     }
     // ==========================================
     // Open New Page
     // ==========================================
     private async openNewPage(button: Locator): Promise<Page> {
-        await button.waitFor({
-            state: 'visible'
-        });
         const [newPage] = await Promise.all([
             this.page.context().waitForEvent('page'),
             button.click()
         ]);
-        await newPage.waitForLoadState('domcontentloaded');
+        await newPage.waitForLoadState('load');
+        await expect(
+            newPage.locator('#sampleHeading')
+        ).toBeVisible();
         return newPage;
     }
     // ==========================================
