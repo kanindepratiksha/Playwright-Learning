@@ -1,19 +1,22 @@
 import { test } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+import { InventoryPage } from '../pages/InventoryPage';
+import { CartPage } from '../pages/CartPage';
+import { FakerUtils } from '../utils/FakerUtils';
 import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 import users from '../testdata/users.json';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
-test('Verify Product Sorting Using Dropdown Options', async ({ page }) => {
+test('Checkout using Dynamic Test Data', async ({ page }) => {
     // ==========================================
     // Page Objects
     // ==========================================
     const loginPage = new LoginPage(page);
     const inventoryPage = new InventoryPage(page);
+    const cartPage = new CartPage(page);
     // ==========================================
-    // Select the first user
+    // Test Data
     // ==========================================
-    const user = users[0];
+    const user = FakerUtils.getUser();
     // ==========================================
     // Navigate
     // ==========================================
@@ -22,37 +25,38 @@ test('Verify Product Sorting Using Dropdown Options', async ({ page }) => {
     // Login
     // ==========================================
     await loginPage.login(
-        user.username,
-        user.password
+        users[0].username,
+        users[0].password
     );
     // ==========================================
-    // Verify Login
+    // Add Product
     // ==========================================
-    await loginPage.verifyLoginSuccess();
-    await inventoryPage.verifyProductsPage();
+    await inventoryPage.addProduct(
+        testData.product1
+    );
     // ==========================================
-    // Sort A-Z
+    // Open Cart
     // ==========================================
-    await inventoryPage.sortProducts('az');
-    await inventoryPage.verifySortOption('az');
-    await inventoryPage.verifyFirstProduct(testData.productNameAZ);
+    await inventoryPage.openCart();
     // ==========================================
-    // Sort Z-A
+    // Verify Product
     // ==========================================
-    await inventoryPage.sortProducts('za');
-    await inventoryPage.verifySortOption('za');
-    await inventoryPage.verifyFirstProduct(testData.productNameZA);
+    await cartPage.verifyProduct(
+        testData.product1
+    );
     // ==========================================
-    // Sort Low to High
+    // Checkout
     // ==========================================
-    await inventoryPage.sortProducts('lohi');
-    await inventoryPage.verifySortOption('lohi');
-    await inventoryPage.verifyFirstPrice(testData.lowPrice);
+    await cartPage.clickCheckout();
+    await cartPage.fillCheckoutDetails(
+        user.firstName,
+        user.lastName,
+        user.postalCode
+    );
+    await cartPage.continueCheckout();
+    await cartPage.finishCheckout();
     // ==========================================
-    // Sort High to Low
+    // Verify Order
     // ==========================================
-    await inventoryPage.sortProducts('hilo');
-    await inventoryPage.verifySortOption('hilo');
-    await inventoryPage.verifyFirstProduct(testData.highPriceProduct);
-    await inventoryPage.verifyFirstPrice(testData.highPrice);
+    await cartPage.verifyOrderSuccess();
 });

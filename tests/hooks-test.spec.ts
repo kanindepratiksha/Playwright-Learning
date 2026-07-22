@@ -5,13 +5,13 @@ let hooksPage: HooksPage;
 // Before All
 // ==========================================
 test.beforeAll(async () => {
-    console.log('BEFORE ALL');
+    console.log('========== BEFORE ALL ==========');
 });
 // ==========================================
 // Before Each
 // ==========================================
 test.beforeEach(async ({ page }) => {
-    console.log('BEFORE EACH');
+    console.log('========== BEFORE EACH ==========');
     hooksPage = new HooksPage(page);
     await hooksPage.navigate();
     await hooksPage.login();
@@ -19,14 +19,22 @@ test.beforeEach(async ({ page }) => {
 // ==========================================
 // After Each
 // ==========================================
-test.afterEach(async () => {
-    console.log('AFTER EACH');
+test.afterEach(async ({ page }, testInfo) => {
+    console.log('========== AFTER EACH ==========');
+    console.log(`Title : ${testInfo.title}`);
+    console.log(`Status : ${testInfo.status}`);
+    if (testInfo.status !== testInfo.expectedStatus) {
+        await page.screenshot({
+            path: `screenshots/${testInfo.title}.png`,
+            fullPage: true
+        });
+    }
 });
 // ==========================================
 // After All
 // ==========================================
 test.afterAll(async () => {
-    console.log('AFTER ALL');
+    console.log('========== AFTER ALL ==========');
 });
 // ==========================================
 // Test Suite
@@ -45,13 +53,16 @@ test.describe('Hooks Demo', () => {
         await hooksPage.logout();
         await hooksPage.verifyLogout();
     });
-    test('Only Example', async () => {
-        console.log('This is test.only example');
+    // ==========================================
+    // Example Test
+    // ==========================================
+    test('Example Test', async () => {
+        await hooksPage.verifyLogin();
     });
     // ==========================================
     // Skip Example
     // ==========================================
     test.skip('Checkout Test', async () => {
-        console.log('Checkout test skipped');
+        // Future implementation
     });
 });

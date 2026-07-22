@@ -1,77 +1,78 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
+import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 import users from '../testdata/users.json';
-import { config } from '../config/env';
-const user = users[0];
+import { LoginPage } from '../pages/LoginPage';
+import { InventoryPage } from '../pages/InventoryPage';
+import { CartPage } from '../pages/CartPage';
 test('UI Actions Demo', async ({ page }) => {
+    // ==========================================
+    // Page Objects
+    // ==========================================
+    const loginPage = new LoginPage(page);
+    const inventoryPage = new InventoryPage(page);
+    const cartPage = new CartPage(page);
+    const user = users[0];
+    // ==========================================
+    // Navigate
+    // ==========================================
     await page.goto(config.sauceDemoUrl);
     // ==========================================
     // Login
     // ==========================================
-    await page.getByPlaceholder('Username')
-        .fill(user.username);
-    await page.getByPlaceholder('Password')
-        .fill(user.password);
-    // keyboard.press()
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Enter');
+    await loginPage.login(
+        user.username,
+        user.password
+    );
+    await inventoryPage.loginWithKeyboard();
     // ==========================================
     // Verify Login
     // ==========================================
-    await expect(
-        page.locator('.title')
-    ).toHaveText(testData.productPageTitle);
-    // hover()
-    await page.locator('.inventory_item')
-        .first()
-        .hover();
+    await loginPage.verifyLoginSuccess();
+    await inventoryPage.verifyProductsPage();
     // ==========================================
-    // Add to Cart
+    // Hover Product
     // ==========================================
-    await page
-        .locator('.inventory_item')
-        .filter({ hasText: testData.product1 })
-        .getByRole('button', { name: 'Add to cart' })
-        .click();
+    await inventoryPage.hoverFirstProduct();
     // ==========================================
-    // Cart Validation
+    // Add Product
     // ==========================================
-    await expect(
-        page.locator('.shopping_cart_badge')
-    ).toHaveText('1');
+    await inventoryPage.addProduct(
+        testData.product1
+    );
     // ==========================================
-    // Navigate to Cart
+    // Verify Cart Count
     // ==========================================
-    await page.locator('.shopping_cart_link').click();
-    await expect(page)
-        .toHaveURL(/cart/);
+    await inventoryPage.verifyCartCount('1');
     // ==========================================
-    // Verify Product
+    // Open Cart
     // ==========================================
-    await expect(
-        page.getByText(testData.product1)
-    ).toBeVisible();
+    await inventoryPage.openCart();
+    // ==========================================
+    // Verify Cart
+    // ==========================================
+    await cartPage.verifyCartPage();
+    await cartPage.verifyProduct(
+        testData.product1
+    );
     // ==========================================
     // Remove Product
     // ==========================================
-    await page.getByRole('button', {
-        name: 'Remove'
-    }).click();
+    await cartPage.removeProduct(
+        testData.product1
+    );
     // ==========================================
-    // Verify Empty Cart
+    // Verify Cart Empty
     // ==========================================
-    await expect(
-        page.locator('.cart_item')
-    ).toHaveCount(0);
+    await cartPage.verifyCartIsEmpty();
     // ==========================================
-    // Browser Navigation
+    // Go Back
     // ==========================================
-    await page.goBack();
-    await expect(
-        page.locator('.title')
-    ).toHaveText(testData.productPageTitle);
-    await page.reload();
-    await expect(
-        page.locator('.title')
-    ).toHaveText(testData.productPageTitle);
+    await inventoryPage.goBack();
+    await inventoryPage.verifyProductsPage();
+    // ==========================================
+    // Reload
+    // ==========================================
+    await inventoryPage.reloadPage();
+    await inventoryPage.verifyProductsPage();
 });

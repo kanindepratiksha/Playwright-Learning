@@ -32,7 +32,7 @@ test.describe('CSV Data Driven Testing', () => {
                         false
                     );
                     await loginPage.verifyErrorMessage(
-                        'Sorry, this user has been locked out.'
+                        'Epic sadface: Sorry, this user has been locked out.'
                     );
                 }
             });

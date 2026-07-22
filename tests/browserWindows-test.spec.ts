@@ -1,20 +1,20 @@
 import { test } from '@playwright/test';
 import { BrowserWindowsPage } from '../pages/BrowserWindowsPage';
-test('Verify Multiple Tabs and Popup Handling', async ({ page }) => {
+test('Verify Browser Windows', async ({ page }) => {
     // ==========================================
-    // Create Page Object
+    // Page Object
     // ==========================================
-    const browserWindow = new BrowserWindowsPage(page);
+    const browserWindowsPage = new BrowserWindowsPage(page);
     // ==========================================
     // Navigate
     // ==========================================
-    await browserWindow.navigate();
+    await browserWindowsPage.navigate();
     // ==========================================
-    // Multiple Tabs
+    // Verify New Tab
     // ==========================================
-    await browserWindow.verifyNewTab();
+    await browserWindowsPage.verifyNewTab();
     // ==========================================
-    // Popup Window
+    // Verify New Window
     // ==========================================
-    await browserWindow.verifyNewWindow();
+    await browserWindowsPage.verifyNewWindow();
 });

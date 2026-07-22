@@ -1,6 +1,10 @@
-import { test } from '../fixtures/teardownFixture';
+import { test, expect } from '../fixtures/teardownFixture';
 test.describe('Fixture Teardown Demo', () => {
+    // ==========================================
+    // Create and Delete User
+    // ==========================================
     test('Create and Delete User', async ({ user }) => {
-        console.log(user.username);
+        expect(user).toBeDefined();
+        expect(user.username).toBeTruthy();
     });
 });

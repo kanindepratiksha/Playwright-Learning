@@ -14,9 +14,9 @@ export const test = base.extend<AuthFixture>({
         await page.goto(config.sauceDemoUrl);
         const loginPage = new LoginPage(page);
         await loginPage.login(
-            user.username,
-            user.password
-        );
+    users[0].username,
+    users[0].password
+);
         await use(page);
     }
 });

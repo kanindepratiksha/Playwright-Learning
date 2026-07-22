@@ -8,6 +8,13 @@ export class CartPage extends BasePage {
     private readonly cartTitle: Locator;
     private readonly cartBadge: Locator;
     private readonly cartItems: Locator;
+    private readonly checkoutButton: Locator;
+    private readonly firstNameInput: Locator;
+    private readonly lastNameInput: Locator;
+    private readonly postalCodeInput: Locator;
+    private readonly continueButton: Locator;
+    private readonly finishButton: Locator;
+    private readonly completeHeader: Locator;
     // ==========================================
     // Constructor
     // ==========================================
@@ -17,6 +24,13 @@ export class CartPage extends BasePage {
         this.cartTitle = page.locator('.title');
         this.cartBadge = page.locator('.shopping_cart_badge');
         this.cartItems = page.locator('.cart_item');
+        this.checkoutButton = page.locator('[data-test="checkout"]');
+        this.firstNameInput = page.locator('[data-test="firstName"]');
+        this.lastNameInput = page.locator('[data-test="lastName"]');
+        this.postalCodeInput = page.locator('[data-test="postalCode"]');
+        this.continueButton = page.locator('[data-test="continue"]');
+        this.finishButton = page.locator('[data-test="finish"]');
+        this.completeHeader = page.locator('[data-test="complete-header"]');
     }
     // ==========================================
     // Dynamic Locators
@@ -33,9 +47,6 @@ export class CartPage extends BasePage {
     // ==========================================
     // Actions
     // ==========================================
-    async openCart() {
-        await this.click(this.cartLink);
-    }
     async removeProduct(productName: string) {
         await this.click(
             this.getRemoveButton(productName)
@@ -44,6 +55,9 @@ export class CartPage extends BasePage {
     // ==========================================
     // Verifications
     // ==========================================
+    async verifyCartPage() {
+        await this.verifyUrl(/cart/);
+    }
     async verifyCartTitle() {
         await this.verifyVisible(this.cartTitle);
     }
@@ -60,5 +74,29 @@ export class CartPage extends BasePage {
     }
     async verifyCartIsEmpty() {
         await expect(this.cartItems).toHaveCount(0);
+    }
+    // ==========================================
+    // Checkout Methods
+    // ==========================================
+    async clickCheckout() {
+        await this.click(this.checkoutButton);
+    }
+    async fillCheckoutDetails(
+        firstName: string,
+        lastName: string,
+        postalCode: string
+    ) {
+        await this.fill(this.firstNameInput, firstName);
+        await this.fill(this.lastNameInput, lastName);
+        await this.fill(this.postalCodeInput, postalCode);
+    }
+    async continueCheckout() {
+        await this.click(this.continueButton);
+    }
+    async finishCheckout() {
+        await this.click(this.finishButton);
+    }
+    async verifyOrderSuccess() {
+        await this.verifyVisible(this.completeHeader);
     }
 }

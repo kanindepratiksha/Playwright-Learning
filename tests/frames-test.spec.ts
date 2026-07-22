@@ -1,20 +1,20 @@
 import { test } from '@playwright/test';
 import { FramesPage } from '../pages/FramesPage';
-test('Verify iframe handling using frameLocator()', async ({ page }) => {
+test('Verify Frames', async ({ page }) => {
     // ==========================================
-    // Create Frames Page Object
+    // Page Object
     // ==========================================
     const framesPage = new FramesPage(page);
     // ==========================================
-    // Navigate to Frames Page
+    // Navigate
     // ==========================================
     await framesPage.navigate();
     // ==========================================
-    // Verify Frame Heading Visibility
+    // Verify Frame Visibility
     // ==========================================
     await framesPage.verifyFrameHeadingVisible();
     // ==========================================
-    // Verify Frame Heading Text
+    // Verify Frame Text
     // ==========================================
     await framesPage.verifyFrameText();
 });

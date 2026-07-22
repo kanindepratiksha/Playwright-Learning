@@ -11,18 +11,14 @@ export class FramesPage extends BasePage {
     // Locators
     // ==========================================
     private readonly frame: FrameLocator;
+    private readonly sampleHeading: Locator;
     // ==========================================
     // Constructor
     // ==========================================
     constructor(page: Page) {
         super(page);
         this.frame = page.frameLocator('#frame1');
-    }
-    // ==========================================
-    // Dynamic Locator
-    // ==========================================
-    private getSampleHeading(): Locator {
-        return this.frame.locator('#sampleHeading');
+        this.sampleHeading = this.frame.locator('#sampleHeading');
     }
     // ==========================================
     // Navigate to Frames Page
@@ -34,14 +30,14 @@ export class FramesPage extends BasePage {
     // Verify Heading Visibility
     // ==========================================
     async verifyFrameHeadingVisible() {
-        await this.verifyVisible(this.getSampleHeading());
+        await this.verifyVisible(this.sampleHeading);
     }
     // ==========================================
     // Verify Heading Text
     // ==========================================
     async verifyFrameText() {
         await this.verifyText(
-            this.getSampleHeading(),
+            this.sampleHeading,
             testData.frameHeading
         );
     }

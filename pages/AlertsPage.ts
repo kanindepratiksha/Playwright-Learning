@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, Dialog } from '@playwright/test';
 import { config } from '../config/env';
 import { testData } from '../utils/appConstants';
 import { BasePage } from './BasePage';
@@ -27,38 +27,33 @@ export class AlertsPage extends BasePage {
     // ==========================================
     async navigate() {
         await super.navigate(config.alertsUrl);
-        // Hide DemoQA advertisement and footer
-        await this.page.evaluate(() => {
-            const fixedBan = document.getElementById('fixedban');
-            if (fixedBan) {
-                (fixedBan as HTMLElement).style.display = 'none';
+        await this.waitForVisible(this.alertButton);
+    }
+    // ==========================================
+    // Handle Dialog
+    // ==========================================
+    private handleDialog(action: 'accept' | 'dismiss', text?: string) {
+        this.page.once('dialog', async (dialog: Dialog) => {
+            if (action === 'accept') {
+                await dialog.accept(text);
+            } else {
+                await dialog.dismiss();
             }
-            const footer = document.querySelector('footer');
-            if (footer) {
-                (footer as HTMLElement).style.display = 'none';
-            }
-        });
-        await this.alertButton.waitFor({
-            state: 'visible'
         });
     }
     // ==========================================
     // Handle Simple Alert
     // ==========================================
     async handleSimpleAlert() {
-        this.page.once('dialog', dialog => {
-            dialog.accept();
-        });
-        await this.alertButton.click();
+        this.handleDialog('accept');
+        await this.click(this.alertButton);
     }
     // ==========================================
     // Handle Confirm Alert
     // ==========================================
     async handleConfirmAlert() {
-        this.page.once('dialog', dialog => {
-            dialog.accept();
-        });
-        await this.confirmButton.click();
+        this.handleDialog('accept');
+        await this.click(this.confirmButton);
     }
     // ==========================================
     // Verify Confirm Result
@@ -73,10 +68,11 @@ export class AlertsPage extends BasePage {
     // Handle Prompt Alert
     // ==========================================
     async handlePromptAlert() {
-        this.page.once('dialog', dialog => {
-            dialog.accept(testData.promptText);
-        });
-        await this.promptButton.click();
+        this.handleDialog(
+            'accept',
+            testData.promptText
+        );
+        await this.click(this.promptButton);
     }
     // ==========================================
     // Verify Prompt Result

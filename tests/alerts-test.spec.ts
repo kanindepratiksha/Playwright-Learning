@@ -1,15 +1,26 @@
 import { test } from '@playwright/test';
 import { AlertsPage } from '../pages/AlertsPage';
-test('Verify JavaScript Alerts', async ({ page }) => {
+test('Alerts', async ({ page }) => {
+    // ==========================================
+    // Page Object
+    // ==========================================
     const alertsPage = new AlertsPage(page);
-    // Navigate to Alerts page
+    // ==========================================
+    // Navigate
+    // ==========================================
     await alertsPage.navigate();
-    // Handle Simple Alert
+    // ==========================================
+    // Simple Alert
+    // ==========================================
     await alertsPage.handleSimpleAlert();
-    // Handle Confirm Alert
+    // ==========================================
+    // Confirm Alert
+    // ==========================================
     await alertsPage.handleConfirmAlert();
     await alertsPage.verifyConfirmAlert();
-    // Handle Prompt Alert
+    // ==========================================
+    // Prompt Alert
+    // ==========================================
     await alertsPage.handlePromptAlert();
     await alertsPage.verifyPromptAlert();
 });

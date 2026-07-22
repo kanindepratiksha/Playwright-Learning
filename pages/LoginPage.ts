@@ -9,9 +9,6 @@ export class LoginPage extends BasePage {
     private readonly password: Locator;
     private readonly loginButton: Locator;
     private readonly errorMessage: Locator;
-    // ==========================================
-    // Constructor
-    // ==========================================
     constructor(page: Page) {
         super(page);
         this.username = page.getByPlaceholder('Username');
@@ -35,6 +32,21 @@ export class LoginPage extends BasePage {
         if (shouldLogin) {
             await expect(this.page).toHaveURL(/inventory/);
         }
+    }
+    
+    // ==========================================
+    // Verify Login Page
+    // ==========================================
+    async verifyLoginPage() {
+        await this.verifyVisible(this.username);
+        await this.verifyVisible(this.password);
+        await this.verifyVisible(this.loginButton);
+    }
+    // ==========================================
+    // Verify Login Successful
+    // ==========================================
+    async verifyLoginSuccess() {
+        await this.verifyUrl(/inventory/);
     }
     // ==========================================
     // Verify Error Message

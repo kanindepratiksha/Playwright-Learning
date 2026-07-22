@@ -10,7 +10,7 @@ export class TestDataFactory {
             'testdata',
             'users.json'
         );
-        return DataReader.readJson(filePath);
+        return DataReader.readJson('users.json');
     }
     static getExcelUsers(): ExcelUser[] {
         return ExcelReader.readExcel(
