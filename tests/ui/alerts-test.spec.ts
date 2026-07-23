@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { AlertsPage } from '../pages/AlertsPage';
+import { AlertsPage } from '../../pages/AlertsPage';
 test('Alerts', async ({ page }) => {
     // ==========================================
     // Page Object

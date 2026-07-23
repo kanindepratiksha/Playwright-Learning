@@ -1,9 +1,9 @@
 import { test } from '@playwright/test';
-import { config } from '../config/env';
-import { testData } from '../utils/appConstants';
-import users from '../testdata/users.json';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
+import { config } from '../../config/env';
+import { testData } from '../../utils/appConstants';
+import users from '../../testdata/users.json';
+import { LoginPage } from '../../pages/LoginPage';
+import { InventoryPage } from '../../pages/InventoryPage';
 test('Verify Product Sorting Using Dropdown Options', async ({ page }) => {
     // ==========================================
     // Page Objects

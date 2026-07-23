@@ -1,5 +1,5 @@
-import { test, expect } from '../fixtures/apiFixture';
-import { config } from '../config/env';
+import { test, expect } from '../../fixtures/apiFixture';
+import { config } from '../../config/env';
 test.describe('API Fixture', () => {
     test('Verify Users API', async ({ apiClient }) => {
         // ==========================================

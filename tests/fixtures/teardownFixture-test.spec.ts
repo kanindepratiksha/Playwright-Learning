@@ -1,4 +1,4 @@
-import { test, expect } from '../fixtures/teardownFixture';
+import { test, expect } from '../../fixtures/teardownFixture';
 test.describe('Fixture Teardown Demo', () => {
     // ==========================================
     // Create and Delete User

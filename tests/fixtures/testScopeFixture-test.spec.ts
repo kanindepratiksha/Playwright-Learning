@@ -1,4 +1,4 @@
-import { test, expect } from '../fixtures/testScopeFixture';
+import { test, expect } from '../../fixtures/testScopeFixture';
 test.describe('Test Scope Fixture Demo', () => {
     // ==========================================
     // Test One

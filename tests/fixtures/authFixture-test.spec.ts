@@ -1,5 +1,5 @@
-import { test } from '../fixtures/authFixture';
-import { InventoryPage } from '../pages/InventoryPage';
+import { test } from '../../fixtures/authFixture';
+import { InventoryPage } from '../../pages/InventoryPage';
 test.describe('Authentication Fixture', () => {
     test('Verify Successful Login', async ({ authenticatedPage }) => {
         // ==========================================

@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
-import { config } from '../config/env';
-import { testData } from '../utils/appConstants';
-import users from '../testdata/users.json';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
-import { HooksAdvancedPage } from '../pages/hooks-advancedPage';
+import { config } from '../../config/env';
+import { testData } from '../../utils/appConstants';
+import users from '../../testdata/users.json';
+import { LoginPage } from '../../pages/LoginPage';
+import { InventoryPage } from '../../pages/InventoryPage';
+import { HooksAdvancedPage } from '../../pages/hooks-advancedPage';
 const user = users[0];
 test('Locators Demo', async ({ page }) => {
     // ==========================================

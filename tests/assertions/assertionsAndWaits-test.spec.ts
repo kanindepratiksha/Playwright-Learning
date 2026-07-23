@@ -1,10 +1,10 @@
 import { test } from '@playwright/test';
-import { config } from '../config/env';
-import users from '../testdata/users.json';
-import { testData } from '../utils/appConstants';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
-import { CartPage } from '../pages/CartPage';
+import { config } from '../../config/env';
+import users from '../../testdata/users.json';
+import { testData } from '../../utils/appConstants';
+import { LoginPage } from '../../pages/LoginPage';
+import { InventoryPage } from '../../pages/InventoryPage';
+import { CartPage } from '../../pages/CartPage';
 test('Verify Assertions and Waits', async ({ page }) => {
     // ==========================================
     // Page Objects
