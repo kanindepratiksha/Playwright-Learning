@@ -298,6 +298,7 @@ docs/
 - Used JSON-based data-driven API testing.
 - Improved framework maintainability by reducing duplicate code.
 - Built a scalable and reusable API automation framework following enterprise automation best practices.
+- Reorganized the test suite using a feature-based folder structure for better maintainability and scalability.
 
 ---
 
@@ -315,6 +316,36 @@ docs/
 
 ---
 
+---
+
+# Framework Restructure
+
+Reorganized the test suite into a feature-based folder structure to improve readability, maintainability, and scalability.
+
+```text
+tests/
+├── api/
+├── ui/
+├── assertions/
+├── data-driven/
+├── fixtures/
+└── hooks/
+```
+
+**Benefits**
+
+- Better project organization
+- Easy navigation of test cases
+- Clear separation of framework features
+- Improved maintainability
+- Scalable folder structure for future enhancements
+
+---
+
 ## Status
 
 ✅ Completed
+
+**Additional Enhancement**
+
+- ✅ Restructured test folders using a feature-based organization.

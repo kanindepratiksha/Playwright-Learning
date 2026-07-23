@@ -1,7 +1,7 @@
-import { test, expect } from '../fixtures/fixture';
-import { config } from '../config/env';
-import { testData } from '../utils/appConstants';
-import users from '../testdata/users.json';
+import { test, expect } from '../../fixtures/fixture';
+import { config } from '../../config/env';
+import { testData } from '../../utils/appConstants';
+import users from '../../testdata/users.json';
 test.describe('Playwright Fixture Demo', () => {
     // ==========================================
     // Feature 1 - Built-in Fixture

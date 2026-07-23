@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { TestDataFactory } from '../utils/TestDataFactory';
-import { DataValidator } from '../utils/DataValidator';
+import { TestDataFactory } from '../../utils/TestDataFactory';
+import { DataValidator } from '../../utils/DataValidator';
 test('Read JSON Users', async () => {
     const users = TestDataFactory.getJsonUsers();
     DataValidator.validateUsers(users);

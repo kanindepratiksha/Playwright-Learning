@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
-import { HooksAdvancedPage } from '../pages/hooks-advancedPage';
-import users from '../testdata/users.json';
+import { HooksAdvancedPage } from '../../pages/hooks-advancedPage';
+import users from '../../testdata/users.json';
 // ==========================================
 // Page Object
 // ==========================================

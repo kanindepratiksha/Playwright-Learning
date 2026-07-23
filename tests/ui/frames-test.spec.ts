@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { FramesPage } from '../pages/FramesPage';
+import { FramesPage } from '../../pages/FramesPage';
 test('Verify Frames', async ({ page }) => {
     // ==========================================
     // Page Object

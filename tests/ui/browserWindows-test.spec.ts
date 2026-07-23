@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { BrowserWindowsPage } from '../pages/BrowserWindowsPage';
+import { BrowserWindowsPage } from '../../pages/BrowserWindowsPage';
 test('Verify Browser Windows', async ({ page }) => {
     // ==========================================
     // Page Object

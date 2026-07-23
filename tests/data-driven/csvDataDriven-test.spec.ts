@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { config } from '../config/env';
-import { TestDataFactory } from '../utils/TestDataFactory';
-import { DataValidator } from '../utils/DataValidator';
+import { LoginPage } from '../../pages/LoginPage';
+import { config } from '../../config/env';
+import { TestDataFactory } from '../../utils/TestDataFactory';
+import { DataValidator } from '../../utils/DataValidator';
 let normalizedUsers: any[] = [];
 test.beforeAll(async () => {
     const users = await TestDataFactory.getCsvUsers();

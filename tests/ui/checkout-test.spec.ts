@@ -1,11 +1,11 @@
 import { test } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
-import { InventoryPage } from '../pages/InventoryPage';
-import { CartPage } from '../pages/CartPage';
-import { FakerUtils } from '../utils/FakerUtils';
-import { config } from '../config/env';
-import { testData } from '../utils/appConstants';
-import users from '../testdata/users.json';
+import { LoginPage } from '../../pages/LoginPage';
+import { InventoryPage } from '../../pages/InventoryPage';
+import { CartPage } from '../../pages/CartPage';
+import { FakerUtils } from '../../utils/FakerUtils';
+import { config } from '../../config/env';
+import { testData } from '../../utils/appConstants';
+import users from '../../testdata/users.json';
 test('Checkout using Dynamic Test Data', async ({ page }) => {
     // ==========================================
     // Page Objects

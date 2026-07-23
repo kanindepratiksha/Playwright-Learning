@@ -1,4 +1,4 @@
-import { test, expect } from '../fixtures/workerFixture';
+import { test, expect } from '../../fixtures/workerFixture';
 test.describe('Worker Fixture Demo', () => {
     // ==========================================
     // Worker Test 1
