@@ -1,7 +1,14 @@
 import { test, expect } from "@playwright/test";
 import { AuthApi } from "../../api/AuthApi";
-test("Verify Authentication Token Generation", async ({ request }) => {
-    const authApi = new AuthApi(request);
-    const token = await authApi.generateToken();
-    expect(token).toBeTruthy();
+test("Generate Authentication Token", async ({ request }) => {
+    const authApi = new AuthApi();
+    const response = await request.post(authApi.getAuthUrl(), {
+        headers: authApi.getDefaultHeaders(),
+        data: {
+            username: "admin",
+            password: "password123"
+        }
+    });
+    const body = await response.json();
+    expect(body.token).toBeTruthy();
 });

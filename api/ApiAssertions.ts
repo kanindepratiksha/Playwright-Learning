@@ -2,13 +2,14 @@ import { APIResponse, expect } from "@playwright/test";
 export class ApiAssertions {
     static verifyStatus(
         response: APIResponse,
-        status: number
-    ) {
-        expect(response.status()).toBe(status);
+        expectedStatus: number
+    ): void {
+        expect(response.status()).toBe(expectedStatus);
     }
-    static verifySuccess(
-        response: APIResponse
-    ) {
-        expect(response.ok()).toBeTruthy();
+    static verifyResponseTime(
+        responseTime: number,
+        maxResponseTime: number = 2000
+    ): void {
+        expect(responseTime).toBeLessThanOrEqual(maxResponseTime);
     }
 }

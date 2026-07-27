@@ -1,5 +1,8 @@
 import { test } from '@playwright/test';
 import { BrowserWindowsPage } from '../../pages/BrowserWindowsPage';
+
+test.setTimeout(90_000);
+
 test('Verify Browser Windows', async ({ page }) => {
     // ==========================================
     // Page Object

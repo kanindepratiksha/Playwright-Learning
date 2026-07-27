@@ -344,8 +344,8 @@ tests/
 
 ## Status
 
-✅ Completed
+Completed
 
 **Additional Enhancement**
 
-- ✅ Restructured test folders using a feature-based organization.
+-  Restructured test folders using a feature-based organization.
