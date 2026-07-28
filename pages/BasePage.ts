@@ -4,10 +4,9 @@ export class BasePage {
     // ==========================================
     // Navigation
     // ==========================================
-    protected async navigate(url: string) {
+    protected async navigate(url: string): Promise<void> {
         await this.page.goto(url, {
-            waitUntil: 'domcontentloaded',
-            timeout: 60000
+            waitUntil: "domcontentloaded"
         });
     }
     // ==========================================

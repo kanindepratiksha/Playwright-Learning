@@ -33,11 +33,11 @@ export class AlertsPage extends BasePage {
     // Handle Dialog
     // ==========================================
     private handleDialog(action: 'accept' | 'dismiss', text?: string) {
-        this.page.once('dialog', async (dialog: Dialog) => {
+        this.page.once('dialog', (dialog: Dialog) => {
             if (action === 'accept') {
-                await dialog.accept(text);
+                dialog.accept(text);
             } else {
-                await dialog.dismiss();
+                dialog.dismiss();
             }
         });
     }

@@ -8,19 +8,24 @@ type MyFixtures = {
     inventoryPage: InventoryPage;
 };
 export const test = base.extend<MyFixtures>({
-    loginPage: async ({ page }, use) => {
-        console.log('LoginPage Fixture Setup');
-        await page.goto(config.sauceDemoUrl);
-        const loginPage = new LoginPage(page);
-        await use(loginPage);
-        console.log('LoginPage Fixture Cleanup');
-    },
+    loginPage: [
+        async ({ page }, use) => {
+            console.log('LoginPage Fixture Setup');
+            await page.goto(config.sauceDemoUrl, {
+                waitUntil: "domcontentloaded"
+            });
+            const loginPage = new LoginPage(page);
+            await use(loginPage);
+            console.log('LoginPage Fixture Cleanup');
+        },
+        { timeout: 90_000 }
+    ],
     inventoryPage: async ({ page, loginPage }, use) => {
         console.log('Inventory Fixture Setup');
         await loginPage.login(
-    users[0].username,
-    users[0].password
-);
+            users[0].username,
+            users[0].password
+        );
         const inventoryPage = new InventoryPage(page);
         await use(inventoryPage);
         console.log('Inventory Fixture Cleanup');
