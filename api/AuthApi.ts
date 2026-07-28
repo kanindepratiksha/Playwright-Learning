@@ -1,10 +1,21 @@
+import { APIRequestContext, APIResponse } from "@playwright/test";
+import { BaseApi } from "./BaseApi";
 import { config } from "../config/env";
-import { ApiHeaders } from "./ApiHeaders";
-export class AuthApi {
-    getAuthUrl(): string {
-        return `${config.restfulBookerBaseUrl}/auth`;
+export class AuthApi extends BaseApi {
+    constructor(request: APIRequestContext) {
+        super(request);
     }
-    getDefaultHeaders(): Record<string, string> {
-        return ApiHeaders.json();
+    async generateToken(): Promise<APIResponse> {
+        return this.post(
+            `${config.restfulBookerBaseUrl}/auth`,
+            {
+                username: config.username,
+                password: config.password
+            },
+            {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        );
     }
 }

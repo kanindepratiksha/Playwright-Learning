@@ -16,7 +16,7 @@ test('Verify Assertions and Waits', async ({ page }) => {
     // ==========================================
     // Navigate
     // ==========================================
-    await page.goto(config.sauceDemoUrl);
+    await page.goto(config.sauceDemoUrl, { waitUntil: "commit" });
     await page.waitForLoadState('networkidle');
     // ==========================================
     // Login

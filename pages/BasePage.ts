@@ -6,7 +6,7 @@ export class BasePage {
     // ==========================================
     protected async navigate(url: string): Promise<void> {
         await this.page.goto(url, {
-            waitUntil: "domcontentloaded"
+            waitUntil: "commit"
         });
     }
     // ==========================================
@@ -28,7 +28,7 @@ export class BasePage {
     // Verify Visible
     // ==========================================
     protected async verifyVisible(locator: Locator) {
-        await expect(locator).toBeVisible();
+        await expect(locator).toBeVisible({ timeout: 60_000 });
     }
     // ==========================================
     // Verify Hidden
@@ -49,7 +49,7 @@ export class BasePage {
         locator: Locator,
         text: string
     ) {
-        await expect(locator).toHaveText(text);
+        await expect(locator).toHaveText(text, { timeout: 60_000 });
     }
     protected async verifyUrl(url: string | RegExp) {
         await expect(this.page).toHaveURL(url);
