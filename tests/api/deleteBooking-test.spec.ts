@@ -3,9 +3,9 @@ import { AuthApi } from "../../api/AuthApi";
 import { BookingApi } from "../../api/BookingApi";
 import { ApiAssertions } from "../../api/ApiAssertions";
 import bookingData from "../../testdata/bookingData.json";
-test("Delete Booking", async ({ request }) => {
-    const authApi = new AuthApi(request);
-    const bookingApi = new BookingApi(request);
+test("Delete Booking", async ({ request }, testInfo) => {
+    const authApi = new AuthApi(request, testInfo);
+    const bookingApi = new BookingApi(request, testInfo);
     const authResponse = await authApi.generateToken();
     const token = (await authResponse.json()).token;
     const createResponse = await bookingApi.createBooking(bookingData);
@@ -16,21 +16,13 @@ test("Delete Booking", async ({ request }) => {
     );
     ApiAssertions.verifyStatus(response, 201);
 });
-
-test("Reject Delete Booking with Invalid Token", async ({ request }) => {
-    const bookingApi = new BookingApi(request);
+test("Reject Delete Booking with Invalid Token", async ({ request }, testInfo) => {
+    const bookingApi = new BookingApi(request, testInfo);
     const createResponse = await bookingApi.createBooking(bookingData);
     const bookingId = (await createResponse.json()).bookingid;
-
-    const response = await request.delete(
-        `https://restful-booker.herokuapp.com/booking/${bookingId}`,
-        {
-            headers: {
-                "Content-Type": "application/json",
-                Cookie: "token=invalid-token"
-            }
-        }
+    const response = await bookingApi.deleteBookingWithInvalidToken(
+        bookingId,
+        "invalid-token"
     );
-
     ApiAssertions.verifyStatus(response, 403);
 });

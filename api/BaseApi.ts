@@ -1,11 +1,14 @@
 import {
     APIRequestContext,
     APIResponse,
-    expect
+    TestInfo
 } from "@playwright/test";
 import { RetryUtil } from "../utils/RetryUtil";
 export class BaseApi {
-    constructor(protected request: APIRequestContext) {}
+    constructor(
+        protected request: APIRequestContext,
+        protected testInfo?: TestInfo
+    ) {}
     private async executeRequest(
         method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
         url: string,
@@ -24,6 +27,20 @@ export class BaseApi {
         if (data) {
             console.log("\nRequest Body:");
             console.log(JSON.stringify(data, null, 2));
+        }
+        const requestDetails = {
+            method,
+            url,
+            headers,
+            body: data ?? null
+        };
+        if (this.testInfo) {
+            await this.testInfo.attach("API Request", {
+                body: Buffer.from(
+                    JSON.stringify(requestDetails, null, 2)
+                ),
+                contentType: "application/json"
+            });
         }
         const start = Date.now();
         const response = await RetryUtil.execute(async () => {
@@ -60,6 +77,21 @@ export class BaseApi {
         } catch {
             responseBody = await response.text();
         }
+        const responseDetails = {
+            status: response.status(),
+            statusText: response.statusText(),
+            responseTime: `${end - start} ms`,
+            headers: response.headers(),
+            body: responseBody
+        };
+        if (this.testInfo) {
+            await this.testInfo.attach("API Response", {
+                body: Buffer.from(
+                    JSON.stringify(responseDetails, null, 2)
+                ),
+                contentType: "application/json"
+            });
+        }
         console.log("\n========================================");
         console.log("API RESPONSE");
         console.log("========================================");
@@ -69,7 +101,8 @@ export class BaseApi {
         console.log("\nResponse Body:");
         console.log(JSON.stringify(responseBody, null, 2));
         console.log("========================================\n");
-        expect(response.ok()).toBeTruthy();
+        // Return the response so each test can validate
+        // the expected status (200, 201, 403, etc.).
         return response;
     }
     protected async get(
