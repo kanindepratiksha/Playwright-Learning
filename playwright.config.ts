@@ -38,20 +38,25 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: "DEV",
+    use: {
+      browserName: "chromium"
+    }
     },
 
     {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      name: "QA",
+    use: {
+      browserName: "chromium"
+    }
     },
 
     {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-
+      name: "UAT",
+    use: {
+      browserName: "chromium"
+    }
+  },
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',

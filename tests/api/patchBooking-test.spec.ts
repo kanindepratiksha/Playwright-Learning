@@ -7,10 +7,14 @@ import bookingData from "../../testdata/bookingData.json";
 test("Patch Booking", async ({ request }, testInfo) => {
     const authApi = new AuthApi(request, testInfo);
     const bookingApi = new BookingApi(request, testInfo);
-    const authResponse = await authApi.generateToken();
-    const token = (await authResponse.json()).token;
+    // Generate Token
+    const token = await authApi.generateToken();
+    // Create Booking
     const createResponse = await bookingApi.createBooking(bookingData);
-    const bookingId = (await createResponse.json()).bookingid;
+    expect(createResponse.status()).toBe(200);
+    const createBody = await createResponse.json();
+    const bookingId = createBody.bookingid;
+    // Patch Booking
     const response = await bookingApi.patchBooking(
         bookingId,
         {

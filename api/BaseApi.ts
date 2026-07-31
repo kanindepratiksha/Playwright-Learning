@@ -4,6 +4,7 @@ import {
     TestInfo
 } from "@playwright/test";
 import { RetryUtil } from "../utils/RetryUtil";
+import { ApiPerformanceTracker } from "../utils/ApiPerformanceTracker";
 export class BaseApi {
     constructor(
         protected request: APIRequestContext,
@@ -71,6 +72,14 @@ export class BaseApi {
             }
         });
         const end = Date.now();
+        const responseTime = end - start;
+        // ⭐ Add API performance tracking
+        ApiPerformanceTracker.add(
+            method,
+            url,
+            response.status(),
+            responseTime
+        );
         let responseBody: any;
         try {
             responseBody = await response.json();
@@ -80,7 +89,7 @@ export class BaseApi {
         const responseDetails = {
             status: response.status(),
             statusText: response.statusText(),
-            responseTime: `${end - start} ms`,
+            responseTime: `${responseTime} ms`,
             headers: response.headers(),
             body: responseBody
         };
@@ -97,12 +106,10 @@ export class BaseApi {
         console.log("========================================");
         console.log(`Status Code   : ${response.status()}`);
         console.log(`Status Text   : ${response.statusText()}`);
-        console.log(`Response Time : ${end - start} ms`);
+        console.log(`Response Time : ${responseTime} ms`);
         console.log("\nResponse Body:");
         console.log(JSON.stringify(responseBody, null, 2));
         console.log("========================================\n");
-        // Return the response so each test can validate
-        // the expected status (200, 201, 403, etc.).
         return response;
     }
     protected async get(
