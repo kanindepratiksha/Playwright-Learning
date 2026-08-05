@@ -18,7 +18,7 @@ test.describe('CSV Data Driven Testing', () => {
         for (const user of normalizedUsers) {
             await test.step(`Login with ${user.username}`, async () => {
                 const loginPage = new LoginPage(page);
-                await page.goto(config.sauceDemoUrl);
+                await page.goto(config.sauceDemoUrl, { waitUntil: "commit" });
                 if (user.expected.toLowerCase() === 'success') {
                     await loginPage.login(
                         user.username,

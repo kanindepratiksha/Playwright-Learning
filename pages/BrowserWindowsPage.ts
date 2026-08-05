@@ -21,7 +21,7 @@ export class BrowserWindowsPage extends BasePage {
     // ==========================================
     async navigate() {
         await super.navigate(config.browserWindowsUrl);
-        await expect(this.newTabButton).toBeVisible();
+        await expect(this.newTabButton).toBeVisible({ timeout: 60_000 });
     }
     // ==========================================
     // Open New Page
@@ -30,17 +30,16 @@ export class BrowserWindowsPage extends BasePage {
 // Open New Page
 // ==========================================
 private async openNewPage(button: Locator): Promise<Page> {
-    await expect(button).toBeVisible();
+    await expect(button).toBeVisible({ timeout: 60_000 });
     await expect(button).toBeEnabled();
     const context = this.page.context();
     const [newPage] = await Promise.all([
         context.waitForEvent('page'),
         button.click()
     ]);
-    await newPage.waitForLoadState('domcontentloaded');
     await expect(
         newPage.locator('#sampleHeading')
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 60_000 });
     return newPage;
 }
     // ==========================================

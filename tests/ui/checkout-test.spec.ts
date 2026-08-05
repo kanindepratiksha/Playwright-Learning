@@ -21,7 +21,7 @@ test('Checkout using Dynamic Test Data', async ({ page }) => {
     // Navigate
     // ==========================================
     await page.goto(config.sauceDemoUrl, {
-    waitUntil: "domcontentloaded"
+    waitUntil: "commit"
 });
     // ==========================================
     // Login

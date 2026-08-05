@@ -16,7 +16,7 @@ DataValidator.validateUsers(normalizedUsers);
 normalizedUsers.forEach((user: LoginUser) => {
     test(`Login with ${user.username}`, async ({ page }) => {
         const loginPage = new LoginPage(page);
-        await page.goto(config.sauceDemoUrl);
+        await page.goto(config.sauceDemoUrl, { waitUntil: "commit" });
         if (user.expected.toLowerCase() === 'success') {
             await loginPage.login(
                 user.username,

@@ -19,7 +19,7 @@ test('Locators Advanced Demo', async ({ page }) => {
     // ==========================================
     // Navigate
     // ==========================================
-    await page.goto(config.sauceDemoUrl);
+    await page.goto(config.sauceDemoUrl, { waitUntil: "commit" });
     // ==========================================
     // Login
     // ==========================================

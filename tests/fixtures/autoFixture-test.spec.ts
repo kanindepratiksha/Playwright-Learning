@@ -10,7 +10,7 @@ test.describe('Auto Fixture Demo', () => {
         // ==========================================
         // Navigate
         // ==========================================
-        await page.goto(config.sauceDemoUrl);
+        await page.goto(config.sauceDemoUrl, { waitUntil: "commit" });
         // ==========================================
         // Verify Title
         // ==========================================

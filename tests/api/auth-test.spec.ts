@@ -1,14 +1,22 @@
 import { test, expect } from "@playwright/test";
 import { AuthApi } from "../../api/AuthApi";
-test("Generate Authentication Token", async ({ request }) => {
-    const authApi = new AuthApi();
-    const response = await request.post(authApi.getAuthUrl(), {
-        headers: authApi.getDefaultHeaders(),
-        data: {
-            username: "admin",
-            password: "password123"
-        }
-    });
+import { SchemaValidator } from "../../utils/SchemaValidator";
+import { authSchema } from "../../schemas/authSchema";
+test("Generate Authentication Token", async ({ request }, testInfo) => {
+    const authApi = new AuthApi(request, testInfo);
+    const response = await authApi.generateToken();
     const body = await response.json();
-    expect(body.token).toBeTruthy();
+    SchemaValidator.validate(
+        body,
+        authSchema,
+        "Authentication Schema"
+    );
+});
+test("Reject Authentication with Invalid Payload", async ({ request }, testInfo) => {
+    const authApi = new AuthApi(request, testInfo);
+    const response = await authApi.generateTokenWithInvalidPayload();
+    expect(response.status()).toBe(200);
+    await expect(response.json()).resolves.toEqual({
+        reason: "Bad credentials"
+    });
 });

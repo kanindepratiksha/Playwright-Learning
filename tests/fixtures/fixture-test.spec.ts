@@ -7,7 +7,7 @@ test.describe('Playwright Fixture Demo', () => {
     // Feature 1 - Built-in Fixture
     // ==========================================
     test('Built-in Page Fixture', async ({ page }) => {
-        await page.goto(config.sauceDemoUrl);
+        await page.goto(config.sauceDemoUrl, { waitUntil: "commit" });
         // Page title assertion is acceptable since it is not a locator.
         await expect(page).toHaveTitle(/Swag Labs/);
     });
