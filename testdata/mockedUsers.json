@@ -1,0 +1,16 @@
+{
+    "page": 1,
+    "total": 2,
+    "data": [
+        {
+            "id": 101,
+            "first_name": "Pratiksha",
+            "last_name": "Kaninde"
+        },
+        {
+            "id": 102,
+            "first_name": "Playwright",
+            "last_name": "Framework"
+        }
+    ]
+}
