@@ -1,7 +1,8 @@
 import { APIRequestContext } from "@playwright/test";
-import { BookingApi } from "../api/BookingApi";
-import { TokenManager } from "../utils/TokenManager";
-import { BookingFactory } from "../factory/BookingFactory";
+import { BookingApi } from "../../../api/BookingApi";
+import { TokenManager } from "../../../utils/TokenManager";
+import { BookingFactory } from "../../../factory/BookingFactory";
+
 export class BookingFlow {
     constructor(
         private request: APIRequestContext
