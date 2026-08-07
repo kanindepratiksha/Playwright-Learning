@@ -8,8 +8,7 @@ import bookingData from "../../testdata/bookingData.json";
 test("Update Booking", async ({ request }, testInfo) => {
     const authApi = new AuthApi(request, testInfo);
     const bookingApi = new BookingApi(request, testInfo);
-    const authResponse = await authApi.generateToken();
-    const token = (await authResponse.json()).token;
+   const token = await authApi.generateToken();
     const createResponse = await bookingApi.createBooking(bookingData);
     const bookingId = (await createResponse.json()).bookingid;
     const updatedBooking = {
