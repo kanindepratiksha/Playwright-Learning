@@ -129,4 +129,69 @@ export class NetworkInterceptor {
             Logger.info("================================");
         });
     }
+    /**
+ * Abort network request
+ */
+async abortRequest(
+    urlPattern: string,
+    errorCode:
+        | "failed"
+        | "aborted"
+        | "timedout"
+        | "accessdenied"
+        | "internetdisconnected" = "aborted"
+): Promise<void> {
+    await this.page.route(urlPattern, async (route: Route) => {
+        Logger.info("=========== ABORT REQUEST ===========");
+        Logger.info(`URL Pattern : ${urlPattern}`);
+        Logger.info(`URL : ${route.request().url()}`);
+        Logger.info(`Method : ${route.request().method()}`);
+        Logger.info(`Abort Reason : ${errorCode}`);
+        await route.abort(errorCode);
+        Logger.info("Request aborted successfully.");
+        Logger.info("=====================================");
+    });
+}
+/**
+ * Rewrite request URL
+ */
+async rewriteUrl(
+    urlPattern: string,
+    newUrl: string
+): Promise<void> {
+    await this.page.route(urlPattern, async (route: Route) => {
+        Logger.info("=========== URL REWRITE ===========");
+        Logger.info(`Original URL : ${route.request().url()}`);
+        Logger.info(`New URL : ${newUrl}`);
+        await route.continue({
+            url: newUrl
+        });
+        Logger.info("URL rewritten successfully.");
+        Logger.info("===================================");
+    });
+}
+/**
+ * Modify request body
+ */
+async modifyRequestBody(
+    urlPattern: string,
+    callback: (body: any) => void
+): Promise<void> {
+    await this.page.route(urlPattern, async (route: Route) => {
+        const request = route.request();
+        let body = {};
+        if (request.postData()) {
+            body = JSON.parse(request.postData()!);
+        }
+        Logger.info("====== REQUEST BODY MODIFICATION ======");
+        Logger.info(`Original Body : ${JSON.stringify(body, null, 2)}`);
+        callback(body);
+        Logger.info(`Modified Body : ${JSON.stringify(body, null, 2)}`);
+        await route.continue({
+            postData: JSON.stringify(body)
+        });
+        Logger.info("Request body modified successfully.");
+        Logger.info("=======================================");
+    });
+}
 }
