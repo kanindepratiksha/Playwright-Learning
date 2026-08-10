@@ -1,10 +1,23 @@
-import { test, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { test } from "../hooks/reporting/apiAllureHooks";
 import { ApiClient } from "../../api/ApiClient";
+import { AllureHelper } from "../../utils/AllureHelper";
 import { config } from "../../config/env";
-test("Verify Generic API Client", async ({ request }) => {
-    const client = new ApiClient(request);
-    const response = await client.getRequest(
-        `${config.restfulBookerBaseUrl}/booking`
-    );
-    expect(response.status()).toBe(200);
-});
+test(
+    "Verify Generic API Client",
+    async ({ request }, testInfo) => {
+        await AllureHelper.metadata({
+            feature: "API Client",
+            story: "GET Request Validation",
+            severity: "critical"
+        });
+        const client = new ApiClient(
+            request,
+            testInfo
+        );
+        const response = await client.getRequest(
+            `${config.restfulBookerBaseUrl}/booking`
+        );
+        expect(response.status()).toBe(200);
+    }
+);

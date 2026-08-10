@@ -1,19 +1,18 @@
-import { test } from '@playwright/test';
-import { HooksPage } from '../../pages/HooksPage';
-import { Logger } from '../../utils/Logger';
-import { ScreenshotManager } from '../../utils/ScreenshotManager';
+import { test } from "../hooks/reporting/uiAllureHooks";
+import { AllureHelper } from "../../utils/AllureHelper";
+import { HooksPage } from "../../pages/HooksPage";
 let hooksPage: HooksPage;
 // ==========================================
 // Before All
 // ==========================================
 test.beforeAll(async () => {
-    console.log('========== BEFORE ALL ==========');
+    console.log("========== BEFORE ALL ==========");
 });
 // ==========================================
 // Before Each
 // ==========================================
 test.beforeEach(async ({ page }) => {
-    console.log('========== BEFORE EACH ==========');
+    console.log("========== BEFORE EACH ==========");
     hooksPage = new HooksPage(page);
     await hooksPage.navigate();
     await hooksPage.login();
@@ -21,50 +20,116 @@ test.beforeEach(async ({ page }) => {
 // ==========================================
 // After Each
 // ==========================================
-test.afterEach(async ({ page }, testInfo) => {
-    console.log('========== AFTER EACH ==========');
+test.afterEach(async ({}, testInfo) => {
+    console.log("========== AFTER EACH ==========");
     console.log(`Title : ${testInfo.title}`);
     console.log(`Status : ${testInfo.status}`);
-    if (testInfo.status !== testInfo.expectedStatus) {
-        await page.screenshot({
-            path: `screenshots/${testInfo.title}.png`,
-            fullPage: true
-        });
-    }
 });
 // ==========================================
 // After All
 // ==========================================
 test.afterAll(async () => {
-    console.log('========== AFTER ALL ==========');
+    console.log("========== AFTER ALL ==========");
 });
 // ==========================================
 // Test Suite
 // ==========================================
-test.describe('Hooks Demo', () => {
+test.describe("Hooks Demo", () => {
     // ==========================================
     // Smoke Test
     // ==========================================
-    test('@smoke Verify Login', async () => {
-        await hooksPage.verifyLogin();
-    });
+    test(
+        "@smoke Verify Login",
+        async () => {
+            // ==========================================
+            // Allure Metadata
+            // ==========================================
+            await AllureHelper.metadata({
+                feature: "Playwright Hooks",
+                story: "Verify Login",
+                severity: "critical"
+            });
+            // ==========================================
+            // Verify Login
+            // ==========================================
+            await AllureHelper.step(
+                "Verify User Login",
+                async () => {
+                    await hooksPage.verifyLogin();
+                }
+            );
+        }
+    );
     // ==========================================
     // Regression Test
     // ==========================================
-    test('@regression Verify Logout', async () => {
-        await hooksPage.logout();
-        await hooksPage.verifyLogout();
-    });
+    test(
+        "@regression Verify Logout",
+        async () => {
+            // ==========================================
+            // Allure Metadata
+            // ==========================================
+            await AllureHelper.metadata({
+                feature: "Playwright Hooks",
+                story: "Verify Logout",
+                severity: "critical"
+            });
+            // ==========================================
+            // Logout
+            // ==========================================
+            await AllureHelper.step(
+                "Logout from Application",
+                async () => {
+                    await hooksPage.logout();
+                }
+            );
+            // ==========================================
+            // Verify Logout
+            // ==========================================
+            await AllureHelper.step(
+                "Verify Logout",
+                async () => {
+                    await hooksPage.verifyLogout();
+                }
+            );
+        }
+    );
     // ==========================================
     // Example Test
     // ==========================================
-    test('Example Test', async () => {
-        await hooksPage.verifyLogin();
-    });
+    test(
+        "Example Test",
+        async () => {
+            // ==========================================
+            // Allure Metadata
+            // ==========================================
+            await AllureHelper.metadata({
+                feature: "Playwright Hooks",
+                story: "Example Test",
+                severity: "normal"
+            });
+            // ==========================================
+            // Verify Login
+            // ==========================================
+            await AllureHelper.step(
+                "Verify User Login",
+                async () => {
+                    await hooksPage.verifyLogin();
+                }
+            );
+        }
+    );
     // ==========================================
     // Skip Example
     // ==========================================
-    test.skip('Checkout Test', async () => {
-        // Future implementation
-    });
+    test.skip(
+        "Checkout Test",
+        async () => {
+            await AllureHelper.metadata({
+                feature: "Playwright Hooks",
+                story: "Checkout Test",
+                severity: "minor"
+            });
+        }
+    );
 });

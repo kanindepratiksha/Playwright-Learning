@@ -1,23 +1,15 @@
-import { test } from '@playwright/test';
-import { BrowserWindowsPage } from '../../pages/BrowserWindowsPage';
-
+import { test } from "../hooks/reporting/uiAllureHooks";
+import { AllureHelper } from "../../utils/AllureHelper";
+import { BrowserWindowsPage } from "../../pages/BrowserWindowsPage";
 test.setTimeout(90_000);
-
-test('Verify Browser Windows', async ({ page }) => {
-    // ==========================================
-    // Page Object
-    // ==========================================
+test("Verify Browser Windows", async ({ page }) => {
+    await AllureHelper.metadata({
+        feature: "Browser Windows",
+        story: "Verify Browser Windows",
+        severity: "critical"
+    });
     const browserWindowsPage = new BrowserWindowsPage(page);
-    // ==========================================
-    // Navigate
-    // ==========================================
     await browserWindowsPage.navigate();
-    // ==========================================
-    // Verify New Tab
-    // ==========================================
     await browserWindowsPage.verifyNewTab();
-    // ==========================================
-    // Verify New Window
-    // ==========================================
     await browserWindowsPage.verifyNewWindow();
 });

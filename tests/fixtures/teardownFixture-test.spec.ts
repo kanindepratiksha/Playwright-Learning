@@ -1,10 +1,32 @@
-import { test, expect } from '../../fixtures/teardownFixture';
-test.describe('Fixture Teardown Demo', () => {
-    // ==========================================
-    // Create and Delete User
-    // ==========================================
-    test('Create and Delete User', async ({ user }) => {
-        expect(user).toBeDefined();
-        expect(user.username).toBeTruthy();
-    });
+import { expect } from "@playwright/test";
+import { test } from "../../fixtures/teardownFixture";
+import { AllureHelper } from "../../utils/AllureHelper";
+test.describe("Fixture Teardown Demo", () => {
+    test(
+        "Create and Delete User",
+        async ({ user }) => {
+            // ==========================================
+            // Allure Metadata
+            // ==========================================
+            await AllureHelper.metadata({
+                feature: "Fixture Teardown",
+                story: "Create and Delete User",
+                severity: "critical"
+            });
+            // ==========================================
+            // Verify User Creation
+            // ==========================================
+            await AllureHelper.step(
+                "Verify Created User",
+                async () => {
+                    expect(user).toBeDefined();
+                    expect(user.username).toBeTruthy();
+                    await AllureHelper.attachJson(
+                        "Created User",
+                        user
+                    );
+                }
+            );
+        }
+    );
 });
