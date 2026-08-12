@@ -1,10 +1,16 @@
-import { test, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { test } from "../hooks/reporting/apiAllureHooks";
 import { AuthApi } from "../../api/AuthApi";
 import { BookingApi } from "../../api/BookingApi";
+import { AllureHelper } from "../../utils/AllureHelper";
 import { SchemaValidator } from "../../utils/SchemaValidator";
 import { bookingSchema } from "../../schemas/bookingSchema";
 import bookingData from "../../testdata/bookingData.json";
 test("Patch Booking", async ({ request }, testInfo) => {
+    await AllureHelper.metadata({
+        feature: "Booking",
+        story: "Partial Update Booking"
+    });
     const authApi = new AuthApi(request, testInfo);
     const bookingApi = new BookingApi(request, testInfo);
     // Generate Token

@@ -1,5 +1,6 @@
-import { Page, Locator, expect } from '@playwright/test';
-import { BasePage } from './BasePage';
+import { Page, Locator, expect } from "@playwright/test";
+import { BasePage } from "./BasePage";
+import { AllureHelper } from "../utils/AllureHelper";
 export class CartPage extends BasePage {
     // ==========================================
     // Locators
@@ -20,10 +21,10 @@ export class CartPage extends BasePage {
     // ==========================================
     constructor(page: Page) {
         super(page);
-        this.cartLink = page.locator('.shopping_cart_link');
-        this.cartTitle = page.locator('.title');
-        this.cartBadge = page.locator('.shopping_cart_badge');
-        this.cartItems = page.locator('.cart_item');
+        this.cartLink = page.locator(".shopping_cart_link");
+        this.cartTitle = page.locator(".title");
+        this.cartBadge = page.locator(".shopping_cart_badge");
+        this.cartItems = page.locator(".cart_item");
         this.checkoutButton = page.locator('[data-test="checkout"]');
         this.firstNameInput = page.locator('[data-test="firstName"]');
         this.lastNameInput = page.locator('[data-test="lastName"]');
@@ -37,33 +38,48 @@ export class CartPage extends BasePage {
     // ==========================================
     private getCartProduct(productName: string): Locator {
         return this.page
-            .locator('.cart_item')
+            .locator(".cart_item")
             .filter({ hasText: productName });
     }
     private getRemoveButton(productName: string): Locator {
         return this.getCartProduct(productName)
-            .getByRole('button');
+            .getByRole("button");
     }
     // ==========================================
     // Actions
     // ==========================================
     async removeProduct(productName: string) {
-        await this.click(
-            this.getRemoveButton(productName)
+        await AllureHelper.step(
+            `Remove Product: ${productName}`,
+            async () => {
+                await this.click(
+                    this.getRemoveButton(productName)
+                );
+            }
         );
     }
     // ==========================================
     // Verifications
     // ==========================================
     async verifyCartPage() {
-        await this.verifyUrl(/cart/);
+        await AllureHelper.step(
+            "Verify Cart Page",
+            async () => {
+                await this.verifyUrl(/cart/);
+            }
+        );
     }
     async verifyCartTitle() {
         await this.verifyVisible(this.cartTitle);
     }
     async verifyProduct(productName: string) {
-        await this.verifyVisible(
-            this.getCartProduct(productName)
+        await AllureHelper.step(
+            `Verify Product: ${productName}`,
+            async () => {
+                await this.verifyVisible(
+                    this.getCartProduct(productName)
+                );
+            }
         );
     }
     async verifyCartBadgeCount(count: string) {
@@ -73,7 +89,12 @@ export class CartPage extends BasePage {
         );
     }
     async verifyCartIsEmpty() {
-        await expect(this.cartItems).toHaveCount(0);
+        await AllureHelper.step(
+            "Verify Cart Is Empty",
+            async () => {
+                await expect(this.cartItems).toHaveCount(0);
+            }
+        );
     }
     // ==========================================
     // Checkout Methods
@@ -96,7 +117,31 @@ export class CartPage extends BasePage {
     async finishCheckout() {
         await this.click(this.finishButton);
     }
+    async checkout(user: {
+        firstName: string;
+        lastName: string;
+        postalCode: string;
+    }) {
+        await AllureHelper.step(
+            "Complete Checkout",
+            async () => {
+                await this.clickCheckout();
+                await this.fillCheckoutDetails(
+                    user.firstName,
+                    user.lastName,
+                    user.postalCode
+                );
+                await this.continueCheckout();
+                await this.finishCheckout();
+            }
+        );
+    }
     async verifyOrderSuccess() {
-        await this.verifyVisible(this.completeHeader);
+        await AllureHelper.step(
+            "Verify Order Success",
+            async () => {
+                await this.verifyVisible(this.completeHeader);
+            }
+        );
     }
 }

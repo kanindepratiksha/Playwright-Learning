@@ -1,9 +1,16 @@
-import { test } from "@playwright/test";
+import { test } from "../hooks/reporting/apiAllureHooks";
+import { AllureHelper } from "../../utils/AllureHelper";
 import { AuthApi } from "../../api/AuthApi";
 import { BookingApi } from "../../api/BookingApi";
 import { ApiAssertions } from "../../api/ApiAssertions";
 import bookingData from "../../testdata/bookingData.json";
 test("Delete Booking", async ({ request }, testInfo) => {
+    // Allure Metadata
+    await AllureHelper.metadata({
+        severity: "critical",
+        feature: "Delete Booking",
+        story: "Delete Existing Booking"
+    });
     const authApi = new AuthApi(request, testInfo);
     const bookingApi = new BookingApi(request, testInfo);
     // Generate Token

@@ -1,5 +1,6 @@
-import { Page } from '@playwright/test';
-import { BasePage } from './BasePage';
+import { Page } from "@playwright/test";
+import { BasePage } from "./BasePage";
+import { AllureHelper } from "../utils/AllureHelper";
 export class HomePage extends BasePage {
     // ==========================================
     // Constructor
@@ -11,6 +12,11 @@ export class HomePage extends BasePage {
     // Verify Home Page Title
     // ==========================================
     async verifyHomePageTitle() {
-        await this.verifyTitle(/Swag Labs/);
+        await AllureHelper.step(
+            "Verify Home Page Title",
+            async () => {
+                await this.verifyTitle(/Swag Labs/);
+            }
+        );
     }
 }

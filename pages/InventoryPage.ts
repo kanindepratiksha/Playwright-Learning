@@ -1,10 +1,9 @@
-import { Page, Locator, expect } from '@playwright/test';
-import { BasePage } from './BasePage';
-import { Logger } from '../utils/Logger';
-import { WaitUtil } from '../utils/WaitUtil';
-import { RetryUtil } from '../utils/RetryUtil';
-import { ScreenshotManager } from '../utils/ScreenshotManager';
-import { AssertUtil } from '../utils/AssertUtil';
+import { Page, Locator, expect } from "@playwright/test";
+import { BasePage } from "./BasePage";
+import { Logger } from "../utils/Logger";
+import { WaitUtil } from "../utils/WaitUtil";
+import { AssertUtil } from "../utils/AssertUtil";
+import { AllureHelper } from "../utils/AllureHelper";
 export class InventoryPage extends BasePage {
     // ==========================================
     // Locators
@@ -23,17 +22,17 @@ export class InventoryPage extends BasePage {
     // ==========================================
     constructor(page: Page) {
         super(page);
-        this.pageTitle = page.locator('.title');
-        this.inventoryList = page.locator('.inventory_list');
-        this.inventoryItems = page.locator('.inventory_item');
+        this.pageTitle = page.locator(".title");
+        this.inventoryList = page.locator(".inventory_list");
+        this.inventoryItems = page.locator(".inventory_item");
         this.firstInventoryItem = this.inventoryItems.first();
-        this.cartBadge = page.locator('.shopping_cart_badge');
+        this.cartBadge = page.locator(".shopping_cart_badge");
         this.sortDropdown = page.locator(
             '[data-test="product-sort-container"]'
         );
-        this.firstProduct = page.locator('.inventory_item_name').first();
-        this.firstPrice = page.locator('.inventory_item_price').first();
-        this.cartLink = page.locator('.shopping_cart_link');
+        this.firstProduct = page.locator(".inventory_item_name").first();
+        this.firstPrice = page.locator(".inventory_item_price").first();
+        this.cartLink = page.locator(".shopping_cart_link");
     }
     // ==========================================
     // Dynamic Locator - Product
@@ -53,41 +52,85 @@ export class InventoryPage extends BasePage {
     // Actions
     // ==========================================
     async addProduct(productName: string) {
-        await this.click(
-            this.getProduct(productName).getByRole('button')
+        await AllureHelper.step(
+            `Add Product : ${productName}`,
+            async () => {
+                await this.click(
+                    this.getProduct(productName).getByRole("button")
+                );
+            }
         );
     }
     async openCart() {
-        await this.click(this.cartLink);
+        await AllureHelper.step(
+            "Open Shopping Cart",
+            async () => {
+                await this.click(this.cartLink);
+            }
+        );
     }
     async hoverFirstProduct() {
-        await this.firstInventoryItem.hover();
+        await AllureHelper.step(
+            "Hover Over First Product",
+            async () => {
+                await this.firstInventoryItem.hover();
+            }
+        );
     }
     async sortProducts(option: string) {
-        await this.sortDropdown.selectOption(option);
+        await AllureHelper.step(
+            `Sort Products : ${option.toUpperCase()}`,
+            async () => {
+                await this.sortDropdown.selectOption(option);
+            }
+        );
     }
     // ==========================================
     // Compatibility Methods
     // ==========================================
     async verifyProductsPage() {
-        await this.verifyPageTitle();
-        await this.verifyInventoryList();
+        await AllureHelper.step(
+            "Verify Products Page",
+            async () => {
+                await this.verifyPageTitle();
+                await this.verifyInventoryList();
+            }
+        );
     }
     async verifySortOption(option: string) {
         await this.verifySelectedSortOption(option);
     }
     async verifyCartCount(count: string) {
-        await this.verifyCartBadgeCount(count);
+        await AllureHelper.step(
+            `Verify Cart Count : ${count}`,
+            async () => {
+                await this.verifyCartBadgeCount(count);
+            }
+        );
     }
     async loginWithKeyboard() {
-        // Login is already handled by LoginPage.login()
-        // Keeping this method for backward compatibility.
+        await AllureHelper.step(
+            "Login Using Keyboard",
+            async () => {
+                // Kept for backward compatibility.
+            }
+        );
     }
     async goBack() {
-        await this.page.goBack();
+        await AllureHelper.step(
+            "Navigate Back",
+            async () => {
+                await this.page.goBack();
+            }
+        );
     }
     async reloadPage() {
-        await this.page.reload();
+        await AllureHelper.step(
+            "Reload Page",
+            async () => {
+                await this.page.reload();
+            }
+        );
     }
     // ==========================================
     // Verifications
@@ -99,13 +142,16 @@ export class InventoryPage extends BasePage {
         await this.verifyVisible(this.inventoryList);
     }
     async verifyProductVisible(productName: string) {
-        Logger.info(`Verifying product: ${productName}`);
-        const product = this.getProductText(productName);
-        // Wait until product is visible
-        await WaitUtil.waitForVisible(product);
-        // Verify product
-        await AssertUtil.visible(product);
-        Logger.info(`${productName} is visible`);
+        await AllureHelper.step(
+            `Verify Product : ${productName}`,
+            async () => {
+                Logger.info(`Verifying product: ${productName}`);
+                const product = this.getProductText(productName);
+                await WaitUtil.waitForVisible(product);
+                await AssertUtil.visible(product);
+                Logger.info(`${productName} is visible`);
+            }
+        );
     }
     async verifyFirstInventoryItemVisible() {
         await this.verifyVisible(this.firstInventoryItem);
