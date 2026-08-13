@@ -42,21 +42,26 @@ pipeline {
                     def shardCount = params.SHARDS.toInteger()
                     def parallelStages = [:]
                     for (int i = 1; i <= shardCount; i++) {
-                        def shard = i
-                        parallelStages["Shard ${shard}"] = {
-                            dir("shard-${shard}") {
-                                bat """
-                                    if not exist blob-report mkdir blob-report
-                                    if not exist allure-results mkdir allure-results
-                                    set PW_WORKERS=${params.PW_WORKERS}
-                                    set PLAYWRIGHT_BLOB_OUTPUT_DIR=blob-report
-                                    set ALLURE_RESULTS_DIR=allure-results
-                                    npx playwright test ^
-                                      --project=${params.TEST_ENV} ^
-                                      --shard=${shard}/${shardCount} ^
-                                      --workers=${params.PW_WORKERS}
-                                """
-                            }
+                        def currentShard = i
+                        parallelStages["Shard ${currentShard}"] = {
+                            bat """
+                                if not exist "shard-${currentShard}\\blob-report" mkdir "shard-${currentShard}\\blob-report"
+                                if not exist "shard-${currentShard}\\allure-results" mkdir "shard-${currentShard}\\allure-results"
+                                set TEST_ENV=${params.TEST_ENV}
+                                set PW_WORKERS=${params.PW_WORKERS}
+                                set PLAYWRIGHT_BLOB_OUTPUT_DIR=shard-${currentShard}\\blob-report
+                                set ALLURE_RESULTS_DIR=shard-${currentShard}\\allure-results
+                                echo ========================================
+                                echo Running Playwright Shard ${currentShard}/${shardCount}
+                                echo Environment: %TEST_ENV%
+                                echo Workers: %PW_WORKERS%
+                                echo ========================================
+                                npx playwright test ^
+                                  --config=playwright.config.ts ^
+                                  --project=%TEST_ENV% ^
+                                  --shard=${currentShard}/${shardCount} ^
+                                  --workers=%PW_WORKERS%
+                            """
                         }
                     }
                     parallel parallelStages
@@ -66,9 +71,9 @@ pipeline {
         stage('Merge Playwright Reports') {
             steps {
                 bat '''
-                    if not exist merged-blob-report mkdir merged-blob-report
+                    if not exist "merged-blob-report" mkdir "merged-blob-report"
                     for /D %%D in (shard-*) do (
-                        if exist "%%D\\blob-report\\*" (
+                        if exist "%%D\\blob-report" (
                             copy /Y "%%D\\blob-report\\*" "merged-blob-report\\" >nul
                         )
                     )
@@ -79,9 +84,9 @@ pipeline {
         stage('Merge Allure Results') {
             steps {
                 bat '''
-                    if not exist merged-allure-results mkdir merged-allure-results
+                    if not exist "merged-allure-results" mkdir "merged-allure-results"
                     for /D %%D in (shard-*) do (
-                        if exist "%%D\\allure-results\\*" (
+                        if exist "%%D\\allure-results" (
                             copy /Y "%%D\\allure-results\\*" "merged-allure-results\\" >nul
                         )
                     )
@@ -93,7 +98,7 @@ pipeline {
     post {
         always {
             archiveArtifacts(
-                artifacts: 'playwright-report/**, allure-report/**, merged-blob-report/**, merged-allure-results/**',
+                artifacts: 'playwright-report/**, allure-report/**, merged-blob-report/**, merged-allure-results/**, shard-*/blob-report/**, shard-*/allure-results/**',
                 allowEmptyArchive: true
             )
         }
