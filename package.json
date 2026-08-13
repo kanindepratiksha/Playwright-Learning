@@ -9,7 +9,8 @@
     "report": "playwright show-report",
     "allure:generate": "npx allure generate allure-results",
     "allure:open": "npx allure open",
-    "allure": "allure generate allure-results --clean -o allure-report && allure open allure-report"
+    "allure": "allure generate allure-results --clean -o allure-report && allure open allure-report",
+    "test:parallel": "playwright test --workers=4"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +23,8 @@
     "allure": "^3.14.3",
     "allure-commandline": "^2.43.0",
     "allure-js-commons": "^3.10.2",
-    "allure-playwright": "^3.10.2"
+    "allure-playwright": "^3.10.2",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "ajv": "^8.20.0",
