@@ -90,7 +90,7 @@ pipeline {
                             copy /Y "shard-%%S\\allure-results\\*" "merged-allure-results\\" >nul
                         )
                     )
-                    call npx allure generate merged-allure-results --clean -o allure-report
+                    call npx allure generate merged-allure-results -o allure-report
                 '''
             }
         }
