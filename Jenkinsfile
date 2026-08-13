@@ -72,9 +72,9 @@ pipeline {
             steps {
                 bat '''
                     if not exist "merged-blob-report" mkdir "merged-blob-report"
-                    for /D %%D in (shard-*) do (
-                        if exist "%%D\\blob-report" (
-                            copy /Y "%%D\\blob-report\\*" "merged-blob-report\\" >nul
+                    for /L %%S in (1,1,%SHARDS%) do (
+                        if exist "shard-%%S\\blob-report\\*" (
+                            copy /Y "shard-%%S\\blob-report\\*" "merged-blob-report\\" >nul
                         )
                     )
                     npx playwright merge-reports --reporter html merged-blob-report
@@ -85,12 +85,12 @@ pipeline {
             steps {
                 bat '''
                     if not exist "merged-allure-results" mkdir "merged-allure-results"
-                    for /D %%D in (shard-*) do (
-                        if exist "%%D\\allure-results" (
-                            copy /Y "%%D\\allure-results\\*" "merged-allure-results\\" >nul
+                    for /L %%S in (1,1,%SHARDS%) do (
+                        if exist "shard-%%S\\allure-results\\*" (
+                            copy /Y "shard-%%S\\allure-results\\*" "merged-allure-results\\" >nul
                         )
                     )
-                    npx allure generate merged-allure-results --clean -o allure-report
+                    call npx allure generate merged-allure-results --clean -o allure-report
                 '''
             }
         }
