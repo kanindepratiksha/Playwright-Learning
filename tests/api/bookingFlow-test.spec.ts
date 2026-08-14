@@ -1,4 +1,5 @@
 import { expect } from "@playwright/test";
+import { Severity } from "allure-js-commons";
 import { test } from "../hooks/reporting/apiAllureHooks";
 import { BookingFlow } from "./flows/BookingFlow";
 import { AllureHelper } from "../../utils/AllureHelper";
@@ -10,7 +11,7 @@ test(
         await AllureHelper.metadata({
             feature: "Booking Workflow",
             story: "Create Update Delete Booking",
-            severity: "critical"
+            severity: Severity.CRITICAL
         });
 
         const bookingFlow = new BookingFlow(
