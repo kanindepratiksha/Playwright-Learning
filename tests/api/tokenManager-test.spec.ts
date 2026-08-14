@@ -1,9 +1,17 @@
-import { test, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { test } from "../hooks/reporting/apiAllureHooks";
+import { AllureHelper } from "../../utils/AllureHelper";
 import { TokenManager } from "../../utils/TokenManager";
 test("Verify Token Manager", async ({ request }) => {
+    await AllureHelper.metadata({
+        feature: "Authentication",
+        story: "Token Manager"
+    });
     const token1 = await TokenManager.getToken(request);
     const token2 = await TokenManager.getToken(request);
-    console.log("Token 1:", token1);
-    console.log("Token 2:", token2);
+    await AllureHelper.attachText(
+        "Generated Token",
+        token1
+    );
     expect(token1).toBe(token2);
 });

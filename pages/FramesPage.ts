@@ -2,10 +2,11 @@ import {
     Page,
     FrameLocator,
     Locator
-} from '@playwright/test';
-import { config } from '../config/env';
-import { testData } from '../utils/appConstants';
-import { BasePage } from './BasePage';
+} from "@playwright/test";
+import { config } from "../config/env";
+import { testData } from "../utils/appConstants";
+import { BasePage } from "./BasePage";
+import { AllureHelper } from "../utils/AllureHelper";
 export class FramesPage extends BasePage {
     // ==========================================
     // Locators
@@ -17,28 +18,46 @@ export class FramesPage extends BasePage {
     // ==========================================
     constructor(page: Page) {
         super(page);
-        this.frame = page.frameLocator('#frame1');
-        this.sampleHeading = this.frame.locator('#sampleHeading');
+        this.frame = page.frameLocator("#frame1");
+        this.sampleHeading =
+            this.frame.locator("#sampleHeading");
     }
     // ==========================================
     // Navigate to Frames Page
     // ==========================================
     async navigate() {
-        await super.navigate(config.framesUrl);
+        await AllureHelper.step(
+            "Navigate to Frames Page",
+            async () => {
+                await super.navigate(config.framesUrl);
+            }
+        );
     }
     // ==========================================
     // Verify Heading Visibility
     // ==========================================
     async verifyFrameHeadingVisible() {
-        await this.verifyVisible(this.sampleHeading);
+        await AllureHelper.step(
+            "Verify Frame Heading Visibility",
+            async () => {
+                await this.verifyVisible(
+                    this.sampleHeading
+                );
+            }
+        );
     }
     // ==========================================
     // Verify Heading Text
     // ==========================================
     async verifyFrameText() {
-        await this.verifyText(
-            this.sampleHeading,
-            testData.frameHeading
+        await AllureHelper.step(
+            "Verify Frame Heading Text",
+            async () => {
+                await this.verifyText(
+                    this.sampleHeading,
+                    testData.frameHeading
+                );
+            }
         );
     }
 }

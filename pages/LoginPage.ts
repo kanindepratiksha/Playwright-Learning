@@ -1,11 +1,7 @@
-import { Page, Locator, expect } from '@playwright/test';
-import { testData } from '../utils/appConstants';
-import { BasePage } from './BasePage';
-import { Logger } from '../utils/Logger';
-import { WaitUtil } from '../utils/WaitUtil';
-import { RetryUtil } from '../utils/RetryUtil';
-import { ScreenshotManager } from '../utils/ScreenshotManager';
-import { AssertUtil } from '../utils/AssertUtil';
+import { Page, Locator, expect } from "@playwright/test";
+import { testData } from "../utils/appConstants";
+import { BasePage } from "./BasePage";
+import { AllureHelper } from "../utils/AllureHelper";
 export class LoginPage extends BasePage {
     // ==========================================
     // Locators
@@ -14,11 +10,14 @@ export class LoginPage extends BasePage {
     private readonly passwordInput: Locator;
     private readonly loginButton: Locator;
     private readonly errorMessage: Locator;
+    // ==========================================
+    // Constructor
+    // ==========================================
     constructor(page: Page) {
         super(page);
-        this.usernameInput = page.getByPlaceholder('Username');
-        this.passwordInput = page.getByPlaceholder('Password');
-        this.loginButton = page.getByRole('button', {
+        this.usernameInput = page.getByPlaceholder("Username");
+        this.passwordInput = page.getByPlaceholder("Password");
+        this.loginButton = page.getByRole("button", {
             name: testData.loginButton
         });
         this.errorMessage = page.locator('[data-test="error"]');
@@ -31,32 +30,51 @@ export class LoginPage extends BasePage {
         pass: string,
         shouldLogin: boolean = true
     ) {
-        await this.fill(this.usernameInput, user);
-        await this.fill(this.passwordInput, pass);
-        await this.click(this.loginButton);
-        if (shouldLogin) {
-            await expect(this.page).toHaveURL(/inventory/);
-        }
+        await AllureHelper.step(
+            "Login with Valid User",
+            async () => {
+                await this.fill(this.usernameInput, user);
+                await this.fill(this.passwordInput, pass);
+                await this.click(this.loginButton);
+                if (shouldLogin) {
+                    await expect(this.page).toHaveURL(/inventory/);
+                }
+            }
+        );
     }
-    
     // ==========================================
     // Verify Login Page
     // ==========================================
     async verifyLoginPage() {
-        await this.verifyVisible(this.usernameInput);
-        await this.verifyVisible(this.passwordInput);
-        await this.verifyVisible(this.loginButton);
+        await AllureHelper.step(
+            "Verify Login Page",
+            async () => {
+                await this.verifyVisible(this.usernameInput);
+                await this.verifyVisible(this.passwordInput);
+                await this.verifyVisible(this.loginButton);
+            }
+        );
     }
     // ==========================================
     // Verify Login Successful
     // ==========================================
     async verifyLoginSuccess() {
-        await this.verifyUrl(/inventory/);
+        await AllureHelper.step(
+            "Verify Login Success",
+            async () => {
+                await this.verifyUrl(/inventory/);
+            }
+        );
     }
     // ==========================================
     // Verify Error Message
     // ==========================================
     async verifyErrorMessage(message: string) {
-        await expect(this.errorMessage).toContainText(message);
+        await AllureHelper.step(
+            "Verify Error Message",
+            async () => {
+                await expect(this.errorMessage).toContainText(message);
+            }
+        );
     }
 }

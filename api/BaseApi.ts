@@ -29,6 +29,7 @@ export class BaseApi {
             console.log("\nRequest Body:");
             console.log(JSON.stringify(data, null, 2));
         }
+        // Attach API Request
         const requestDetails = {
             method,
             url,
@@ -47,7 +48,9 @@ export class BaseApi {
         const response = await RetryUtil.execute(async () => {
             switch (method) {
                 case "GET":
-                    return await this.request.get(url, { headers });
+                    return await this.request.get(url, {
+                        headers
+                    });
                 case "POST":
                     return await this.request.post(url, {
                         headers,
@@ -73,13 +76,29 @@ export class BaseApi {
         });
         const end = Date.now();
         const responseTime = end - start;
-        // ⭐ Add API performance tracking
+        // Existing Performance Tracker
         ApiPerformanceTracker.add(
             method,
             url,
             response.status(),
             responseTime
         );
+        // Attach Performance
+        if (this.testInfo) {
+            const performance = {
+                method,
+                url,
+                status: response.status(),
+                statusText: response.statusText(),
+                responseTime: `${responseTime} ms`
+            };
+            await this.testInfo.attach("API Performance", {
+                body: Buffer.from(
+                    JSON.stringify(performance, null, 2)
+                ),
+                contentType: "application/json"
+            });
+        }
         let responseBody: any;
         try {
             responseBody = await response.json();
@@ -93,6 +112,7 @@ export class BaseApi {
             headers: response.headers(),
             body: responseBody
         };
+        // Attach API Response
         if (this.testInfo) {
             await this.testInfo.attach("API Response", {
                 body: Buffer.from(
@@ -110,6 +130,24 @@ export class BaseApi {
         console.log("\nResponse Body:");
         console.log(JSON.stringify(responseBody, null, 2));
         console.log("========================================\n");
+        // Attach Execution Log
+        const executionLog = `
+========================================
+API EXECUTION LOG
+========================================
+Method        : ${method}
+URL           : ${url}
+Status Code   : ${response.status()}
+Status Text   : ${response.statusText()}
+Response Time : ${responseTime} ms
+========================================
+`;
+        if (this.testInfo) {
+            await this.testInfo.attach("Execution Log", {
+                body: Buffer.from(executionLog),
+                contentType: "text/plain"
+            });
+        }
         return response;
     }
     protected async get(
@@ -123,26 +161,45 @@ export class BaseApi {
         data: any,
         headers: Record<string, string> = {}
     ): Promise<APIResponse> {
-        return this.executeRequest("POST", url, headers, data);
+        return this.executeRequest(
+            "POST",
+            url,
+            headers,
+            data
+        );
     }
     protected async put(
         url: string,
         data: any,
         headers: Record<string, string> = {}
     ): Promise<APIResponse> {
-        return this.executeRequest("PUT", url, headers, data);
+        return this.executeRequest(
+            "PUT",
+            url,
+            headers,
+            data
+        );
     }
     protected async patch(
         url: string,
         data: any,
         headers: Record<string, string> = {}
     ): Promise<APIResponse> {
-        return this.executeRequest("PATCH", url, headers, data);
+        return this.executeRequest(
+            "PATCH",
+            url,
+            headers,
+            data
+        );
     }
     protected async delete(
         url: string,
         headers: Record<string, string> = {}
     ): Promise<APIResponse> {
-        return this.executeRequest("DELETE", url, headers);
+        return this.executeRequest(
+            "DELETE",
+            url,
+            headers
+        );
     }
 }
