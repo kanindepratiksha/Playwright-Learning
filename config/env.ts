@@ -40,7 +40,14 @@ const environments = {
         password: "password123"
     }
 };
-const currentEnv = (process.env.TEST_ENV || "qa") as keyof typeof environments;
+const currentEnv =
+    (process.env.TEST_ENV || "qa").toLowerCase() as keyof typeof environments;
+if (!environments[currentEnv]) {
+    throw new Error(
+        `Invalid TEST_ENV value: ${process.env.TEST_ENV}. ` +
+        `Supported environments: ${Object.keys(environments).join(", ")}`
+    );
+}
 console.log("========================================");
 console.log(`Running Environment : ${currentEnv.toUpperCase()}`);
 console.log(
