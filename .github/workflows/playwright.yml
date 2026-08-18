@@ -9,16 +9,18 @@ permissions:
   contents: read
 jobs:
   test:
-    name: Playwright Shard ${{ matrix.shard }}/4
+    name: ${{ matrix.browser }} - Shard ${{ matrix.shard }}/4
     timeout-minutes: 60
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
+        browser: [Chromium, Firefox, WebKit]
         shard: [1, 2, 3, 4]
     env:
       CI: true
       PW_WORKERS: 4
+      TEST_ENV: QA
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,19 +34,23 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: npx playwright test --shard=${{ matrix.shard }}/4 --workers=${{ env.PW_WORKERS }}
+        run: |
+          npx playwright test \
+            --project=${{ matrix.browser }} \
+            --shard=${{ matrix.shard }}/4 \
+            --workers=${{ env.PW_WORKERS }}
       - name: Upload Playwright Blob Report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-blob-${{ matrix.shard }}
+          name: playwright-blob-${{ matrix.browser }}-${{ matrix.shard }}
           path: blob-report/
           retention-days: 30
       - name: Upload Allure Results
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: allure-results-shard-${{ matrix.shard }}
+          name: allure-results-${{ matrix.browser }}-${{ matrix.shard }}
           path: allure-results/
           retention-days: 30
   merge-reports:
@@ -80,7 +86,7 @@ jobs:
       - name: Download Allure Results
         uses: actions/download-artifact@v4
         with:
-          pattern: allure-results-shard-*
+          pattern: allure-results-*
           path: allure-results
           merge-multiple: true
       - name: Generate Allure Report

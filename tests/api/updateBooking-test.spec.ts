@@ -6,13 +6,14 @@ import { ApiAssertions } from "../../api/ApiAssertions";
 import { SchemaValidator } from "../../utils/SchemaValidator";
 import { bookingSchema } from "../../schemas/bookingSchema";
 import bookingData from "../../testdata/bookingData.json";
+import { Severity } from "allure-js-commons";
 test(
     "Update Booking",
     async ({ request }, testInfo) => {
         await AllureHelper.metadata({
             feature: "Booking",
             story: "Update Booking",
-            severity: "critical"
+            severity: Severity.CRITICAL
         });
         const authApi = new AuthApi(request, testInfo);
         const bookingApi = new BookingApi(request, testInfo);
@@ -50,7 +51,7 @@ test(
         await AllureHelper.metadata({
             feature: "Booking",
             story: "Update Booking with Invalid Authorization",
-            severity: "critical"
+            severity: Severity.CRITICAL
         });
         const bookingApi = new BookingApi(request, testInfo);
         // Create Booking

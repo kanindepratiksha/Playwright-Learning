@@ -4,12 +4,13 @@ import { AuthApi } from "../../api/AuthApi";
 import { AllureHelper } from "../../utils/AllureHelper";
 import { SchemaValidator } from "../../utils/SchemaValidator";
 import { authSchema } from "../../schemas/authSchema";
+import { Severity } from "allure-js-commons";
 test(
     "Generate Authentication Token",
     async ({ request }, testInfo) => {
         await AllureHelper.metadata({
             feature: "Generate Token",
-            severity: "critical",
+            severity: Severity.CRITICAL,
             story: "Generate Authentication Token"
         });
         const authApi = new AuthApi(request, testInfo);

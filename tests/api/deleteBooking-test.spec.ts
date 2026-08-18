@@ -4,10 +4,11 @@ import { AuthApi } from "../../api/AuthApi";
 import { BookingApi } from "../../api/BookingApi";
 import { ApiAssertions } from "../../api/ApiAssertions";
 import bookingData from "../../testdata/bookingData.json";
+import { Severity } from "allure-js-commons";
 test("Delete Booking", async ({ request }, testInfo) => {
     // Allure Metadata
     await AllureHelper.metadata({
-        severity: "critical",
+        severity: Severity.CRITICAL,
         feature: "Delete Booking",
         story: "Delete Existing Booking"
     });

@@ -3,13 +3,14 @@ import { test } from "../hooks/reporting/uiAllureHooks";
 import { TestDataFactory } from "../../utils/TestDataFactory";
 import { DataValidator } from "../../utils/DataValidator";
 import { AllureHelper } from "../../utils/AllureHelper";
+import { Severity } from "allure-js-commons";
 test(
     "Read JSON Users",
     async () => {
         await AllureHelper.metadata({
             feature: "Test Data",
             story: "Read JSON Users",
-            severity: "normal"
+            severity: Severity.NORMAL
         });
         const users = TestDataFactory.getJsonUsers();
         await AllureHelper.attachJson(
@@ -27,7 +28,7 @@ test(
         await AllureHelper.metadata({
             feature: "Test Data",
             story: "Read Excel Users",
-            severity: "normal"
+            severity: Severity.NORMAL
         });
         const users = TestDataFactory.getExcelUsers();
         const normalizedUsers = users.map((user: any) => ({
@@ -50,7 +51,7 @@ test(
         await AllureHelper.metadata({
             feature: "Test Data",
             story: "Read CSV Users",
-            severity: "normal"
+            severity: Severity.NORMAL
         });
         const users = await TestDataFactory.getCsvUsers();
         const normalizedUsers = users.map((user: any) => ({

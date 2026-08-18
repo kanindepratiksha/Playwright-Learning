@@ -1,3 +1,4 @@
+import { Severity } from "allure-js-commons";
 import { test } from "../../fixtures/authFixture";
 import { InventoryPage } from "../../pages/InventoryPage";
 import { AllureHelper } from "../../utils/AllureHelper";
@@ -7,7 +8,7 @@ test(
         await AllureHelper.metadata({
             feature: "Authentication Fixture",
             story: "Verify Successful Login",
-            severity: "critical"
+            severity: Severity.CRITICAL
         });
         const inventoryPage = new InventoryPage(
             authenticatedPage

@@ -1,4 +1,5 @@
 import { expect, Request } from "@playwright/test";
+import { Severity } from "allure-js-commons";
 import { test } from "../hooks/reporting/uiAllureHooks";
 import { AllureHelper } from "../../utils/AllureHelper";
 import { config } from "../../config/env";
@@ -16,7 +17,7 @@ test.describe("Request Interception", () => {
             await AllureHelper.metadata({
                 feature: "Network Interception",
                 story: "Capture GET Request Details",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Network Interceptor
@@ -77,7 +78,7 @@ test.describe("Request Interception", () => {
             await AllureHelper.metadata({
                 feature: "Network Interception",
                 story: "Intercept POST Request",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Network Interceptor

@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 const isCI = !!process.env.CI;
 function getWorkers(): number | string | undefined {
   const configuredWorkers = process.env.PW_WORKERS;
@@ -29,10 +29,10 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
+  retries: isCI ? 2 : 0,
   /* Configurable workers */
   workers,
-  /* Reporter to use */
+  /* Reporters */
   reporter: isCI
     ? [
         [
@@ -54,7 +54,7 @@ export default defineConfig({
         ['html'],
         ['allure-playwright'],
       ],
-  /* Shared settings for all the projects below */
+  /* Shared settings for all browser projects */
   use: {
     ignoreHTTPSErrors: true,
     /* Screenshot on failure */
@@ -64,51 +64,36 @@ export default defineConfig({
     /* Trace on failure/retry */
     trace: 'retain-on-failure',
   },
-  /* Configure projects for DEV / QA / UAT */
+  /*
+   * Cross-browser Playwright projects
+   *
+   * Environment is controlled independently using TEST_ENV.
+   *
+   * Examples:
+   * TEST_ENV=qa + Chromium
+   * TEST_ENV=qa + Firefox
+   * TEST_ENV=qa + WebKit
+   */
   projects: [
     {
-      name: 'DEV',
+      name: 'Chromium',
       use: {
         browserName: 'chromium',
       },
     },
     {
-      name: 'QA',
+      name: 'Firefox',
       use: {
-        browserName: 'chromium',
+        browserName: 'firefox',
       },
     },
     {
-      name: 'UAT',
+      name: 'WebKit',
       use: {
-        browserName: 'chromium',
+        browserName: 'webkit',
       },
     },
   ],
-  /* Mobile projects can be added later */
-  // {
-  //   name: 'Mobile Chrome',
-  //   use: { ...devices['Pixel 5'] },
-  // },
-  // {
-  //   name: 'Mobile Safari',
-  //   use: { ...devices['iPhone 12'] },
-  // },
-  /* Branded browsers can be added later */
-  // {
-  //   name: 'Microsoft Edge',
-  //   use: {
-  //     ...devices['Desktop Edge'],
-  //     channel: 'msedge',
-  //   },
-  // },
-  // {
-  //   name: 'Google Chrome',
-  //   use: {
-  //     ...devices['Desktop Chrome'],
-  //     channel: 'chrome',
-  //   },
-  // },
   /* Run local dev server before starting the tests */
   // webServer: {
   //   command: 'npm run start',

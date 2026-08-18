@@ -105,30 +105,86 @@ export class NetworkInterceptor {
      * Modify API response
      */
     async modifyResponse(
-        urlPattern: string,
-        callback: (body: any) => void
-    ): Promise<void> {
-        await this.page.route(urlPattern, async (route: Route) => {
-            Logger.info("======= MODIFY RESPONSE =======");
-            Logger.info(`URL Pattern : ${urlPattern}`);
-            const response = await route.fetch();
-            Logger.info(`STATUS : ${response.status()}`);
-            const body = await response.json();
-            Logger.info(
-                `Original Response : ${JSON.stringify(body, null, 2)}`
+    urlPattern: string,
+    callback: (body: any) => void
+): Promise<void> {
+    await this.page.route(urlPattern, async (route: Route) => {
+        Logger.info("======= MODIFY RESPONSE =======");
+        Logger.info(`URL Pattern : ${urlPattern}`);
+        const response = await route.fetch({
+    headers: {
+        ...route.request().headers(),
+        'accept-encoding': 'identity',
+    },
+});
+        Logger.info(`STATUS : ${response.status()}`);
+        const headers = response.headers();
+        const contentEncoding = headers["content-encoding"];
+        Logger.info(
+            `Content-Encoding : ${contentEncoding || "none"}`
+        );
+        let body: any;
+        /*
+         * Playwright may return a compressed response body depending
+         * on the browser. Decompress it before parsing JSON.
+         */
+        if (contentEncoding) {
+            const compressedBody = await response.body();
+            const zlib = await import("zlib");
+            let decompressedBody: Buffer;
+            switch (contentEncoding.toLowerCase()) {
+                case "gzip":
+                    decompressedBody = zlib.gunzipSync(compressedBody);
+                    break;
+                case "br":
+                    decompressedBody = zlib.brotliDecompressSync(
+                        compressedBody
+                    );
+                    break;
+                case "deflate":
+                    decompressedBody = zlib.inflateSync(compressedBody);
+                    break;
+                default:
+                    throw new Error(
+                        `Unsupported Content-Encoding: ${contentEncoding}`
+                    );
+            }
+            body = JSON.parse(
+                decompressedBody.toString("utf-8")
             );
-            callback(body);
-            Logger.info(
-                `Modified Response : ${JSON.stringify(body, null, 2)}`
-            );
-            await route.fulfill({
-                response,
-                body: JSON.stringify(body)
-            });
-            Logger.info("Response modified successfully.");
-            Logger.info("================================");
+        } else {
+            body = JSON.parse(await response.text());
+        }
+        Logger.info(
+            `Original Response : ${JSON.stringify(body, null, 2)}`
+        );
+        /*
+         * Modify the response body.
+         */
+        callback(body);
+        Logger.info(
+            `Modified Response : ${JSON.stringify(body, null, 2)}`
+        );
+        /*
+         * Remove compression-related headers because we are
+         * sending an uncompressed JSON body.
+         */
+        const modifiedHeaders = {
+            ...headers
+        };
+        delete modifiedHeaders["content-encoding"];
+        delete modifiedHeaders["content-length"];
+        delete modifiedHeaders["transfer-encoding"];
+        modifiedHeaders["content-type"] = "application/json";
+        await route.fulfill({
+            response,
+            headers: modifiedHeaders,
+            body: JSON.stringify(body)
         });
-    }
+        Logger.info("Response modified successfully.");
+        Logger.info("================================");
+    });
+}
     /**
  * Abort network request
  */

@@ -1,3 +1,4 @@
+import { Severity } from "allure-js-commons";
 import { test } from "../../fixtures/overrideFixture";
 import { HomePage } from "../../pages/HomePage";
 import { AllureHelper } from "../../utils/AllureHelper";
@@ -11,7 +12,7 @@ test.describe("Fixture Override Demo", () => {
             await AllureHelper.metadata({
                 feature: "Fixture Override",
                 story: "Override Built-in Page Fixture",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Page Object

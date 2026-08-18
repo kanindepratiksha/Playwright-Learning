@@ -6,11 +6,12 @@ import { AllureHelper } from "../../utils/AllureHelper";
 import { SchemaValidator } from "../../utils/SchemaValidator";
 import { createBookingSchema } from "../../schemas/createBookingSchema";
 import bookingData from "../../testdata/bookingData.json";
+import { Severity } from "allure-js-commons";
 test(
     "Create Booking",
     async ({ request }, testInfo) => {
         await AllureHelper.metadata({
-            severity: "critical",
+            severity: Severity.CRITICAL,
             feature: "Create Booking",
             story: "Create Booking API"
         });

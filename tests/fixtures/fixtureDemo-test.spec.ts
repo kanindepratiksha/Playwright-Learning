@@ -4,6 +4,7 @@ import { AllureHelper } from "../../utils/AllureHelper";
 import { config } from "../../config/env";
 import { testData } from "../../utils/appConstants";
 import users from "../../testdata/users.json";
+import { Severity } from "allure-js-commons";
 test.describe("Playwright Fixture Demo", () => {
     // ==========================================
     // Feature 1 - Built-in Fixture
@@ -17,7 +18,7 @@ test.describe("Playwright Fixture Demo", () => {
             await AllureHelper.metadata({
                 feature: "Playwright Fixture",
                 story: "Built-in Page Fixture",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Navigate
@@ -57,7 +58,7 @@ test.describe("Playwright Fixture Demo", () => {
             await AllureHelper.metadata({
                 feature: "Playwright Fixture",
                 story: "Custom Fixture",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Login
@@ -85,7 +86,7 @@ test.describe("Playwright Fixture Demo", () => {
             await AllureHelper.metadata({
                 feature: "Playwright Fixture",
                 story: "test.extend Demo",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Login
@@ -113,7 +114,7 @@ test.describe("Playwright Fixture Demo", () => {
             await AllureHelper.metadata({
                 feature: "Playwright Fixture",
                 story: "use() Demo",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Login
@@ -141,7 +142,7 @@ test.describe("Playwright Fixture Demo", () => {
             await AllureHelper.metadata({
                 feature: "Playwright Fixture",
                 story: "Fixture Dependency",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Verify Product

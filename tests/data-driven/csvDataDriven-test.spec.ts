@@ -5,6 +5,7 @@ import { config } from "../../config/env";
 import { TestDataFactory } from "../../utils/TestDataFactory";
 import { DataValidator } from "../../utils/DataValidator";
 import { AllureHelper } from "../../utils/AllureHelper";
+import { Severity } from "allure-js-commons";
 let normalizedUsers: any[] = [];
 test.beforeAll(async () => {
     const users = await TestDataFactory.getCsvUsers();
@@ -21,7 +22,7 @@ test(
         await AllureHelper.metadata({
             feature: "Authentication",
             story: "Login using CSV Test Data",
-            severity: "critical"
+            severity: Severity.CRITICAL
         });
         const loginPage = new LoginPage(page);
         for (const user of normalizedUsers) {
