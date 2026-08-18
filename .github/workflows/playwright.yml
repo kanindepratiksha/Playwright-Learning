@@ -12,54 +12,38 @@ jobs:
     name: ${{ matrix.browser }} - Shard ${{ matrix.shard }}/4
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.0-noble
     strategy:
       fail-fast: false
       matrix:
         include:
-          # ==============================
           # Chromium
-          # ==============================
           - browser: Chromium
-            install-browser: chromium
             shard: 1
           - browser: Chromium
-            install-browser: chromium
             shard: 2
           - browser: Chromium
-            install-browser: chromium
             shard: 3
           - browser: Chromium
-            install-browser: chromium
             shard: 4
-          # ==============================
           # Firefox
-          # ==============================
           - browser: Firefox
-            install-browser: firefox
             shard: 1
           - browser: Firefox
-            install-browser: firefox
             shard: 2
           - browser: Firefox
-            install-browser: firefox
             shard: 3
           - browser: Firefox
-            install-browser: firefox
             shard: 4
-          # ==============================
           # WebKit
-          # ==============================
           - browser: WebKit
-            install-browser: webkit
             shard: 1
           - browser: WebKit
-            install-browser: webkit
             shard: 2
           - browser: WebKit
-            install-browser: webkit
             shard: 3
           - browser: WebKit
-            install-browser: webkit
             shard: 4
     env:
       CI: true
@@ -72,7 +56,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       # ==============================
-      # Node.js
+      # Setup Node.js
       # ==============================
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -80,31 +64,12 @@ jobs:
           node-version: lts/*
           cache: npm
       # ==============================
-      # Dependencies
+      # Install project dependencies
       # ==============================
       - name: Install dependencies
         run: npm ci
       # ==============================
-      # Playwright Browser Cache
-      # ==============================
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ matrix.install-browser }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            playwright-${{ runner.os }}-${{ matrix.install-browser }}-
-      # ==============================
-      # Install only required browser
-      # ==============================
-      - name: Install Playwright Browser
-        run: npx playwright install ${{ matrix.install-browser }}
-
-      - name: Install WebKit System Dependencies
-        if: matrix.install-browser == 'webkit'
-        run: npx playwright install-deps webkit
-      # ==============================
-      # Run Tests
+      # Run Playwright tests
       # ==============================
       - name: Run Playwright tests
         run: |
@@ -140,6 +105,8 @@ jobs:
     if: ${{ !cancelled() }}
     needs: test
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.0-noble
     steps:
       # ==============================
       # Checkout
@@ -147,7 +114,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       # ==============================
-      # Node.js
+      # Setup Node.js
       # ==============================
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -155,7 +122,7 @@ jobs:
           node-version: lts/*
           cache: npm
       # ==============================
-      # Dependencies
+      # Install dependencies
       # ==============================
       - name: Install dependencies
         run: npm ci
