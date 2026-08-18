@@ -99,6 +99,10 @@ jobs:
       # ==============================
       - name: Install Playwright Browser
         run: npx playwright install ${{ matrix.install-browser }}
+
+      - name: Install WebKit System Dependencies
+        if: matrix.install-browser == 'webkit'
+        run: npx playwright install-deps webkit
       # ==============================
       # Run Tests
       # ==============================
