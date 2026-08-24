@@ -4,7 +4,12 @@ pipeline {
         choice(
             name: 'TEST_ENV',
             choices: ['DEV', 'QA', 'UAT'],
-            description: 'Environment/project to execute'
+            description: 'Test environment to execute'
+        )
+        choice(
+            name: 'BROWSER',
+            choices: ['Chromium', 'Firefox', 'WebKit'],
+            description: 'Browser project to execute'
         )
         choice(
             name: 'PW_WORKERS',
@@ -33,7 +38,7 @@ pipeline {
         }
         stage('Install Playwright Browsers') {
             steps {
-                bat 'npx playwright install'
+                bat 'npx playwright install chromium firefox webkit'
             }
         }
         stage('Parallel Test Execution') {
@@ -48,17 +53,19 @@ pipeline {
                                 if not exist "shard-${currentShard}\\blob-report" mkdir "shard-${currentShard}\\blob-report"
                                 if not exist "shard-${currentShard}\\allure-results" mkdir "shard-${currentShard}\\allure-results"
                                 set TEST_ENV=${params.TEST_ENV}
+                                set BROWSER=${params.BROWSER}
                                 set PW_WORKERS=${params.PW_WORKERS}
                                 set PLAYWRIGHT_BLOB_OUTPUT_DIR=shard-${currentShard}\\blob-report
                                 set ALLURE_RESULTS_DIR=shard-${currentShard}\\allure-results
                                 echo ========================================
                                 echo Running Playwright Shard ${currentShard}/${shardCount}
                                 echo Environment: %TEST_ENV%
+                                echo Browser: %BROWSER%
                                 echo Workers: %PW_WORKERS%
                                 echo ========================================
                                 npx playwright test ^
                                   --config=playwright.config.ts ^
-                                  --project=%TEST_ENV% ^
+                                  --project=%BROWSER% ^
                                   --shard=${currentShard}/${shardCount} ^
                                   --workers=%PW_WORKERS%
                             """

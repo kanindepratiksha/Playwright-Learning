@@ -1,4 +1,5 @@
 import { expect } from "@playwright/test";
+import { Severity } from "allure-js-commons";
 import { test } from "../hooks/reporting/uiAllureHooks";
 import { AllureHelper } from "../../utils/AllureHelper";
 import { config } from "../../config/env";
@@ -13,7 +14,7 @@ test.describe("Abort Request", () => {
             await AllureHelper.metadata({
                 feature: "Network Interception",
                 story: "Abort Image Request",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Network Interceptor

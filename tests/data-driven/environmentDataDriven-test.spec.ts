@@ -6,6 +6,7 @@ import { TestDataFactory } from "../../utils/TestDataFactory";
 import { DataValidator } from "../../utils/DataValidator";
 import { ExcelUser, LoginUser } from "../../utils/types";
 import { AllureHelper } from "../../utils/AllureHelper";
+import { Severity } from "allure-js-commons";
 const users = TestDataFactory.getExcelUsers();
 const normalizedUsers: LoginUser[] = users.map(
     (user: ExcelUser) => ({
@@ -22,7 +23,7 @@ normalizedUsers.forEach((user: LoginUser) => {
             await AllureHelper.metadata({
                 feature: "Authentication",
                 story: "Login using Excel Test Data",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             const loginPage = new LoginPage(page);
             await AllureHelper.step(

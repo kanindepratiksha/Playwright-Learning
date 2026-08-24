@@ -1,4 +1,5 @@
 import { expect } from "@playwright/test";
+import { Severity } from "allure-js-commons";
 import { test } from "../hooks/reporting/uiAllureHooks";
 import { AllureHelper } from "../../utils/AllureHelper";
 import { config } from "../../config/env";
@@ -16,7 +17,7 @@ test.describe("Route Continue", () => {
             await AllureHelper.metadata({
                 feature: "Network Interception",
                 story: "Continue Original Request",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Network Interceptor
@@ -80,7 +81,7 @@ test.describe("Route Continue", () => {
             await AllureHelper.metadata({
                 feature: "Network Interception",
                 story: "Continue Request with Custom Headers",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Network Interceptor

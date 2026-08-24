@@ -1,4 +1,5 @@
 import { expect } from "@playwright/test";
+import { Severity } from "allure-js-commons";
 import { test } from "../hooks/reporting/uiAllureHooks";
 import { AllureHelper } from "../../utils/AllureHelper";
 import { config } from "../../config/env";
@@ -17,7 +18,7 @@ test.describe("Route Fulfill", () => {
             await AllureHelper.metadata({
                 feature: "Network Interception",
                 story: "Mock API Response using route.fulfill()",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Network Interceptor
@@ -89,7 +90,7 @@ test.describe("Route Fulfill", () => {
             await AllureHelper.metadata({
                 feature: "Network Interception",
                 story: "Mock API with Custom Status",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Network Interceptor

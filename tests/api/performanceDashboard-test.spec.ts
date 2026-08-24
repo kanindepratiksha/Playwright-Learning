@@ -4,13 +4,14 @@ import { AuthApi } from "../../api/AuthApi";
 import { BookingApi } from "../../api/BookingApi";
 import { ApiPerformanceTracker } from "../../utils/ApiPerformanceTracker";
 import bookingData from "../../testdata/bookingData.json";
+import { Severity } from "allure-js-commons";
 test(
     "API Performance Dashboard",
     async ({ request }, testInfo) => {
         await AllureHelper.metadata({
             feature: "Performance",
             story: "API Performance Dashboard",
-            severity: "critical"
+            severity: Severity.CRITICAL
         });
         ApiPerformanceTracker.clear();
         const authApi = new AuthApi(request, testInfo);

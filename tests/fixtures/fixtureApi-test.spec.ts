@@ -2,6 +2,7 @@ import { APIResponse } from "@playwright/test";
 import { test, expect } from "../../fixtures/apiFixture";
 import { AllureHelper } from "../../utils/AllureHelper";
 import { config } from "../../config/env";
+import { Severity } from "allure-js-commons";
 test.describe("API Fixture", () => {
     test(
         "Verify Users API",
@@ -12,7 +13,7 @@ test.describe("API Fixture", () => {
             await AllureHelper.metadata({
                 feature: "API Fixture",
                 story: "Verify Users API",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             let response: APIResponse;
             // ==========================================

@@ -6,13 +6,14 @@ import { testData } from "../../utils/appConstants";
 import { LoginPage } from "../../pages/LoginPage";
 import { InventoryPage } from "../../pages/InventoryPage";
 import { CartPage } from "../../pages/CartPage";
+import { Severity } from "allure-js-commons";
 test(
     "Verify Assertions and Waits",
     async ({ page }) => {
         await AllureHelper.metadata({
             feature: "Assertions",
             story: "Verify Assertions and Waits",
-            severity: "normal"
+            severity: Severity.CRITICAL
         });
         const loginPage = new LoginPage(page);
         const inventoryPage = new InventoryPage(page);

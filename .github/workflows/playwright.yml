@@ -8,68 +8,166 @@ on:
 permissions:
   contents: read
 jobs:
+  # ============================================================
+  # CROSS-BROWSER TEST EXECUTION
+  # ============================================================
   test:
-    name: Playwright Shard ${{ matrix.shard }}/4
+    name: ${{ matrix.browser }} - Shard ${{ matrix.shard }}/4
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    # Playwright Docker image must match project version.
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      options: --user 1001
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        include:
+          # ==============================
+          # Chromium
+          # ==============================
+          - browser: Chromium
+            shard: 1
+          - browser: Chromium
+            shard: 2
+          - browser: Chromium
+            shard: 3
+          - browser: Chromium
+            shard: 4
+          # ==============================
+          # Firefox
+          # ==============================
+          - browser: Firefox
+            shard: 1
+          - browser: Firefox
+            shard: 2
+          - browser: Firefox
+            shard: 3
+          - browser: Firefox
+            shard: 4
+          # ==============================
+          # WebKit
+          # ==============================
+          - browser: WebKit
+            shard: 1
+          - browser: WebKit
+            shard: 2
+          - browser: WebKit
+            shard: 3
+          - browser: WebKit
+            shard: 4
     env:
       CI: true
       PW_WORKERS: 4
+      TEST_ENV: QA
     steps:
+      # ==============================
+      # Checkout
+      # ==============================
       - name: Checkout repository
         uses: actions/checkout@v4
+      # ==============================
+      # Setup Node.js
+      # ==============================
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: npm
+      # ==============================
+      # Install Project Dependencies
+      # ==============================
       - name: Install dependencies
         run: npm ci
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      # ==============================
+      # Verify Playwright Version
+      # ==============================
+      - name: Verify Playwright version
+        run: npx playwright --version
+      # ==============================
+      # Run Playwright Tests
+      # ==============================
       - name: Run Playwright tests
-        run: npx playwright test --shard=${{ matrix.shard }}/4 --workers=${{ env.PW_WORKERS }}
+        run: |
+          npx playwright test \
+            --project=${{ matrix.browser }} \
+            --shard=${{ matrix.shard }}/4 \
+            --workers=${{ env.PW_WORKERS }}
+      # ==============================
+      # Upload Playwright Blob Report
+      # ==============================
       - name: Upload Playwright Blob Report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-blob-${{ matrix.shard }}
+          name: playwright-blob-${{ matrix.browser }}-${{ matrix.shard }}
           path: blob-report/
           retention-days: 30
+      # ==============================
+      # Upload Allure Results
+      # ==============================
       - name: Upload Allure Results
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: allure-results-shard-${{ matrix.shard }}
+          name: allure-results-${{ matrix.browser }}-${{ matrix.shard }}
           path: allure-results/
           retention-days: 30
+  # ============================================================
+  # MERGE REPORTS
+  # ============================================================
   merge-reports:
     name: Merge Test Reports
     if: ${{ !cancelled() }}
     needs: test
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble
+      options: --user 1001
     steps:
+      # ==============================
+      # Checkout
+      # ==============================
       - name: Checkout repository
         uses: actions/checkout@v4
+      # ==============================
+      # Setup Node.js
+      # ==============================
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: npm
+      # ==============================
+      # Install Project Dependencies
+      # ==============================
       - name: Install dependencies
         run: npm ci
+      # ==============================
+      # Verify Playwright Version
+      # ==============================
+      - name: Verify Playwright version
+        run: npx playwright --version
+      # ==============================
+      # Download Playwright Blob Reports
+      # ==============================
       - name: Download Playwright Blob Reports
         uses: actions/download-artifact@v4
         with:
           pattern: playwright-blob-*
           path: blob-reports
           merge-multiple: true
+      # ==============================
+      # Merge Playwright HTML Report
+      # ==============================
       - name: Merge Playwright HTML Report
-        run: npx playwright merge-reports --reporter html blob-reports
+        run: |
+          npx playwright merge-reports \
+            --reporter html \
+            blob-reports
+      # ==============================
+      # Upload Merged Playwright Report
+      # ==============================
       - name: Upload Merged Playwright Report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
@@ -77,14 +175,26 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+      # ==============================
+      # Download Allure Results
+      # ==============================
       - name: Download Allure Results
         uses: actions/download-artifact@v4
         with:
-          pattern: allure-results-shard-*
+          pattern: allure-results-*
           path: allure-results
           merge-multiple: true
+      # ==============================
+      # Generate Allure Report
+      # ==============================
       - name: Generate Allure Report
-        run: npx allure generate allure-results -o allure-report
+        run: |
+          npx allure generate \
+            allure-results \
+            -o allure-report
+      # ==============================
+      # Upload Merged Allure Report
+      # ==============================
       - name: Upload Merged Allure Report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4

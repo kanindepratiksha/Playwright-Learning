@@ -1,6 +1,7 @@
 import { expect } from "@playwright/test";
 import { test } from "../../fixtures/testScopeFixture";
 import { AllureHelper } from "../../utils/AllureHelper";
+import { Severity } from "allure-js-commons";
 test.describe("Test Scope Fixture Demo", () => {
     // ==========================================
     // Test One
@@ -14,7 +15,7 @@ test.describe("Test Scope Fixture Demo", () => {
             await AllureHelper.metadata({
                 feature: "Test Scope Fixture",
                 story: "Test One",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Verify Fixture
@@ -44,7 +45,7 @@ test.describe("Test Scope Fixture Demo", () => {
             await AllureHelper.metadata({
                 feature: "Test Scope Fixture",
                 story: "Test Two",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Verify Fixture

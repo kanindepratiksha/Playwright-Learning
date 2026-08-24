@@ -2,6 +2,7 @@ import { test } from "../hooks/reporting/uiAllureHooks";
 import { AllureHelper } from "../../utils/AllureHelper";
 import { HooksAdvancedPage } from "../../pages/hooks-advancedPage";
 import users from "../../testdata/users.json";
+import { Severity } from "allure-js-commons";
 // ==========================================
 // Page Object
 // ==========================================
@@ -48,7 +49,7 @@ test.describe("Hooks Advanced - Playwright Features", () => {
             await AllureHelper.metadata({
                 feature: "Playwright Hooks",
                 story: "Verify Login",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Verify Login
@@ -74,7 +75,7 @@ test.describe("Hooks Advanced - Playwright Features", () => {
             await AllureHelper.metadata({
                 feature: "Playwright Hooks",
                 story: "Verify Logout",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Logout
@@ -105,7 +106,7 @@ test.describe("Hooks Advanced - Playwright Features", () => {
             await AllureHelper.metadata({
                 feature: "Playwright Hooks",
                 story: "Known Bug Example",
-                severity: "minor"
+                severity: Severity.MINOR
             });
             await AllureHelper.step(
                 "Known Bug Placeholder",
@@ -124,7 +125,7 @@ test.describe("Hooks Advanced - Playwright Features", () => {
             await AllureHelper.metadata({
                 feature: "Playwright Hooks",
                 story: "Wishlist Feature",
-                severity: "minor"
+                severity: Severity.MINOR
             });
         }
     );

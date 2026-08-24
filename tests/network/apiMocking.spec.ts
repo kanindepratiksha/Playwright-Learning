@@ -1,4 +1,5 @@
 import { expect } from "@playwright/test";
+import { Severity } from "allure-js-commons";
 import { test } from "../hooks/reporting/uiAllureHooks";
 import { AllureHelper } from "../../utils/AllureHelper";
 import { config } from "../../config/env";
@@ -18,7 +19,7 @@ test.describe("API Mocking", () => {
             await AllureHelper.metadata({
                 feature: "Network Interception",
                 story: "Mock Complete API Response",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             // ==========================================
             // Network Interceptor
@@ -83,7 +84,7 @@ test.describe("API Mocking", () => {
             await AllureHelper.metadata({
                 feature: "Network Interception",
                 story: "Mock Single User API",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             const interceptor = new NetworkInterceptor(page);
             await AllureHelper.step(
@@ -138,7 +139,7 @@ test.describe("API Mocking", () => {
             await AllureHelper.metadata({
                 feature: "Network Interception",
                 story: "Mock API Error Response",
-                severity: "critical"
+                severity: Severity.CRITICAL
             });
             const interceptor = new NetworkInterceptor(page);
             await AllureHelper.step(
