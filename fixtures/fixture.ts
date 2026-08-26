@@ -1,11 +1,15 @@
 import { test as base, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { InventoryPage } from '../pages/InventoryPage';
+import { CartPage } from '../pages/CartPage';
+import { CheckoutPage } from '../pages/CheckoutPage';
 import { config } from '../config/env';
 import users from '../testdata/users.json';
 type MyFixtures = {
     loginPage: LoginPage;
     inventoryPage: InventoryPage;
+    cartPage: CartPage;
+    checkoutPage: CheckoutPage;
 };
 export const test = base.extend<MyFixtures>({
     loginPage: [
@@ -29,6 +33,18 @@ export const test = base.extend<MyFixtures>({
         const inventoryPage = new InventoryPage(page);
         await use(inventoryPage);
         console.log('Inventory Fixture Cleanup');
+    },
+    cartPage: async ({ page }, use) => {
+        console.log('Cart Fixture Setup');
+        const cartPage = new CartPage(page);
+        await use(cartPage);
+        console.log('Cart Fixture Cleanup');
+    },
+    checkoutPage: async ({ page }, use) => {
+        console.log('Checkout Fixture Setup');
+        const checkoutPage = new CheckoutPage(page);
+        await use(checkoutPage);
+        console.log('Checkout Fixture Cleanup');
     }
 });
 export { expect };

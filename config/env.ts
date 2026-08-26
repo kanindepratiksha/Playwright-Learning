@@ -48,10 +48,16 @@ if (!environments[currentEnv]) {
         `Supported environments: ${Object.keys(environments).join(", ")}`
     );
 }
+// ==========================================
+// Environment Information
+// ==========================================
 console.log("========================================");
 console.log(`Running Environment : ${currentEnv.toUpperCase()}`);
 console.log(
-    `Base URL : ${environments[currentEnv].restfulBookerBaseUrl}`
+    `SauceDemo URL       : ${environments[currentEnv].sauceDemoUrl}`
+);
+console.log(
+    `API Base URL        : ${environments[currentEnv].restfulBookerBaseUrl}`
 );
 console.log("========================================");
 export const config = environments[currentEnv];
