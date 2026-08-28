@@ -85,6 +85,9 @@ export class CartPage extends BasePage {
             "Verify Cart Page",
             async () => {
                 await this.verifyUrl(/cart/);
+                await expect(
+                    this.cartTitle
+                ).toHaveText("Your Cart");
             }
         );
     }
@@ -105,6 +108,27 @@ export class CartPage extends BasePage {
             }
         );
     }
+    async verifyProductQuantityAndDescription(
+        productName: string
+    ) {
+        await AllureHelper.step(
+            `Verify Cart Details: ${productName}`,
+            async () => {
+                const cartProduct =
+                    this.getCartProduct(productName);
+                await expect(
+                    cartProduct.locator(
+                        ".cart_quantity"
+                    )
+                ).toHaveText("1");
+                await expect(
+                    cartProduct.locator(
+                        ".inventory_item_desc"
+                    )
+                ).not.toBeEmpty();
+            }
+        );
+    }
     async verifyCartBadgeCount(
         count: string
     ) {
@@ -119,6 +143,9 @@ export class CartPage extends BasePage {
             async () => {
                 await expect(
                     this.cartItems
+                ).toHaveCount(0);
+                await expect(
+                    this.cartBadge
                 ).toHaveCount(0);
             }
         );

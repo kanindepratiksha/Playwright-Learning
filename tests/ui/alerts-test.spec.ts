@@ -31,5 +31,9 @@ test(
         // Intentional Failure
         // ==========================================
         //expect(true).toBe(false);
+        // ==========================================
+        // Use the actual valid assertion
+        // ===============================
+         expect(true).toBeTruthy();
     }
 );

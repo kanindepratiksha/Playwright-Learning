@@ -99,6 +99,19 @@ export class InventoryPage extends BasePage {
             }
         );
     }
+    async backToProducts() {
+        await AllureHelper.step(
+            "Back to Products",
+            async () => {
+                await this.page
+                    .locator(
+                        '[data-test="back-to-products"]'
+                    )
+                    .click();
+                await this.verifyProductsPage();
+            }
+        );
+    }
     async hoverFirstProduct() {
         await AllureHelper.step(
             "Hover Over First Product",
@@ -277,6 +290,11 @@ export class InventoryPage extends BasePage {
                 ).toHaveURL(
                     /inventory-item/
                 );
+                await expect(
+                    this.page.locator(
+                        ".inventory_details_name"
+                    )
+                ).toHaveText(productName);
             }
         );
     }
@@ -343,6 +361,25 @@ export class InventoryPage extends BasePage {
                         "button",
                         {
                             name: "Add to cart"
+                        }
+                    )
+                ).toBeVisible();
+            }
+        );
+    }
+    async verifyRemoveButton(
+        productName: string
+    ) {
+        await AllureHelper.step(
+            `Verify Product Is Selected: ${productName}`,
+            async () => {
+                await expect(
+                    this.getProduct(
+                        productName
+                    ).getByRole(
+                        "button",
+                        {
+                            name: "Remove"
                         }
                     )
                 ).toBeVisible();
