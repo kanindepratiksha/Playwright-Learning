@@ -21,14 +21,26 @@ test("Patch Booking", async ({ request }, testInfo) => {
     const createBody = await createResponse.json();
     const bookingId = createBody.bookingid;
     // Patch Booking
-    const response = await bookingApi.patchBooking(
+    let response = await bookingApi.patchBooking(
+    bookingId,
+    {
+        firstname: "Playwright"
+    },
+    token
+);
+// Restful Booker can occasionally reject a token with 403.
+// Generate a fresh token and retry the PATCH once.
+if (response.status() === 403) {
+    const freshToken = await authApi.generateToken();
+    response = await bookingApi.patchBooking(
         bookingId,
         {
             firstname: "Playwright"
         },
-        token
+        freshToken
     );
-    expect(response.status()).toBe(200);
+}
+expect(response.status()).toBe(200);
     const body = await response.json();
     expect(body.firstname).toBe("Playwright");
     SchemaValidator.validate(
