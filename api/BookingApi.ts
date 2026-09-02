@@ -7,6 +7,7 @@ import { config } from "../config/env";
 import { ApiRequestBuilder } from "../builder/ApiRequestBuilder";
 import { ApiClient } from "./ApiClient";
 import { AllureHelper } from "../utils/AllureHelper";
+import { Booking } from "../utils/types";
 export class BookingApi {
     private apiClient: ApiClient;
     constructor(
@@ -19,17 +20,38 @@ export class BookingApi {
         );
     }
     // ==========================================
+    // Health Check
+    // ==========================================
+    async healthCheck(): Promise<APIResponse> {
+        return await AllureHelper.step(
+            "Health Check",
+            async () => {
+                const requestData =
+                    new ApiRequestBuilder()
+                        .url(
+                            `${config.restfulBookerBaseUrl}/ping`
+                        )
+                        .build();
+                return await this.apiClient.getRequest(
+                    requestData.url
+                );
+            }
+        );
+    }
+    // ==========================================
     // Create Booking
     // ==========================================
     async createBooking(
-        bookingData: any
+        bookingData: Booking
     ): Promise<APIResponse> {
         return await AllureHelper.step(
             "Create Booking",
             async () => {
                 const requestData =
                     new ApiRequestBuilder()
-                        .url(`${config.restfulBookerBaseUrl}/booking`)
+                        .url(
+                            `${config.restfulBookerBaseUrl}/booking`
+                        )
                         .headers({
                             "Content-Type": "application/json",
                             Accept: "application/json"
@@ -74,7 +96,7 @@ export class BookingApi {
     // ==========================================
     async updateBooking(
         bookingId: number,
-        bookingData: any,
+        bookingData: Booking,
         token: string
     ): Promise<APIResponse> {
         return await AllureHelper.step(
@@ -105,7 +127,7 @@ export class BookingApi {
     // ==========================================
     async patchBooking(
         bookingId: number,
-        bookingData: any,
+        bookingData: Partial<Booking>,
         token: string
     ): Promise<APIResponse> {
         return await AllureHelper.step(

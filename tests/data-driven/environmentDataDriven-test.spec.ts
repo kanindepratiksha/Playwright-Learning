@@ -7,25 +7,40 @@ import { DataValidator } from "../../utils/DataValidator";
 import { ExcelUser, LoginUser } from "../../utils/types";
 import { AllureHelper } from "../../utils/AllureHelper";
 import { Severity } from "allure-js-commons";
+// ==========================================
+// Test Data
+// ==========================================
 const users = TestDataFactory.getExcelUsers();
 const normalizedUsers: LoginUser[] = users.map(
-    (user: ExcelUser) => ({
+    (user: ExcelUser): LoginUser => ({
         username: user.Username,
         password: user.Password,
         expected: user.Expected
     })
 );
+// ==========================================
+// Validate Test Data
+// ==========================================
 DataValidator.validateUsers(normalizedUsers);
+// ==========================================
+// Data-Driven Login Tests
+// ==========================================
 normalizedUsers.forEach((user: LoginUser) => {
     test(
         `Login with ${user.username}`,
         async ({ page }) => {
+            // ==========================================
+            // Allure Metadata
+            // ==========================================
             await AllureHelper.metadata({
                 feature: "Authentication",
                 story: "Login using Excel Test Data",
                 severity: Severity.CRITICAL
             });
             const loginPage = new LoginPage(page);
+            // ==========================================
+            // Navigate to SauceDemo
+            // ==========================================
             await AllureHelper.step(
                 "Navigate to SauceDemo",
                 async () => {
@@ -37,23 +52,29 @@ normalizedUsers.forEach((user: LoginUser) => {
                     );
                 }
             );
+            // ==========================================
+            // Login
+            // ==========================================
             await AllureHelper.step(
                 `Login with ${user.username}`,
                 async () => {
-                    if (user.expected.toLowerCase() === "success") {
-                        await loginPage.login(
-                            user.username,
-                            user.password
+                    await loginPage.login(
+                        user.username,
+                        user.password
+                    );
+                    // ==========================================
+                    // Verify Login Result
+                    // ==========================================
+                    if (
+                        user.expected.toLowerCase() === "success"
+                    ) {
+                        await expect(page).toHaveURL(
+                            /inventory/
                         );
-                        await expect(page)
-                            .toHaveURL(/inventory/);
                     } else {
-                        await loginPage.login(
-                            user.username,
-                            user.password,
-                            false
-                        );
-                        await loginPage.verifyErrorMessage(
+                        await expect(
+                            loginPage.errorMsg
+                        ).toContainText(
                             "Epic sadface: Sorry, this user has been locked out."
                         );
                     }

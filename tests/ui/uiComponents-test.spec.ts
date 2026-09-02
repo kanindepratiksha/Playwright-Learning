@@ -1,10 +1,12 @@
 import { test } from "../hooks/reporting/uiAllureHooks";
+import { expect } from "@playwright/test";
 import { AllureHelper } from "../../utils/AllureHelper";
 import { config } from "../../config/env";
 import { testData } from "../../utils/appConstants";
 import users from "../../testdata/users.json";
 import { LoginPage } from "../../pages/LoginPage";
 import { InventoryPage } from "../../pages/InventoryPage";
+import { Severity } from "allure-js-commons";
 test(
     "Verify Product Sorting Using Dropdown Options",
     async ({ page }) => {
@@ -14,7 +16,7 @@ test(
         await AllureHelper.metadata({
             feature: "Dropdown",
             story: "Verify Product Sorting Using Dropdown Options",
-            severity: "critical"
+            severity: Severity.CRITICAL
         });
         // ==========================================
         // Page Objects
@@ -28,9 +30,12 @@ test(
         // ==========================================
         // Navigate
         // ==========================================
-        await page.goto(config.sauceDemoUrl, {
-            waitUntil: "commit"
-        });
+        await page.goto(
+            config.sauceDemoUrl,
+            {
+                waitUntil: "commit"
+            }
+        );
         await page.waitForLoadState("networkidle");
         // ==========================================
         // Login
@@ -42,32 +47,66 @@ test(
         // ==========================================
         // Verify Login
         // ==========================================
-        await loginPage.verifyLoginSuccess();
-        await inventoryPage.verifyProductsPage();
+        await expect(
+            page
+        ).toHaveURL(/inventory/);
+        await expect(
+            inventoryPage.title
+        ).toHaveText("Products");
+        await expect(
+            inventoryPage.inventory
+        ).toBeVisible();
         // ==========================================
-        // Verify Product Sorting
+        // Sort A-Z
         // ==========================================
         await inventoryPage.sortProducts("az");
-        await inventoryPage.verifySortOption("az");
-        await inventoryPage.verifyFirstProduct(
+        await expect(
+            inventoryPage.sortDropdownLocator
+        ).toHaveValue("az");
+        await expect(
+            inventoryPage.firstProductLocator
+        ).toHaveText(
             testData.productNameAZ
         );
+        // ==========================================
+        // Sort Z-A
+        // ==========================================
         await inventoryPage.sortProducts("za");
-        await inventoryPage.verifySortOption("za");
-        await inventoryPage.verifyFirstProduct(
+        await expect(
+            inventoryPage.sortDropdownLocator
+        ).toHaveValue("za");
+        await expect(
+            inventoryPage.firstProductLocator
+        ).toHaveText(
             testData.productNameZA
         );
+        // ==========================================
+        // Sort Price Low to High
+        // ==========================================
         await inventoryPage.sortProducts("lohi");
-        await inventoryPage.verifySortOption("lohi");
-        await inventoryPage.verifyFirstPrice(
+        await expect(
+            inventoryPage.sortDropdownLocator
+        ).toHaveValue("lohi");
+        await expect(
+            inventoryPage.firstPriceLocator
+        ).toHaveText(
             testData.lowPrice
         );
+        // ==========================================
+        // Sort Price High to Low
+        // ==========================================
         await inventoryPage.sortProducts("hilo");
-        await inventoryPage.verifySortOption("hilo");
-        await inventoryPage.verifyFirstProduct(
+        await expect(
+            inventoryPage.sortDropdownLocator
+        ).toHaveValue("hilo");
+        await expect(
+            inventoryPage.firstProductLocator
+        ).toHaveText(
             testData.highPriceProduct
         );
-        await inventoryPage.verifyFirstPrice(
+        await expect(
+            inventoryPage.firstPriceLocator
+        ).toHaveText(
             testData.highPrice
         );
     }

@@ -150,9 +150,7 @@ test.describe("Playwright Fixture Demo", () => {
             await AllureHelper.step(
                 "Verify Product Visibility",
                 async () => {
-                    await inventoryPage.verifyProductVisible(
-                        testData.product1
-                    );
+                    await expect(inventoryPage.getProductText(testData.product1)).toBeVisible();
                 }
             );
         }

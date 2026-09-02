@@ -1,4 +1,5 @@
 import { test } from "../hooks/reporting/uiAllureHooks";
+import { expect } from "@playwright/test";
 import { AllureHelper } from "../../utils/AllureHelper";
 import { config } from "../../config/env";
 import { testData } from "../../utils/appConstants";
@@ -6,6 +7,7 @@ import users from "../../testdata/users.json";
 import { LoginPage } from "../../pages/LoginPage";
 import { InventoryPage } from "../../pages/InventoryPage";
 import { CartPage } from "../../pages/CartPage";
+import { Severity } from "allure-js-commons";
 test(
     "UI Actions Demo",
     async ({ page }) => {
@@ -15,7 +17,7 @@ test(
         await AllureHelper.metadata({
             feature: "UI Actions",
             story: "Verify UI Actions",
-            severity: "critical"
+            severity: Severity.CRITICAL
         });
         // ==========================================
         // Page Objects
@@ -30,9 +32,12 @@ test(
         // ==========================================
         // Navigate
         // ==========================================
-        await page.goto(config.sauceDemoUrl, {
-            waitUntil: "commit"
-        });
+        await page.goto(
+            config.sauceDemoUrl,
+            {
+                waitUntil: "commit"
+            }
+        );
         await page.waitForLoadState("networkidle");
         // ==========================================
         // Login
@@ -41,12 +46,18 @@ test(
             user.username,
             user.password
         );
-        await inventoryPage.loginWithKeyboard();
         // ==========================================
         // Verify Login
         // ==========================================
-        await loginPage.verifyLoginSuccess();
-        await inventoryPage.verifyProductsPage();
+        await expect(
+            page
+        ).toHaveURL(/inventory/);
+        await expect(
+            inventoryPage.title
+        ).toHaveText("Products");
+        await expect(
+            inventoryPage.inventory
+        ).toBeVisible();
         // ==========================================
         // Product Actions
         // ==========================================
@@ -54,25 +65,71 @@ test(
         await inventoryPage.addProduct(
             testData.product1
         );
-        await inventoryPage.verifyCartCount("1");
+        // ==========================================
+        // Verify Cart Count
+        // ==========================================
+        await expect(
+            inventoryPage.cartBadgeLocator
+        ).toHaveText("1");
+        // ==========================================
+        // Open Cart
+        // ==========================================
         await inventoryPage.openCart();
         // ==========================================
         // Cart Actions
         // ==========================================
-        await cartPage.verifyCartPage();
-        await cartPage.verifyProduct(
-            testData.product1
-        );
+        // Verify Cart page
+        await expect(
+            cartPage.title
+        ).toHaveText("Your Cart");
+        await expect(
+            cartPage.title
+        ).toBeVisible();
+        // Verify product is present
+        await expect(
+            cartPage.getProduct(
+                testData.product1
+            )
+        ).toBeVisible();
+        // Verify exactly one cart item
+        await expect(
+            cartPage.items
+        ).toHaveCount(1);
+        // Remove product
         await cartPage.removeProduct(
             testData.product1
         );
-        await cartPage.verifyCartIsEmpty();
+        // ==========================================
+        // Verify Cart Is Empty
+        // ==========================================
+        await expect(
+            cartPage.items
+        ).toHaveCount(0);
+        // Cart badge should disappear
+        await expect(
+            cartPage.badge
+        ).not.toBeVisible();
         // ==========================================
         // Browser Navigation
         // ==========================================
         await inventoryPage.goBack();
-        await inventoryPage.verifyProductsPage();
+        // Verify Products page after Back
+        await expect(
+            inventoryPage.title
+        ).toHaveText("Products");
+        await expect(
+            inventoryPage.inventory
+        ).toBeVisible();
+        // ==========================================
+        // Reload Page
+        // ==========================================
         await inventoryPage.reloadPage();
-        await inventoryPage.verifyProductsPage();
+        // Verify Products page after Reload
+        await expect(
+            inventoryPage.title
+        ).toHaveText("Products");
+        await expect(
+            inventoryPage.inventory
+        ).toBeVisible();
     }
 );

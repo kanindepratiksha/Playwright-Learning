@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from "@playwright/test";
+import { Page, Locator } from "@playwright/test";
 import { config } from "../config/env";
 import users from "../testdata/users.json";
 import { testData } from "../utils/appConstants";
@@ -33,7 +33,7 @@ export class HooksPage extends BasePage {
     // ==========================================
     // Navigate
     // ==========================================
-    async navigate() {
+    async navigate(): Promise<void> {
         await AllureHelper.step(
             "Navigate to SauceDemo",
             async () => {
@@ -44,7 +44,7 @@ export class HooksPage extends BasePage {
     // ==========================================
     // Login
     // ==========================================
-    async login() {
+    async login(): Promise<void> {
         await AllureHelper.step(
             "Login with Valid User",
             async () => {
@@ -63,7 +63,7 @@ export class HooksPage extends BasePage {
     // ==========================================
     // Verify Login
     // ==========================================
-    async verifyLogin() {
+    async verifyLogin(): Promise<void> {
         await AllureHelper.step(
             "Verify Login",
             async () => {
@@ -77,18 +77,23 @@ export class HooksPage extends BasePage {
     // ==========================================
     // Logout
     // ==========================================
-    async logout() {
+    async logout(): Promise<void> {
         await AllureHelper.step(
             "Logout from Application",
             async () => {
+                // Open hamburger menu
                 await this.click(this.menuButton);
-                await expect(this.sideMenu).toBeVisible({
-                    timeout: 10_000
+                // Wait for side menu to become visible
+                await this.sideMenu.waitFor({
+                    state: "visible",
+                    timeout: 15_000
                 });
-                await expect(this.logoutButton).toBeVisible({
-                    timeout: 10_000
+                // Wait for logout option
+                await this.logoutButton.waitFor({
+                    state: "visible",
+                    timeout: 15_000
                 });
-                await this.logoutButton.scrollIntoViewIfNeeded();
+                // Click logout
                 await this.click(this.logoutButton);
             }
         );
@@ -96,12 +101,14 @@ export class HooksPage extends BasePage {
     // ==========================================
     // Verify Logout
     // ==========================================
-    async verifyLogout() {
+    async verifyLogout(): Promise<void> {
         await AllureHelper.step(
             "Verify Logout",
             async () => {
                 await this.verifyUrl(config.sauceDemoUrl);
-                await this.verifyVisible(this.username);
+                await this.verifyVisible(
+                    this.username
+                );
             }
         );
     }

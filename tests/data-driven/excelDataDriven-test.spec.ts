@@ -51,9 +51,8 @@ normalizedUsers.forEach((user: LoginUser) => {
                         await loginPage.login(
                             user.username,
                             user.password,
-                            false
                         );
-                        await loginPage.verifyErrorMessage(
+                        await expect(loginPage.errorMsg).toContainText(
                             "Epic sadface: Sorry, this user has been locked out."
                         );
                     }

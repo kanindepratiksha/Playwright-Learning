@@ -7,6 +7,7 @@ import users from "../../testdata/users.json";
 import { LoginPage } from "../../pages/LoginPage";
 import { InventoryPage } from "../../pages/InventoryPage";
 import { HooksAdvancedPage } from "../../pages/hooks-advancedPage";
+import { Severity } from "allure-js-commons";
 const user = users[0];
 test(
     "Locators Demo",
@@ -17,7 +18,7 @@ test(
         await AllureHelper.metadata({
             feature: "Locators",
             story: "Verify Playwright Locators",
-            severity: "critical"
+            severity: Severity.CRITICAL
         });
         // ==========================================
         // Page Objects
@@ -43,11 +44,15 @@ test(
         // Validate Login
         // ==========================================
         await expect(page).toHaveURL(/inventory/);
-        await inventoryPage.verifyPageTitle();
-        await inventoryPage.verifyInventoryList();
-        await inventoryPage.verifyProductVisible(
-            testData.product1
-        );
+        await expect(
+            inventoryPage.title
+        ).toHaveText("Products");
+        await expect(
+            inventoryPage.inventory
+        ).toBeVisible();
+        await expect(
+            inventoryPage.getProductText(testData.product1)
+        ).toBeVisible();
         // ==========================================
         // Logout
         // ==========================================
@@ -56,6 +61,14 @@ test(
         // Validate Logout
         // ==========================================
         await hooksAdvancedPage.verifyLogout();
-        await loginPage.verifyLoginPage();
+        await expect(
+            loginPage.usernameField
+        ).toBeVisible();
+        await expect(
+            loginPage.passwordField
+        ).toBeVisible();
+        await expect(
+            loginPage.loginBtn
+        ).toBeVisible();
     }
 );

@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from "@playwright/test";
+import { Page, Locator } from "@playwright/test";
 import { BasePage } from "./BasePage";
 import { AllureHelper } from "../utils/AllureHelper";
 export class CheckoutPage extends BasePage {
@@ -14,38 +14,65 @@ export class CheckoutPage extends BasePage {
     private readonly cancelButton: Locator;
     private readonly pageTitle: Locator;
     private readonly backHomeButton: Locator;
+    private readonly errorMessage: Locator;
     // ==========================================
     // Constructor
     // ==========================================
     constructor(page: Page) {
         super(page);
-        this.firstNameInput = page.locator(
-            '[data-test="firstName"]'
-        );
-        this.lastNameInput = page.locator(
-            '[data-test="lastName"]'
-        );
-        this.postalCodeInput = page.locator(
-            '[data-test="postalCode"]'
-        );
-        this.continueButton = page.locator(
-            '[data-test="continue"]'
-        );
-        this.finishButton = page.locator(
-            '[data-test="finish"]'
-        );
-        this.completeHeader = page.locator(
-            '[data-test="complete-header"]'
-        );
-        this.cancelButton = page.locator(
-            '[data-test="cancel"]'
-        );
-        this.pageTitle = page.locator(
-            ".title"
-        );
-        this.backHomeButton = page.locator(
-            '[data-test="back-to-products"]'
-        );
+        this.firstNameInput =
+            page.getByTestId("firstName");
+        this.lastNameInput =
+            page.getByTestId("lastName");
+        this.postalCodeInput =
+            page.getByTestId("postalCode");
+        this.continueButton =
+            page.getByTestId("continue");
+        this.finishButton =
+            page.getByTestId("finish");
+        this.completeHeader =
+            page.getByTestId("complete-header");
+        this.cancelButton =
+            page.getByTestId("cancel");
+        this.pageTitle =
+            page.locator(".title");
+        this.backHomeButton =
+            page.getByTestId("back-to-products");
+        this.errorMessage =
+            page.getByTestId("error");
+    }
+    // ==========================================
+    // Public Locators
+    // ==========================================
+    get firstNameField(): Locator {
+        return this.firstNameInput;
+    }
+    get lastNameField(): Locator {
+        return this.lastNameInput;
+    }
+    get postalCodeField(): Locator {
+        return this.postalCodeInput;
+    }
+    get continueBtn(): Locator {
+        return this.continueButton;
+    }
+    get finishBtn(): Locator {
+        return this.finishButton;
+    }
+    get cancelBtn(): Locator {
+        return this.cancelButton;
+    }
+    get checkoutTitle(): Locator {
+        return this.pageTitle;
+    }
+    get orderCompleteHeader(): Locator {
+        return this.completeHeader;
+    }
+    get backHomeBtn(): Locator {
+        return this.backHomeButton;
+    }
+    get errorMsg(): Locator {
+        return this.errorMessage;
     }
     // ==========================================
     // Actions
@@ -54,7 +81,7 @@ export class CheckoutPage extends BasePage {
         firstName: string,
         lastName: string,
         postalCode: string
-    ) {
+    ): Promise<void> {
         await AllureHelper.step(
             "Fill Checkout Details",
             async () => {
@@ -73,7 +100,7 @@ export class CheckoutPage extends BasePage {
             }
         );
     }
-    async continueCheckout() {
+    async continueCheckout(): Promise<void> {
         await AllureHelper.step(
             "Continue Checkout",
             async () => {
@@ -83,7 +110,7 @@ export class CheckoutPage extends BasePage {
             }
         );
     }
-    async finishCheckout() {
+    async finishCheckout(): Promise<void> {
         await AllureHelper.step(
             "Finish Checkout",
             async () => {
@@ -93,7 +120,7 @@ export class CheckoutPage extends BasePage {
             }
         );
     }
-    async cancelCheckout() {
+    async cancelCheckout(): Promise<void> {
         await AllureHelper.step(
             "Cancel Checkout",
             async () => {
@@ -103,16 +130,13 @@ export class CheckoutPage extends BasePage {
             }
         );
     }
-    async backHome() {
+    async backHome(): Promise<void> {
         await AllureHelper.step(
             "Back Home",
             async () => {
                 await this.click(
                     this.backHomeButton
                 );
-                await expect(
-                    this.page
-                ).toHaveURL(/inventory/);
             }
         );
     }
@@ -123,7 +147,7 @@ export class CheckoutPage extends BasePage {
         firstName: string;
         lastName: string;
         postalCode: string;
-    }) {
+    }): Promise<void> {
         await AllureHelper.step(
             "Complete Checkout",
             async () => {
@@ -134,163 +158,6 @@ export class CheckoutPage extends BasePage {
                 );
                 await this.continueCheckout();
                 await this.finishCheckout();
-            }
-        );
-    }
-    // ==========================================
-    // Verifications
-    // ==========================================
-    async verifyOrderSuccess() {
-        await AllureHelper.step(
-            "Verify Order Success",
-            async () => {
-                await this.verifyVisible(
-                    this.completeHeader
-                );
-            }
-        );
-    }
-    // ==========================================
-    // Scenario 2
-    // Checkout Information Page
-    // ==========================================
-    async verifyCheckoutInformationPage() {
-        await AllureHelper.step(
-            "Verify Checkout Information Page",
-            async () => {
-                await expect(
-                    this.page
-                ).toHaveURL(
-                    /checkout-step-one/
-                );
-                await expect(
-                    this.pageTitle
-                ).toHaveText(
-                    "Checkout: Your Information"
-                );
-                await expect(
-                    this.firstNameInput
-                ).toBeVisible();
-                await expect(
-                    this.lastNameInput
-                ).toBeVisible();
-                await expect(
-                    this.postalCodeInput
-                ).toBeVisible();
-                await expect(
-                    this.continueButton
-                ).toBeVisible();
-                await expect(
-                    this.cancelButton
-                ).toBeVisible();
-            }
-        );
-    }
-    // ==========================================
-    // Scenario 2
-    // Checkout Overview Page
-    // ==========================================
-    async verifyCheckoutOverviewPage() {
-        await AllureHelper.step(
-            "Verify Checkout Overview Page",
-            async () => {
-                await expect(
-                    this.page
-                ).toHaveURL(
-                    /checkout-step-two/
-                );
-                await expect(
-                    this.pageTitle
-                ).toHaveText(
-                    "Checkout: Overview"
-                );
-                await expect(
-                    this.finishButton
-                ).toBeVisible();
-                await expect(
-                    this.cancelButton
-                ).toBeVisible();
-            }
-        );
-    }
-    // ==========================================
-    // Scenario 2
-    // Error Message Validation
-    // ==========================================
-    async verifyErrorMessage(
-        message: string
-    ) {
-        await AllureHelper.step(
-            `Verify Error Message: ${message}`,
-            async () => {
-                const errorMessage =
-                    this.page.locator(
-                        '[data-test="error"]'
-                    );
-                await expect(
-                    errorMessage
-                ).toBeVisible();
-                await expect(
-                    errorMessage
-                ).toContainText(
-                    message
-                );
-            }
-        );
-    }
-    // ==========================================
-    // Scenario 2
-    // Checkout Complete Page
-    // ==========================================
-    async verifyCheckoutCompletePage() {
-    await AllureHelper.step(
-        "Verify Checkout Complete Page",
-        async () => {
-
-            await expect(
-                this.page
-            ).toHaveURL(
-                /checkout-complete/
-            );
-
-            await expect(
-                this.pageTitle
-            ).toHaveText(
-                "Checkout: Complete!"
-            );
-
-            await expect(
-                this.completeHeader
-            ).toHaveText(
-                "Thank you for your order!"
-            );
-
-            await expect(
-                this.completeHeader
-            ).toBeVisible();
-
-            await expect(
-                this.backHomeButton
-            ).toBeVisible();
-        }
-    );
-}
-    // ==========================================
-    // Scenario 2
-    // Verify Login Navigation After Logout
-    // ==========================================
-    async verifyLoginPage() {
-        await AllureHelper.step(
-            "Verify Login Page",
-            async () => {
-                await expect(
-                    this.page
-                ).toHaveURL(/\/$/);
-                await expect(
-                    this.page
-                ).toHaveTitle(
-                    "Swag Labs"
-                );
             }
         );
     }
