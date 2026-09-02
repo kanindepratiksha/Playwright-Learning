@@ -114,8 +114,9 @@ export class NetworkInterceptor {
         const response = await route.fetch({
     headers: {
         ...route.request().headers(),
-        'accept-encoding': 'identity',
+        "accept-encoding": "identity",
     },
+    maxRetries: 3,
 });
         Logger.info(`STATUS : ${response.status()}`);
         const headers = response.headers();

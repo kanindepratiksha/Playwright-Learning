@@ -22,22 +22,39 @@ export class InventoryPage extends BasePage {
     // ==========================================
     constructor(page: Page) {
         super(page);
-        this.pageTitle = page.locator(".title");
-        this.inventoryList = page.locator(".inventory_list");
-        this.inventoryItems = page.locator(".inventory_item");
-        this.firstInventoryItem = this.inventoryItems.first();
-        this.cartBadge = page.locator(".shopping_cart_badge");
-        this.sortDropdown = page.locator(
-            '[data-test="product-sort-container"]'
-        );
-        this.firstProduct = page.locator(".inventory_item_name").first();
-        this.firstPrice = page.locator(".inventory_item_price").first();
-        this.cartLink = page.locator(".shopping_cart_link");
+        this.pageTitle =
+            page.locator(".title");
+        this.inventoryList =
+            page.locator(".inventory_list");
+        this.inventoryItems =
+            page.locator(".inventory_item");
+        this.firstInventoryItem =
+            this.inventoryItems.first();
+        this.cartBadge =
+            page.locator(".shopping_cart_badge");
+        this.sortDropdown =
+            page.locator(
+                '[data-test="product-sort-container"]'
+            );
+        this.firstProduct =
+            page.locator(
+                ".inventory_item_name"
+            ).first();
+        this.firstPrice =
+            page.locator(
+                ".inventory_item_price"
+            ).first();
+        this.cartLink =
+            page.locator(
+                ".shopping_cart_link"
+            );
     }
     // ==========================================
     // Dynamic Locator - Product
     // ==========================================
-    private getProduct(productName: string): Locator {
+    private getProduct(
+        productName: string
+    ): Locator {
         return this.inventoryItems.filter({
             hasText: productName
         });
@@ -45,19 +62,30 @@ export class InventoryPage extends BasePage {
     // ==========================================
     // Dynamic Locator - Product Text
     // ==========================================
-    private getProductText(productName: string): Locator {
-        return this.page.getByText(productName);
+    private getProductText(
+        productName: string
+    ): Locator {
+        return this.page.getByText(
+            productName,
+            { exact: true }
+        );
     }
     // ==========================================
     // Actions
     // ==========================================
-    async addProduct(productName: string) {
+    async addProduct(
+        productName: string
+    ) {
         await AllureHelper.step(
             `Add Product : ${productName}`,
             async () => {
-                await this.click(
-                    this.getProduct(productName).getByRole("button")
-                );
+                await this.getProduct(
+                    productName
+                )
+                    .getByRole("button", {
+                        name: "Add to cart"
+                    })
+                    .click();
             }
         );
     }
@@ -65,7 +93,22 @@ export class InventoryPage extends BasePage {
         await AllureHelper.step(
             "Open Shopping Cart",
             async () => {
-                await this.click(this.cartLink);
+                await this.click(
+                    this.cartLink
+                );
+            }
+        );
+    }
+    async backToProducts() {
+        await AllureHelper.step(
+            "Back to Products",
+            async () => {
+                await this.page
+                    .locator(
+                        '[data-test="back-to-products"]'
+                    )
+                    .click();
+                await this.verifyProductsPage();
             }
         );
     }
@@ -77,11 +120,15 @@ export class InventoryPage extends BasePage {
             }
         );
     }
-    async sortProducts(option: string) {
+    async sortProducts(
+        option: string
+    ) {
         await AllureHelper.step(
             `Sort Products : ${option.toUpperCase()}`,
             async () => {
-                await this.sortDropdown.selectOption(option);
+                await this.sortDropdown.selectOption(
+                    option
+                );
             }
         );
     }
@@ -97,14 +144,22 @@ export class InventoryPage extends BasePage {
             }
         );
     }
-    async verifySortOption(option: string) {
-        await this.verifySelectedSortOption(option);
+    async verifySortOption(
+        option: string
+    ) {
+        await this.verifySelectedSortOption(
+            option
+        );
     }
-    async verifyCartCount(count: string) {
+    async verifyCartCount(
+        count: string
+    ) {
         await AllureHelper.step(
             `Verify Cart Count : ${count}`,
             async () => {
-                await this.verifyCartBadgeCount(count);
+                await this.verifyCartBadgeCount(
+                    count
+                );
             }
         );
     }
@@ -136,55 +191,267 @@ export class InventoryPage extends BasePage {
     // Verifications
     // ==========================================
     async verifyPageTitle() {
-        await this.verifyVisible(this.pageTitle);
+        await this.verifyVisible(
+            this.pageTitle
+        );
     }
     async verifyInventoryList() {
-        await this.verifyVisible(this.inventoryList);
+        await this.verifyVisible(
+            this.inventoryList
+        );
     }
-    async verifyProductVisible(productName: string) {
+    async verifyProductVisible(
+        productName: string
+    ) {
         await AllureHelper.step(
             `Verify Product : ${productName}`,
             async () => {
-                Logger.info(`Verifying product: ${productName}`);
-                const product = this.getProductText(productName);
-                await WaitUtil.waitForVisible(product);
-                await AssertUtil.visible(product);
-                Logger.info(`${productName} is visible`);
+                Logger.info(
+                    `Verifying product: ${productName}`
+                );
+                const product =
+                    this.getProductText(
+                        productName
+                    );
+                await WaitUtil.waitForVisible(
+                    product
+                );
+                await AssertUtil.visible(
+                    product
+                );
+                Logger.info(
+                    `${productName} is visible`
+                );
             }
         );
     }
     async verifyFirstInventoryItemVisible() {
-        await this.verifyVisible(this.firstInventoryItem);
+        await this.verifyVisible(
+            this.firstInventoryItem
+        );
     }
     async verifyLastInventoryItemVisible() {
         await this.verifyVisible(
             this.inventoryItems.last()
         );
     }
-    async verifyInventoryItemVisible(index: number) {
+    async verifyInventoryItemVisible(
+        index: number
+    ) {
         await this.verifyVisible(
             this.inventoryItems.nth(index)
         );
     }
-    async verifyCartBadgeCount(count: string) {
+    async verifyCartBadgeCount(
+        count: string
+    ) {
         await this.verifyText(
             this.cartBadge,
             count
         );
     }
-    async verifySelectedSortOption(option: string) {
-        await expect(this.sortDropdown).toHaveValue(option);
+    async verifySelectedSortOption(
+        option: string
+    ) {
+        await expect(
+            this.sortDropdown
+        ).toHaveValue(option);
     }
-    async verifyFirstProduct(productName: string) {
+    async verifyFirstProduct(
+        productName: string
+    ) {
         await this.verifyText(
             this.firstProduct,
             productName
         );
     }
-    async verifyFirstPrice(price: string) {
+    async verifyFirstPrice(
+        price: string
+    ) {
         await this.verifyText(
             this.firstPrice,
             price
+        );
+    }
+    // ======================================================
+    // Scenario 2 - Product Details
+    // ======================================================
+    async openProduct(
+        productName: string
+    ) {
+        await AllureHelper.step(
+            `Open Product: ${productName}`,
+            async () => {
+                await this.getProductText(
+                    productName
+                ).click();
+                await expect(
+                    this.page
+                ).toHaveURL(
+                    /inventory-item/
+                );
+                await expect(
+                    this.page.locator(
+                        ".inventory_details_name"
+                    )
+                ).toHaveText(productName);
+            }
+        );
+    }
+    async addProductFromDetails(
+        productName: string
+    ) {
+        await AllureHelper.step(
+            `Add Product From Details: ${productName}`,
+            async () => {
+                await this.page
+                    .getByRole("button", {
+                        name: "Add to cart"
+                    })
+                    .click();
+            }
+        );
+    }
+    async verifyRemoveButtonFromDetails(
+        productName: string
+    ) {
+        await AllureHelper.step(
+            `Verify Remove Button: ${productName}`,
+            async () => {
+                await expect(
+                    this.page.getByRole(
+                        "button",
+                        {
+                            name: "Remove"
+                        }
+                    )
+                ).toBeVisible();
+            }
+        );
+    }
+    // ======================================================
+    // Scenario 2 - Product Remove
+    // ======================================================
+    async removeProduct(
+        productName: string
+    ) {
+        await AllureHelper.step(
+            `Remove Product: ${productName}`,
+            async () => {
+                await this.getProduct(
+                    productName
+                )
+                    .getByRole("button", {
+                        name: "Remove"
+                    })
+                    .click();
+            }
+        );
+    }
+    async verifyAddToCartButton(
+        productName: string
+    ) {
+        await AllureHelper.step(
+            `Verify Add to Cart Button: ${productName}`,
+            async () => {
+                await expect(
+                    this.getProduct(
+                        productName
+                    ).getByRole(
+                        "button",
+                        {
+                            name: "Add to cart"
+                        }
+                    )
+                ).toBeVisible();
+            }
+        );
+    }
+    async verifyRemoveButton(
+        productName: string
+    ) {
+        await AllureHelper.step(
+            `Verify Product Is Selected: ${productName}`,
+            async () => {
+                await expect(
+                    this.getProduct(
+                        productName
+                    ).getByRole(
+                        "button",
+                        {
+                            name: "Remove"
+                        }
+                    )
+                ).toBeVisible();
+            }
+        );
+    }
+    // ======================================================
+    // Scenario 2 - Sorting
+    // ======================================================
+    async verifyProductsSortedZA() {
+        await AllureHelper.step(
+            "Verify Products Sorted Z-A",
+            async () => {
+                const actualNames =
+                    (
+                        await this.page
+                            .locator(
+                                ".inventory_item_name"
+                            )
+                            .allTextContents()
+                    ).map(
+                        name => name.trim()
+                    );
+                const expectedNames =
+                    [...actualNames].sort(
+                        (a, b) =>
+                            b.localeCompare(a)
+                    );
+                expect(
+                    actualNames
+                ).toEqual(
+                    expectedNames
+                );
+            }
+        );
+    }
+    // ======================================================
+    // Scenario 2 - Cart Empty
+    // ======================================================
+    async verifyCartIsEmpty() {
+        await AllureHelper.step(
+            "Verify Cart Is Empty",
+            async () => {
+                await expect(
+                    this.cartBadge
+                ).toHaveCount(0);
+            }
+        );
+    }
+    // ======================================================
+    // Scenario 2 - Logout
+    // ======================================================
+    async logout() {
+        await AllureHelper.step(
+            "Logout",
+            async () => {
+                await this.page
+                    .locator(
+                        "#react-burger-menu-btn"
+                    )
+                    .click();
+                await this.page
+                    .locator(
+                        "#logout_sidebar_link"
+                    )
+                    .click();
+                await expect(
+                    this.page
+                ).toHaveURL(
+                    /\/$/
+                );
+            }
         );
     }
 }
