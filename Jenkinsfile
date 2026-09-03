@@ -1,27 +1,27 @@
 pipeline {
     agent any
     parameters {
-        choice(
-            name: 'TEST_ENV',
-            choices: ['DEV', 'QA', 'UAT'],
-            description: 'Test environment to execute'
-        )
-        choice(
-            name: 'BROWSER',
-            choices: ['Chromium', 'Firefox', 'WebKit'],
-            description: 'Browser project to execute'
-        )
-        choice(
-            name: 'PW_WORKERS',
-            choices: ['1', '2', '4'],
-            description: 'Number of Playwright workers per shard'
-        )
-        choice(
-            name: 'SHARDS',
-            choices: ['1', '2', '4'],
-            description: 'Number of parallel test shards'
-        )
-    }
+    choice(
+        name: 'TEST_ENV',
+        choices: ['QA', 'UAT', 'PROD'],
+        description: 'Test environment to execute'
+    )
+    choice(
+        name: 'BROWSER',
+        choices: ['Chromium', 'Firefox', 'WebKit'],
+        description: 'Browser project to execute'
+    )
+    choice(
+        name: 'PW_WORKERS',
+        choices: ['1', '2', '4'],
+        description: 'Number of Playwright workers per shard'
+    )
+    choice(
+        name: 'SHARDS',
+        choices: ['1', '2', '4'],
+        description: 'Number of parallel test shards'
+    )
+}
     environment {
         CI = 'true'
     }

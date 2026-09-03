@@ -1,4 +1,4 @@
-import { test } from "../hooks/reporting/uiAllureHooks";
+import { test, expect } from "@playwright/test";
 import { AllureHelper } from "../../utils/AllureHelper";
 import { config } from "../../config/env";
 import { testData } from "../../utils/appConstants";
@@ -6,6 +6,7 @@ import users from "../../testdata/users.json";
 import { LoginPage } from "../../pages/LoginPage";
 import { InventoryPage } from "../../pages/InventoryPage";
 import { CartPage } from "../../pages/CartPage";
+import { Severity } from "allure-js-commons";
 // ==========================================
 // Default User
 // ==========================================
@@ -19,7 +20,7 @@ test(
         await AllureHelper.metadata({
             feature: "Advanced Locators",
             story: "Verify Advanced Playwright Locators",
-            severity: "critical"
+            severity: Severity.CRITICAL
         });
         // ==========================================
         // Page Objects
@@ -30,9 +31,12 @@ test(
         // ==========================================
         // Navigate
         // ==========================================
-        await page.goto(config.sauceDemoUrl, {
-            waitUntil: "commit"
-        });
+        await page.goto(
+            config.sauceDemoUrl,
+            {
+                waitUntil: "commit"
+            }
+        );
         await page.waitForLoadState("networkidle");
         // ==========================================
         // Login
@@ -44,14 +48,24 @@ test(
         // ==========================================
         // Verify Products Page
         // ==========================================
-        await inventoryPage.verifyPageTitle();
-        await inventoryPage.verifyInventoryList();
+        await expect(
+            inventoryPage.title
+        ).toHaveText("Products");
+        await expect(
+            inventoryPage.inventory
+        ).toBeVisible();
         // ==========================================
         // Verify Products
         // ==========================================
-        await inventoryPage.verifyFirstInventoryItemVisible();
-        await inventoryPage.verifyLastInventoryItemVisible();
-        await inventoryPage.verifyInventoryItemVisible(1);
+        await expect(
+            inventoryPage.firstItem
+        ).toBeVisible();
+        await expect(
+            inventoryPage.products.last()
+        ).toBeVisible();
+        await expect(
+            inventoryPage.products.nth(1)
+        ).toBeVisible();
         // ==========================================
         // Add Product
         // ==========================================
@@ -59,16 +73,36 @@ test(
             testData.product1
         );
         // ==========================================
+        // Verify Product Added
+        // ==========================================
+        await expect(
+            inventoryPage.getRemoveButton(
+                testData.product1
+            )
+        ).toBeVisible();
+        await expect(
+            inventoryPage.cartBadgeLocator
+        ).toHaveText("1");
+        // ==========================================
         // Open Cart
         // ==========================================
         await inventoryPage.openCart();
         // ==========================================
         // Verify Cart
         // ==========================================
-        await cartPage.verifyCartPage();
-        await cartPage.verifyCartTitle();
-        await cartPage.verifyProduct(
-            testData.product1
-        );
+        await expect(
+            cartPage.title
+        ).toHaveText("Your Cart");
+        await expect(
+            cartPage.title
+        ).toBeVisible();
+        await expect(
+            cartPage.getProduct(
+                testData.product1
+            )
+        ).toBeVisible();
+        await expect(
+            cartPage.items
+        ).toHaveCount(1);
     }
 );

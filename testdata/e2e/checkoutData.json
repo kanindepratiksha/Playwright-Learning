@@ -1,18 +1,18 @@
 [
-  {
-    "username": "standard_user",
-    "password": "secret_sauce",
-    "product": "Sauce Labs Backpack",
-    "firstName": "Pratiksha",
-    "lastName": "Kaninde",
-    "postalCode": "411057"
-  },
-  {
-    "username": "standard_user",
-    "password": "secret_sauce",
-    "product": "Sauce Labs Bike Light",
-    "firstName": "Test",
-    "lastName": "User",
-    "postalCode": "411058"
-  }
+    {
+        "username": "standard_user",
+        "password": "secret_sauce",
+        "product": "Sauce Labs Backpack",
+        "firstName": "Pratiksha",
+        "lastName": "Kaninde",
+        "postalCode": "411057"
+    },
+    {
+        "username": "standard_user",
+        "password": "secret_sauce",
+        "product": "Sauce Labs Bike Light",
+        "firstName": "Test",
+        "lastName": "User",
+        "postalCode": "411058"
+    }
 ]

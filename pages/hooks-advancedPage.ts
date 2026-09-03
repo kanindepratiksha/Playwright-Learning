@@ -78,8 +78,9 @@ export class HooksAdvancedPage extends BasePage {
             "Logout from Application",
             async () => {
                 await this.menuButton.click();
-                await expect(this.logoutButton).toBeVisible({
-                    timeout: 10_000
+                await this.logoutButton.waitFor({
+                    state: "visible",
+                    timeout: 15_000
                 });
                 await this.logoutButton.scrollIntoViewIfNeeded();
                 await this.logoutButton.click();
