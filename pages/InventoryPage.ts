@@ -59,9 +59,7 @@ export class InventoryPage extends BasePage {
                 name: /open menu/i
             }
         );
-        this.logoutButton = page.getByTestId(
-    "logout-sidebar-link"
-);
+        this.logoutButton = page.getByTestId("logout-sidebar-link");
     }
     // ==========================================
     // Public Locators
@@ -248,16 +246,19 @@ export class InventoryPage extends BasePage {
     // ==========================================
     // Logout
     // ==========================================
-   async logout(): Promise<void> {
+    async logout(): Promise<void> {
     await AllureHelper.step(
         "Logout",
         async () => {
+            await this.menuButton.waitFor({
+                state: "visible",
+                timeout: 30000
+            });
             await this.menuButton.click();
             await this.logoutButton.waitFor({
-                state: "attached",
-                timeout: 10000
+                state: "visible",
+                timeout: 30000
             });
-            await this.page.waitForTimeout(500);
             await this.logoutButton.click();
         }
     );

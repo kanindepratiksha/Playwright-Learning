@@ -1,4 +1,8 @@
-import { Page, Locator } from "@playwright/test";
+import {
+    Page,
+    Locator,
+    expect
+} from "@playwright/test";
 import { BasePage } from "./BasePage";
 import { AllureHelper } from "../utils/AllureHelper";
 export class CheckoutPage extends BasePage {
@@ -111,15 +115,23 @@ export class CheckoutPage extends BasePage {
         );
     }
     async finishCheckout(): Promise<void> {
-        await AllureHelper.step(
-            "Finish Checkout",
-            async () => {
-                await this.click(
-                    this.finishButton
-                );
-            }
-        );
-    }
+    await AllureHelper.step(
+        "Finish Checkout",
+        async () => {
+            await this.page.waitForURL("**/checkout-step-two.html", {
+                timeout: 30000
+            });
+            await this.finishButton.waitFor({
+                state: "visible",
+                timeout: 30000
+            });
+            await this.finishButton.click();
+            await this.page.waitForURL("**/checkout-complete.html", {
+                timeout: 30000
+            });
+        }
+    );
+}
     async cancelCheckout(): Promise<void> {
         await AllureHelper.step(
             "Cancel Checkout",
@@ -134,15 +146,17 @@ export class CheckoutPage extends BasePage {
     await AllureHelper.step(
         "Back Home",
         async () => {
-            await this.backHomeButton.click();
-
-            await this.page
-                .locator(".title")
-                .filter({ hasText: "Products" })
-                .waitFor({
-                    state: "visible",
-                    timeout: 15000
-                });
+            await Promise.all([
+                this.page.waitForURL("**/inventory.html", {
+                    timeout: 30000
+                }),
+                this.backHomeButton.click()
+            ]);
+            await expect(
+                this.page.locator(".title")
+            ).toHaveText("Products", {
+                timeout: 30000
+            });
         }
     );
 }
