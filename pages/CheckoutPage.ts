@@ -131,15 +131,21 @@ export class CheckoutPage extends BasePage {
         );
     }
     async backHome(): Promise<void> {
-        await AllureHelper.step(
-            "Back Home",
-            async () => {
-                await this.click(
-                    this.backHomeButton
-                );
-            }
-        );
-    }
+    await AllureHelper.step(
+        "Back Home",
+        async () => {
+            await this.backHomeButton.click();
+
+            await this.page
+                .locator(".title")
+                .filter({ hasText: "Products" })
+                .waitFor({
+                    state: "visible",
+                    timeout: 15000
+                });
+        }
+    );
+}
     // ==========================================
     // Complete Checkout
     // ==========================================
