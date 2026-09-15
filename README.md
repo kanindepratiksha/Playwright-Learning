@@ -1,9 +1,9 @@
 # Playwright Automation Framework
 A scalable UI and API automation framework built using Playwright and TypeScript.
 
-## 📊 Playwright Test Report
+##  Playwright Test Report
 
-👉 **[View Live Playwright HTML Report](https://kanindepratiksha.github.io/Playwright-Learning/)**
+ **[View Live Playwright HTML Report](https://kanindepratiksha.github.io/Playwright-Learning/)**
 
 The live report contains the latest Playwright test execution results, including:
 
@@ -14,9 +14,9 @@ The live report contains the latest Playwright test execution results, including
 - Screenshots, videos and traces for failures
 - Sharded and parallel execution results
 
-## 🔗 Repository
+##  Repository
 
-👉 **[GitHub Repository](https://github.com/kanindepratiksha/Playwright-Learning)**
+**[GitHub Repository](https://github.com/kanindepratiksha/Playwright-Learning)**
 ## Overview
 
 A scalable UI and API automation framework built using Playwright and TypeScript.
